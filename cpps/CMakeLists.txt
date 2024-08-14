@@ -8,40 +8,30 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Set output directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-# FetchContent module is available from CMake 3.11 onwards
-include(FetchContent)
-
-# Download and configure GLFW
-FetchContent_Declare(
-  glfw
-  GIT_REPOSITORY https://github.com/glfw/glfw.git
-  GIT_TAG        3.4  # You can specify the version or branch you want
-)
-
-# Download and make glfw available
-FetchContent_MakeAvailable(glfw)
-
 # Add your source files
 add_executable(DiceProject src/main.cpp)
 
-# Link GLFW to your project
+# Add third-pary libraries
+
+add_subdirectory(third-party/glad-4.3)
+target_link_libraries(DiceProject PRIVATE glad)
+
+add_subdirectory(third-party/glfw-3.4)
 target_link_libraries(DiceProject PRIVATE glfw)
 
-# Include the GLFW directories to ensure headers are found
-target_include_directories(DiceProject PRIVATE ${glfw_SOURCE_DIR}/include)
+target_include_directories(DiceProject PRIVATE
+    third-party/glad-4.3/include
+    third-party/glfw-3.4/include
+)
 
-# For Linux and MacOS, you might need to link additional libraries
-if(UNIX)
-  target_link_libraries(DiceProject PRIVATE pthread dl)
-endif()
-
-# For MacOS, link the necessary frameworks
-if(APPLE)
-  find_library(OpenGL_LIBRARY OpenGL)
-  target_link_libraries(DiceProject PRIVATE
-    ${OpenGL_LIBRARY}
-    "-framework Cocoa"
-    "-framework IOKit"
-    "-framework CoreVideo"
-  )
+if (WIN32)
+    target_link_libraries(DiceProject PRIVATE opengl32)
+elseif(APPLE)
+    find_library(COCOA_LIBRARY Cocoa)
+    find_library(OpenGL_LIBRARY OpenGL)
+    find_library(IOKit_LIBRARY IOKit)
+    find_library(CoreVideo_LIBRARY CoreVideo)
+    target_link_libraries(DiceProject PRIVATE ${COCOA_LIBRARY} ${OpenGL_LIBRARY} ${IOKit_LIBRARY} ${CoreVideo_LIBRARY})
+elseif(UNIX)
+    target_link_libraries(DiceProject PRIVATE GL X11 pthread Xrandr Xi dl)
 endif()
