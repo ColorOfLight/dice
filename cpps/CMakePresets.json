@@ -1,0 +1,19 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "desktop",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build-desktop"
+    },
+    {
+      "name": "web",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/build-web",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "$env{EMSDK}/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
+        "WEB": "ON"
+      }
+    }
+  ]
+}

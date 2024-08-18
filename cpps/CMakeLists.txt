@@ -8,30 +8,56 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Set output directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-# Add your source files
-add_executable(DiceProject src/main.cpp)
+if (WEB)
+  # Add your source files
+  add_executable(DiceProject src/main_web.cpp)
 
-# Add third-pary libraries
+  if(NOT DEFINED ENV{EMSCRIPTEN_ROOT})
+        find_path(EMSCRIPTEN_ROOT "emcc")
+  else()
+      set(EMSCRIPTEN_ROOT "$ENV{EMSCRIPTEN_ROOT}")
+  endif()
 
-add_subdirectory(third-party/glad-4.3)
-target_link_libraries(DiceProject PRIVATE glad)
+  if(NOT EMSCRIPTEN_ROOT)
+      if(NOT DEFINED ENV{EMSDK})
+          message(FATAL_ERROR "The emcc compiler not found in PATH")
+      endif()
+      set(EMSCRIPTEN_ROOT "$ENV{EMSDK}/upstream/emscripten")
+  endif()
 
-add_subdirectory(third-party/glfw-3.4)
-target_link_libraries(DiceProject PRIVATE glfw)
+  if(EXISTS "${EMSCRIPTEN_ROOT}/cmake/Modules/Platform/Emscripten.cmake")
+      set(CMAKE_TOOLCHAIN_FILE "${EMSCRIPTEN_ROOT}/cmake/Modules/Platform/Emscripten.cmake")
+      else()
+      message(FATAL_ERROR "Emscripten.cmake toolchain file not found")
+  endif()
 
-target_include_directories(DiceProject PRIVATE
-    third-party/glad-4.3/include
-    third-party/glfw-3.4/include
-)
+  set_target_properties(DiceProject PROPERTIES LINK_FLAGS "-s MIN_WEBGL_VERSION=2 -s MAX_WEBGL_VERSION=2")
 
-if (WIN32)
-    target_link_libraries(DiceProject PRIVATE opengl32)
-elseif(APPLE)
-    find_library(COCOA_LIBRARY Cocoa)
-    find_library(OpenGL_LIBRARY OpenGL)
-    find_library(IOKit_LIBRARY IOKit)
-    find_library(CoreVideo_LIBRARY CoreVideo)
-    target_link_libraries(DiceProject PRIVATE ${COCOA_LIBRARY} ${OpenGL_LIBRARY} ${IOKit_LIBRARY} ${CoreVideo_LIBRARY})
-elseif(UNIX)
-    target_link_libraries(DiceProject PRIVATE GL X11 pthread Xrandr Xi dl)
+else()
+  # Add your source files
+  add_executable(DiceProject src/main.cpp)
+
+  # Add third-pary libraries
+  add_subdirectory(third-party/glad-4.3)
+  target_link_libraries(DiceProject PRIVATE glad)
+
+  add_subdirectory(third-party/glfw-3.4)
+  target_link_libraries(DiceProject PRIVATE glfw)
+
+  target_include_directories(DiceProject PRIVATE
+      third-party/glad-4.3/include
+      third-party/glfw-3.4/include
+  )
+
+  if (WIN32)
+      target_link_libraries(DiceProject PRIVATE opengl32)
+  elseif(APPLE)
+      find_library(COCOA_LIBRARY Cocoa)
+      find_library(OpenGL_LIBRARY OpenGL)
+      find_library(IOKit_LIBRARY IOKit)
+      find_library(CoreVideo_LIBRARY CoreVideo)
+      target_link_libraries(DiceProject PRIVATE ${COCOA_LIBRARY} ${OpenGL_LIBRARY} ${IOKit_LIBRARY} ${CoreVideo_LIBRARY})
+  elseif(UNIX)
+      target_link_libraries(DiceProject PRIVATE GL X11 pthread Xrandr Xi dl)
+  endif()
 endif()
