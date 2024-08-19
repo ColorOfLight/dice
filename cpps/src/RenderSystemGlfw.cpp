@@ -48,9 +48,6 @@ RenderSystemGlfw::RenderSystemGlfw(int width, int height) {
   if (!gladLoadGL(glfwGetProcAddress)) {
     throw std::runtime_error("Failed to initialize GLAD!");
   }
-
-  // Define the viewport dimensions
-  glViewport(0, 0, width, height);
 }
 
 RenderSystemGlfw::~RenderSystemGlfw() {
