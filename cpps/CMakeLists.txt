@@ -8,9 +8,20 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Set output directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+# Set macro variable
+set(TARGET "${TARGET}")
+
+include_directories(include)
+
+file(GLOB_RECURSE DICE_SOURCES src/*.cpp include/*.h)
+
 if (WEB)
   # Add your source files
-  add_executable(DiceProject src/main_web.cpp)
+  add_executable(DiceProject ${DICE_SOURCES} src/main_web.cpp)
+
+  if(DEFINED TARGET)
+    target_compile_definitions(DiceProject PRIVATE TARGET=${TARGET})
+  endif()
 
   if(NOT DEFINED ENV{EMSCRIPTEN_ROOT})
         find_path(EMSCRIPTEN_ROOT "emcc")
@@ -35,7 +46,11 @@ if (WEB)
 
 else()
   # Add your source files
-  add_executable(DiceProject src/main.cpp)
+  add_executable(DiceProject ${DICE_SOURCES} src/main_new.cpp)
+
+  if(DEFINED TARGET)
+    target_compile_definitions(DiceProject PRIVATE TARGET=${TARGET})
+  endif()
 
   # Add third-pary libraries
   add_subdirectory(third-party/glad-4.3)

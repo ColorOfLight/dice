@@ -5,6 +5,8 @@
 
 #include <iostream>
 
+#include "./Root.h"
+
 // Vertex shader source code
 const char* vertexShaderSource = R"(
     #version 330 core

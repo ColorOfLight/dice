@@ -4,7 +4,10 @@
     {
       "name": "desktop",
       "generator": "Unix Makefiles",
-      "binaryDir": "${sourceDir}/build-desktop"
+      "binaryDir": "${sourceDir}/build-desktop",
+      "cacheVariables": {
+        "TARGET": "OPENGL_GLAD_GLFW"
+      }
     },
     {
       "name": "web",
@@ -12,7 +15,8 @@
       "binaryDir": "${sourceDir}/build-web",
       "cacheVariables": {
         "CMAKE_TOOLCHAIN_FILE": "$env{EMSDK}/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
-        "WEB": "ON"
+        "WEB": "ON",
+        "TARGET": "WEBGL_EMSCRIPTEN"
       }
     }
   ]
