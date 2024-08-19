@@ -8,14 +8,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Set output directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-# Set macro variable
-set(TARGET "${TARGET}")
-
 include_directories(include)
 
 file(GLOB_RECURSE DICE_SOURCES src/*.cpp include/*.h)
 
-if (WEB)
+if(NOT DEFINED TARGET)
+  message(FATAL_ERROR "TARGET is not defined. Please set the TARGET variable.")
+endif()
+
+if (${TARGET} STREQUAL "WEBGL_EMSCRIPTEN")
   # Add your source files
   add_executable(DiceProject ${DICE_SOURCES} src/main_web.cpp)
 
@@ -44,7 +45,7 @@ if (WEB)
 
   set_target_properties(DiceProject PROPERTIES LINK_FLAGS "-s MIN_WEBGL_VERSION=2 -s MAX_WEBGL_VERSION=2")
 
-else()
+elseif(${TARGET} STREQUAL "OPENGL_GLAD_GLFW")
   # Add your source files
   add_executable(DiceProject ${DICE_SOURCES} src/main_new.cpp)
 
@@ -75,4 +76,7 @@ else()
   elseif(UNIX)
       target_link_libraries(DiceProject PRIVATE GL X11 pthread Xrandr Xi dl)
   endif()
+else()
+  # Print error message
+  message(FATAL_ERROR "Invalid target: ${TARGET}")
 endif()
