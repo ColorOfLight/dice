@@ -24,6 +24,8 @@
 
 #include "./GpuResourceManagerOpenGL.h"
 
+GpuResourceManagerOpenGL::~GpuResourceManagerOpenGL() { cleanup(); }
+
 unsigned int GpuResourceManagerOpenGL::createVertexObject(
     std::vector<float> vertices, unsigned int vertex_count) {
   GLuint VAO, VBO;

@@ -24,7 +24,9 @@
 
 #include "./GpuResourceManager.h"
 
-GpuResourceManager::~GpuResourceManager() { cleanup(); }
+GpuResourceManager::~GpuResourceManager() {
+  // Empty definition
+}
 
 unsigned int GpuResourceManager::getShaderProgram(ShaderType type) {
   if (shader_programs.find(type) == shader_programs.end()) {
@@ -42,11 +44,7 @@ void GpuResourceManager::cleanup() {
     deleteShaderProgram(type);
   }
 
-  shader_programs.clear();
-
   for (auto& [index, _] : vertex_objects) {
     deleteVertexObject(index);
   }
-
-  vertex_objects.clear();
 }

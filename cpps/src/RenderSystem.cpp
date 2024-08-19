@@ -22,39 +22,8 @@
  * SOFTWARE.
  */
 
-#pragma once
+#include "./RenderSystem.h"
 
-#include <map>
-#include <memory>
-#include <vector>
-
-#include "./ShaderType.h"
-
-struct VertexObject {
-  unsigned int vao;
-  unsigned int vbo;
-  unsigned int vertex_count;
-};
-
-class GpuResourceManager {
- public:
-  GpuResourceManager() : shader_programs() {};
-  virtual ~GpuResourceManager() = 0;
-
-  unsigned int getShaderProgram(ShaderType type);
-  virtual unsigned int createVertexObject(std::vector<float> vertices,
-                                          unsigned int vertex_count) = 0;
-  const VertexObject& getVertexObject(unsigned int index);
-
-  void cleanup();
-
- protected:
-  std::unordered_map<ShaderType, unsigned int> shader_programs;
-  std::unordered_map<unsigned int, VertexObject> vertex_objects;
-  unsigned int vertex_object_index = 0;
-
- private:
-  virtual unsigned int createShaderProgram(ShaderType type) = 0;
-  virtual void deleteShaderProgram(ShaderType type) = 0;
-  virtual void deleteVertexObject(unsigned int index) = 0;
-};
+RenderSystem::~RenderSystem() {
+  // Empty definition
+}

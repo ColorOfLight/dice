@@ -37,6 +37,7 @@
 class GpuResourceManagerOpenGL : public GpuResourceManager {
  public:
   GpuResourceManagerOpenGL() = default;
+  ~GpuResourceManagerOpenGL() override;
 
   unsigned int createVertexObject(std::vector<float> vertices,
                                   unsigned int vertex_count) override;

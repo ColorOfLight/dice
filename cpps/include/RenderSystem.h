@@ -26,6 +26,7 @@
 
 #include <memory>
 
+#include "./GpuResourceManager.h"
 #include "./RenderSystem.h"
 #include "./SceneManager.h"
 
@@ -40,7 +41,7 @@ class RenderSystem {
   RenderSystem(int width, int height) {
     throw std::runtime_error("Initializer is not implemented");
   }
-  virtual ~RenderSystem() = default;
+  virtual ~RenderSystem() = 0;
 
   virtual void updateWindowSize(int width, int height) = 0;
   virtual void runRenderLoop(RenderItem render_item) = 0;
