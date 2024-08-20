@@ -24,6 +24,8 @@
 
 #include "./GpuResourceManagerOpenGL.h"
 
+#include <string>
+
 GpuResourceManagerOpenGL::~GpuResourceManagerOpenGL() { cleanup(); }
 
 unsigned int GpuResourceManagerOpenGL::createVertexObject(
@@ -54,10 +56,19 @@ unsigned int GpuResourceManagerOpenGL::createVertexObject(
 }
 
 unsigned int GpuResourceManagerOpenGL::createShaderProgram(ShaderType type) {
+  std::string shader_prefix = "";
+  std::string fragment_precision = "";
+
+#if defined(TARGET_GLFW)
+  shader_prefix = "#version 330 core\n";
+#elif defined(TARGET_EMSCRIPTEN)
+  shader_prefix = "#version 300 es\n";
+  fragment_precision = "precision mediump float;\n";
+#endif
+
   switch (type) {
     case ShaderType::BASIC: {
-      const char* vertex_shader_source = R"(
-          #version 330 core
+      std::string vertex_shader_content = R"(
           layout (location = 0) in vec3 aPos;
           void main()
           {
@@ -66,14 +77,20 @@ unsigned int GpuResourceManagerOpenGL::createShaderProgram(ShaderType type) {
       )";
 
       // Fragment shader source code
-      const char* fragment_shader_source = R"(
-          #version 330 core
+      std::string fragment_shader_content = R"(
           out vec4 FragColor;
           void main()
           {
               FragColor = vec4(1.0, 0.0, 0.0, 1.0); // Red color
           }
       )";
+
+      std::string full_vertex_source = shader_prefix + vertex_shader_content;
+      std::string full_fragment_source =
+          shader_prefix + fragment_precision + fragment_shader_content;
+
+      const char* vertex_shader_source = full_vertex_source.c_str();
+      const char* fragment_shader_source = full_fragment_source.c_str();
 
       return createShaderProgramWithSources(vertex_shader_source,
                                             fragment_shader_source);
