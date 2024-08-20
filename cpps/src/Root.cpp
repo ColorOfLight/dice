@@ -57,15 +57,17 @@ void Root::addTriangle() {
   scene_manager->meshes.push_back(Mesh(vertex_object_index, ShaderType::BASIC));
 }
 
-void Root::runRenderLoop() {
-  auto& mesh = scene_manager->meshes[0];
+void Root::renderScene() {
+  auto renderItems = [this]() -> void {
+    auto& mesh = scene_manager->meshes[0];
 
-  unsigned int shader_program =
-      gpu_resource_manager->getShaderProgram(mesh.shader_type);
-  auto& vertex_object =
-      gpu_resource_manager->getVertexObject(mesh.vertex_object_index);
+    unsigned int shader_program =
+        gpu_resource_manager->getShaderProgram(mesh.shader_type);
+    auto& vertex_object =
+        gpu_resource_manager->getVertexObject(mesh.vertex_object_index);
 
-  RenderItem render_item = {shader_program, vertex_object};
+    render_system->drawTriangles(shader_program, vertex_object);
+  };
 
-  render_system->runRenderLoop(render_item);
+  render_system->runRenderLoop(renderItems);
 }

@@ -29,7 +29,7 @@ int main() {
 
   root.addTriangle();
 
-  root.runRenderLoop();
+  root.renderScene();
 
   return 0;
 }

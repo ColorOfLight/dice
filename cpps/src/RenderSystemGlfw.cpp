@@ -59,7 +59,7 @@ void RenderSystemGlfw::updateWindowSize(int width, int height) {
   glfwSetWindowSize(window, width, height);
 }
 
-void RenderSystemGlfw::runRenderLoop(RenderItem render_item) {
+void RenderSystemGlfw::runRenderLoop(std::function<void()> render_func) {
   // // Main loop
   while (!glfwWindowShouldClose(window)) {
     // Input
@@ -69,13 +69,17 @@ void RenderSystemGlfw::runRenderLoop(RenderItem render_item) {
     // Rendering commands here
     glClear(GL_COLOR_BUFFER_BIT);
 
-    // Draw the triangle
-    glUseProgram(render_item.shader_program);
-    glBindVertexArray(render_item.vertex_object.vao);
-    glDrawArrays(GL_TRIANGLES, 0, render_item.vertex_object.vertex_count);
+    render_func();
 
     // Swap buffers and poll IO events
     glfwSwapBuffers(window);
     glfwPollEvents();
   }
+}
+
+void RenderSystemGlfw::drawTriangles(unsigned int shader_program,
+                                     const VertexObject& vertex_object) {
+  glUseProgram(shader_program);
+  glBindVertexArray(vertex_object.vao);
+  glDrawArrays(GL_TRIANGLES, 0, vertex_object.vertex_count);
 }

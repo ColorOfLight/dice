@@ -29,6 +29,8 @@
 // Fix include order; glad must be included before GLFW
 #include <GLFW/glfw3.h>
 
+#include <functional>
+
 #include "./GpuResourceManager.h"
 #include "./RenderSystem.h"
 #include "./SceneManager.h"
@@ -39,7 +41,9 @@ class RenderSystemGlfw : public RenderSystem {
   ~RenderSystemGlfw() override;
 
   void updateWindowSize(int width, int height) override;
-  void runRenderLoop(RenderItem render_item) override;
+  void runRenderLoop(std::function<void()> render_func) override;
+  void drawTriangles(unsigned int shader_program,
+                     const VertexObject& vertex_object) override;
 
  private:
   GLFWwindow* window;

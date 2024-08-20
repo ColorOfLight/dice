@@ -45,7 +45,7 @@ class Root {
   Root(BuildOption build_option, RootOptions options);
 
   void addTriangle();
-  void runRenderLoop();
+  void renderScene();
 
   std::unique_ptr<SceneManager> scene_manager;
 
