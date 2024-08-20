@@ -24,6 +24,21 @@
 
 #include "./RenderSystemEmscripten.h"
 
+// Store the std::function in a static/global variable
+static std::function<void()> stored_function;
+
+extern "C" void function_wrapper() {
+  if (stored_function) {
+    stored_function();  // Call the stored std::function
+  }
+}
+
+// Convert std::function<void()> to void(*)()
+void* convert_function(const std::function<void()>& func) {
+  stored_function = func;
+  return (void*)function_wrapper;
+}
+
 RenderSystemEmscripten::RenderSystemEmscripten(int width, int height) {
   // Initialize the WebGL context using Emscripten
   EmscriptenWebGLContextAttributes attr;
@@ -31,13 +46,13 @@ RenderSystemEmscripten::RenderSystemEmscripten(int width, int height) {
   attr.majorVersion = 2;  // WebGL 2.0
   attr.minorVersion = 0;
 
+  emscripten_set_canvas_element_size("#canvas", width, height);
+
   EMSCRIPTEN_WEBGL_CONTEXT_HANDLE context =
       emscripten_webgl_create_context("#canvas", &attr);
   if (!context) {
     throw std::runtime_error("Failed to create WebGL context!");
   }
-
-  emscripten_set_canvas_element_size("#canvas", width, height);
 
   emscripten_webgl_make_context_current(context);
 }
@@ -48,17 +63,10 @@ void RenderSystemEmscripten::updateWindowSize(int width, int height) {
   emscripten_set_canvas_element_size("#canvas", width, height);
 }
 
-std::function<void()> RenderSystemEmscripten::render_function_bridge;
-
 void RenderSystemEmscripten::runRenderLoop(std::function<void()> render_func) {
-  render_function_bridge = render_func;
-  emscripten_set_main_loop(renderLoopCallbackBridge, 0, 1);
-}
+  void (*func_ptr)() = (void (*)())convert_function(render_func);
 
-void RenderSystemEmscripten::renderLoopCallbackBridge() {
-  if (render_function_bridge) {
-    render_function_bridge();
-  }
+  emscripten_set_main_loop(func_ptr, 0, 1);
 }
 
 void RenderSystemEmscripten::drawTriangles(unsigned int shader_program,

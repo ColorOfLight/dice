@@ -45,6 +45,4 @@ class RenderSystemEmscripten : public RenderSystem {
                      const VertexObject& vertex_object) override;
 
  private:
-  static std::function<void()> render_function_bridge;
-  static void renderLoopCallbackBridge();
 };
