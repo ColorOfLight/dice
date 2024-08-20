@@ -6,7 +6,9 @@
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/cpps/third-party/*/include"
             ],
-            "defines": [],
+            "defines": [
+                "TARGET_GLFW=1"
+            ],
             "macFrameworkPath": [
                 "/Library/Developer/CommandLineTools/SDKs/MacOSX14.sdk/System/Library/Frameworks"
             ],
