@@ -22,30 +22,15 @@
  * SOFTWARE.
  */
 
-#pragma once
+#include "./Root.h"
 
-#include <vector>
+#include "./GpuResourceManagerOpenGL.h"
+#include "./RenderSystemGlfw.h"
+#include "./SceneManager.h"
 
-#include "./GpuResourceManager.h"
-
-#if TARGET == OPENGL_GLAD_GLFW
-#include <glad/gl.h>
-#elif TARGET == WEBGL_EMSCRIPTEN
-#include <GLES3/gl3.h>
-#endif
-
-class GpuResourceManagerOpenGL : public GpuResourceManager {
- public:
-  GpuResourceManagerOpenGL() = default;
-  ~GpuResourceManagerOpenGL() override;
-
-  unsigned int createVertexObject(std::vector<float> vertices,
-                                  unsigned int vertex_count) override;
-
- private:
-  unsigned int createShaderProgram(ShaderType type) override;
-  unsigned int createShaderProgramWithSources(
-      const char* vertex_shader_source, const char* fragment_shader_source);
-  void deleteShaderProgram(ShaderType type) override;
-  void deleteVertexObject(unsigned int index) override;
-};
+Root::Root(RootOptions options) {
+  render_system = std::make_unique<RenderSystemGlfw>(options.initial_width,
+                                                     options.initial_height);
+  gpu_resource_manager = std::make_unique<GpuResourceManagerOpenGL>();
+  scene_manager = std::make_unique<SceneManager>();
+}

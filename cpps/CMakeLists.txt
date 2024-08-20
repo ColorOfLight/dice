@@ -8,22 +8,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Set output directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-include_directories(include)
-
-file(GLOB_RECURSE DICE_SOURCES src/*.cpp include/*.h)
-
 if(NOT DEFINED TARGET)
   message(FATAL_ERROR "TARGET is not defined. Please set the TARGET variable.")
 endif()
 
 if (${TARGET} STREQUAL "WEBGL_EMSCRIPTEN")
-  # Add your source files
-  add_executable(DiceProject ${DICE_SOURCES} src/main_web.cpp)
-
-  if(DEFINED TARGET)
-    target_compile_definitions(DiceProject PRIVATE TARGET=${TARGET})
-  endif()
-
   if(NOT DEFINED ENV{EMSCRIPTEN_ROOT})
         find_path(EMSCRIPTEN_ROOT "emcc")
   else()
@@ -43,15 +32,21 @@ if (${TARGET} STREQUAL "WEBGL_EMSCRIPTEN")
       message(FATAL_ERROR "Emscripten.cmake toolchain file not found")
   endif()
 
-  set_target_properties(DiceProject PROPERTIES LINK_FLAGS "-s MIN_WEBGL_VERSION=2 -s MAX_WEBGL_VERSION=2")
+  include_directories(include/common include/emscripten)
+
+  file(GLOB_RECURSE DICE_SOURCES src/main.cpp src/common/*.cpp src/emscripten/*.cpp include/common/*.h include/emscripten/*.h)
+
+  add_executable(DiceProject ${DICE_SOURCES})
+
+  set_target_properties(DiceProject PROPERTIES LINK_FLAGS "-s MIN_WEBGL_VERSION=2 -s MAX_WEBGL_VERSION=2 -fexceptions")
+  target_compile_definitions(DiceProject PRIVATE TARGET_EMSCRIPTEN)
 
 elseif(${TARGET} STREQUAL "OPENGL_GLAD_GLFW")
-  # Add your source files
-  add_executable(DiceProject ${DICE_SOURCES} src/main_new.cpp)
+  include_directories(include/common include/glfw)
 
-  if(DEFINED TARGET)
-    target_compile_definitions(DiceProject PRIVATE TARGET=${TARGET})
-  endif()
+  file(GLOB_RECURSE DICE_SOURCES src/main.cpp src/common/*.cpp src/glfw/*.cpp include/common/*.h include/glfw/*.h)
+
+  add_executable(DiceProject ${DICE_SOURCES})
 
   # Add third-pary libraries
   add_subdirectory(third-party/glad-4.3)
@@ -76,6 +71,8 @@ elseif(${TARGET} STREQUAL "OPENGL_GLAD_GLFW")
   elseif(UNIX)
       target_link_libraries(DiceProject PRIVATE GL X11 pthread Xrandr Xi dl)
   endif()
+
+  target_compile_definitions(DiceProject PRIVATE TARGET_GLFW)
 else()
   # Print error message
   message(FATAL_ERROR "Invalid target: ${TARGET}")

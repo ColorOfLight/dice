@@ -26,24 +26,6 @@
 
 #include <vector>
 
-#include "./GpuResourceManagerOpenGL.h"
-#include "./RenderSystemGlfw.h"
-#include "./SceneManager.h"
-
-Root::Root(BuildOption build_option, RootOptions options) {
-#if TARGET == OPENGL_GLAD_GLFW
-  render_system = std::make_unique<RenderSystemGlfw>(options.initial_width,
-                                                     options.initial_height);
-  gpu_resource_manager = std::make_unique<GpuResourceManagerOpenGL>();
-#elif TARGET == WEBGL_EMSCRIPTEN
-// TODO
-#else
-  throw std::runtime_error("Invalid build option");
-#endif
-
-  scene_manager = std::make_unique<SceneManager>();
-}
-
 void Root::addTriangle() {
   std::vector<float> vertices = {
       -0.5f, -0.5f, 0.0f,  // bottom left

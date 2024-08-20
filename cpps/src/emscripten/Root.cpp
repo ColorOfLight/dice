@@ -22,34 +22,15 @@
  * SOFTWARE.
  */
 
-#pragma once
+#include "./Root.h"
 
-#include <memory>
-
-#include "./GpuResourceManager.h"
-#include "./RenderSystem.h"
+#include "./GpuResourceManagerOpenGL.h"
+#include "./RenderSystemEmscripten.h"
 #include "./SceneManager.h"
 
-enum BuildOption {
-  OPENGL_GLAD_GLFW,
-  WEBGL_EMSCRIPTEN,
-};
-
-struct RootOptions {
-  int initial_width;
-  int initial_height;
-};
-
-class Root {
- public:
-  Root(BuildOption build_option, RootOptions options);
-
-  void addTriangle();
-  void renderScene();
-
-  std::unique_ptr<SceneManager> scene_manager;
-
- private:
-  std::unique_ptr<RenderSystem> render_system;
-  std::unique_ptr<GpuResourceManager> gpu_resource_manager;
-};
+Root::Root(RootOptions options) {
+  render_system = std::make_unique<RenderSystemEmscripten>(
+      options.initial_width, options.initial_height);
+  gpu_resource_manager = std::make_unique<GpuResourceManagerOpenGL>();
+  scene_manager = std::make_unique<SceneManager>();
+}

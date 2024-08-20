@@ -22,14 +22,29 @@
  * SOFTWARE.
  */
 
-#include "./Root.h"
+#pragma once
 
-int main() {
-  Root root(BuildOption::OPENGL_GLAD_GLFW, {800, 600});
+#include <GLES3/gl3.h>  // OpenGL ES 3.0 for WebGL 2.0
+#include <emscripten/emscripten.h>
+#include <emscripten/html5.h>
 
-  root.addTriangle();
+#include <functional>
 
-  root.renderScene();
+#include "./GpuResourceManager.h"
+#include "./RenderSystem.h"
+#include "./SceneManager.h"
 
-  return 0;
-}
+class RenderSystemEmscripten : public RenderSystem {
+ public:
+  RenderSystemEmscripten(int width, int height);
+  ~RenderSystemEmscripten() override;
+
+  void updateWindowSize(int width, int height) override;
+  void runRenderLoop(std::function<void()> render_func) override;
+  void drawTriangles(unsigned int shader_program,
+                     const VertexObject& vertex_object) override;
+
+ private:
+  static std::function<void()> render_function_bridge;
+  static void renderLoopCallbackBridge();
+};
