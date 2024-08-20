@@ -26,15 +26,20 @@
 
 #include <vector>
 
-#include "./Geometry.h"
-#include "./Mesh.h"
-#include "./ShaderType.h"
-
-class SceneManager {
+class Geometry {
  public:
-  SceneManager() {};
+  Geometry() {};
+  ~Geometry() {};
 
-  std::vector<Mesh> meshes;
+  std::vector<float> data;
+};
 
- private:
+class TriangleGeometry : public Geometry {
+ public:
+  TriangleGeometry() {
+    data = {0.0f,  0.5f,  0.0f,   // top
+            0.5f,  -0.5f, 0.0f,   // right
+            -0.5f, -0.5f, 0.0f};  // left
+  };
+  ~TriangleGeometry() {};
 };

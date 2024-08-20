@@ -26,6 +26,7 @@
 
 #include <memory>
 
+#include "./Geometry.h"
 #include "./GpuResourceManager.h"
 #include "./RenderSystem.h"
 #include "./SceneManager.h"
@@ -39,7 +40,8 @@ class Root {
  public:
   Root(RootOptions options);
 
-  void addTriangle();
+  void addMesh(const Geometry& geometry, ShaderType shader_type);
+
   void renderScene();
 
   std::unique_ptr<SceneManager> scene_manager;

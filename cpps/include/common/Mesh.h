@@ -24,17 +24,15 @@
 
 #pragma once
 
-#include <vector>
-
-#include "./Geometry.h"
-#include "./Mesh.h"
 #include "./ShaderType.h"
 
-class SceneManager {
+class Mesh {
  public:
-  SceneManager() {};
+  Mesh(unsigned int vertex_object_index, ShaderType shader_type)
+      : vertex_object_index(vertex_object_index), shader_type(shader_type) {};
 
-  std::vector<Mesh> meshes;
+  ShaderType shader_type;
+  unsigned int vertex_object_index;
 
  private:
 };

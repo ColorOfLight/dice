@@ -24,12 +24,16 @@
 
 #include <iostream>
 
+#include "./Geometry.h"
 #include "./Root.h"
+#include "./ShaderType.h"
 
 int main() {
   Root root({800, 600});
 
-  root.addTriangle();
+  TriangleGeometry triangle_geometry;
+
+  root.addMesh(triangle_geometry, ShaderType::BASIC);
 
   root.renderScene();
 

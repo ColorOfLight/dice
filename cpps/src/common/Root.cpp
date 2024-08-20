@@ -26,17 +26,11 @@
 
 #include <vector>
 
-void Root::addTriangle() {
-  std::vector<float> vertices = {
-      -0.5f, -0.5f, 0.0f,  // bottom left
-      0.5f,  -0.5f, 0.0f,  // bottom right
-      0.0f,  0.5f,  0.0f   // top
-  };
-
+void Root::addMesh(const Geometry& geometry, ShaderType shader_type) {
   unsigned int vertex_object_index =
-      gpu_resource_manager->createVertexObject(vertices, 3);
+      gpu_resource_manager->createVertexObject(geometry.data, 3);
 
-  scene_manager->meshes.push_back(Mesh(vertex_object_index, ShaderType::BASIC));
+  scene_manager->meshes.push_back(Mesh(vertex_object_index, shader_type));
 }
 
 void Root::renderScene() {
