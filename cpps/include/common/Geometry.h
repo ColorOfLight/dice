@@ -37,9 +37,9 @@ class Geometry {
 class TriangleGeometry : public Geometry {
  public:
   TriangleGeometry() {
-    data = {0.0f,  0.5f,  0.0f,   // top
-            0.5f,  -0.5f, 0.0f,   // right
-            -0.5f, -0.5f, 0.0f};  // left
+    data = {0.0f,  0.5f,  0.0f, 0.0f, 0.1f, 0.0f, 0.5f, 1.0f,   // top
+            0.5f,  -0.5f, 0.0f, 0.0f, 0.1f, 0.0f, 1.0f, 0.0f,   // right
+            -0.5f, -0.5f, 0.0f, 0.0f, 0.1f, 0.0f, 0.0f, 0.0f};  // left
   };
   ~TriangleGeometry() {};
 };

@@ -42,8 +42,17 @@ unsigned int GpuResourceManagerOpenGL::createVertexObject(
   glBufferData(GL_ARRAY_BUFFER, vertices.size() * 4, vertices.data(),
                GL_STATIC_DRAW);
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+  // Position attribute
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);
+
+  // Normal attribute
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+  glEnableVertexAttribArray(1);
+
+  // Texture Coordinate attribute
+  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+  glEnableVertexAttribArray(2);
 
   // Unbind VBO and VAO for safety
   glBindBuffer(GL_ARRAY_BUFFER, 0);
