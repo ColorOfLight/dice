@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-#include <glm/vec3.hpp>
 #include <iostream>
 
 #include "./Geometry.h"
