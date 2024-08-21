@@ -88,5 +88,9 @@ else()
   message(FATAL_ERROR "Invalid target: ${TARGET}")
 endif()
 
-find_package(glm CONFIG REQUIRED)
+add_subdirectory(third-party/glm-1.0.1)
 target_link_libraries(DiceProject PRIVATE glm::glm)
+
+target_include_directories(DiceProject PRIVATE
+      third-party/glm-1.0.1/glm
+)
