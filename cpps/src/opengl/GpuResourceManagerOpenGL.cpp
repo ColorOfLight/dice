@@ -50,11 +50,11 @@ unsigned int GpuResourceManagerOpenGL::createVertexObject(
   glEnableVertexAttribArray(0);
 
   // Normal attribute
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)12);
   glEnableVertexAttribArray(1);
 
   // Texture Coordinate attribute
-  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)24);
   glEnableVertexAttribArray(2);
 
   // Unbind VBO and VAO for safety
@@ -70,7 +70,7 @@ unsigned int GpuResourceManagerOpenGL::createVertexObject(
 unsigned int GpuResourceManagerOpenGL::createShaderProgram(MaterialType type) {
   ShaderSource shader_source = getShaderSource(type);
 
-    return createShaderProgramWithSources(
+  return createShaderProgramWithSources(
       shader_source.vertex_shader_source.c_str(),
       shader_source.fragment_shader_source.c_str());
 }
