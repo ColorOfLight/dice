@@ -87,3 +87,6 @@ else()
   # Print error message
   message(FATAL_ERROR "Invalid target: ${TARGET}")
 endif()
+
+find_package(glm CONFIG REQUIRED)
+target_link_libraries(DiceProject PRIVATE glm::glm)
