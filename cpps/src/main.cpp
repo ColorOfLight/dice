@@ -31,9 +31,9 @@
 int main() {
   Root root({800, 600});
 
-  TriangleGeometry triangle_geometry;
+  CubeGeometry cube_geometry(1.0f, 1.0f, 1.0f, 1, 1, 1);
 
-  root.addMesh(triangle_geometry, MaterialType::TEXTURE_COORD);
+  root.addMesh(cube_geometry, MaterialType::TEXTURE_COORD);
 
   root.renderScene();
 

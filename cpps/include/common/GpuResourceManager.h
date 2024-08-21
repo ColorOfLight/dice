@@ -35,6 +35,7 @@ struct VertexObject {
   unsigned int vao;
   unsigned int vbo;
   unsigned int vertex_count;
+  std::optional<unsigned int> ebo;
 };
 
 class GpuResourceManager {
@@ -43,8 +44,7 @@ class GpuResourceManager {
   virtual ~GpuResourceManager() = 0;
 
   unsigned int getShaderProgram(MaterialType type);
-  virtual unsigned int createVertexObject(
-      const std::vector<Vertex>& vertices) = 0;
+  virtual unsigned int createVertexObject(const Geometry& geometry) = 0;
   const VertexObject& getVertexObject(unsigned int index);
 
   void cleanup();

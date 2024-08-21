@@ -32,11 +32,15 @@
 GpuResourceManagerOpenGL::~GpuResourceManagerOpenGL() { cleanup(); }
 
 unsigned int GpuResourceManagerOpenGL::createVertexObject(
-    const std::vector<Vertex>& vertices) {
-  unsigned int vertex_count = vertices.size();
+    const Geometry& geometry) {
+  auto& vertices = geometry.vertices;
+  auto& indices = geometry.indices;
 
-  std::vector<float> raw_vertices = std::vector<float>(vertex_count * 8);
-  for (int i = 0; i < vertex_count; i++) {
+  unsigned int vertex_count =
+      indices.has_value() ? indices.value().size() : vertices.size();
+
+  std::vector<float> raw_vertices = std::vector<float>(vertices.size() * 8);
+  for (int i = 0; i < vertices.size(); i++) {
     raw_vertices[i * 8] = vertices[i].position.x;
     raw_vertices[i * 8 + 1] = vertices[i].position.y;
     raw_vertices[i * 8 + 2] = vertices[i].position.z;
@@ -47,7 +51,7 @@ unsigned int GpuResourceManagerOpenGL::createVertexObject(
     raw_vertices[i * 8 + 7] = vertices[i].texture_coord.y;
   }
 
-  GLuint VAO, VBO;
+  GLuint VAO, VBO, EBO;
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
 
@@ -58,6 +62,13 @@ unsigned int GpuResourceManagerOpenGL::createVertexObject(
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBufferData(GL_ARRAY_BUFFER, raw_vertices.size() * 4, raw_vertices.data(),
                GL_STATIC_DRAW);
+
+  if (indices.has_value()) {
+    glGenBuffers(1, &EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.value().size() * 4,
+                 indices.value().data(), GL_STATIC_DRAW);
+  }
 
   // Position attribute
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
@@ -78,6 +89,11 @@ unsigned int GpuResourceManagerOpenGL::createVertexObject(
   glBindVertexArray(0);
 
   VertexObject vertex_object = {VAO, VBO, vertex_count};
+
+  if (indices.has_value()) {
+    vertex_object.ebo = EBO;
+  }
+
   vertex_objects[vertex_object_index] = vertex_object;
 
   return vertex_object_index++;
@@ -151,4 +167,7 @@ void GpuResourceManagerOpenGL::deleteVertexObject(unsigned int index) {
   VertexObject vertex_object = vertex_objects[index];
   glDeleteVertexArrays(1, &vertex_object.vao);
   glDeleteBuffers(1, &vertex_object.vbo);
+  if (vertex_object.ebo.has_value()) {
+    glDeleteBuffers(1, &vertex_object.ebo.value());
+  }
 }

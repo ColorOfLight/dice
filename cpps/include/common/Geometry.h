@@ -26,6 +26,7 @@
 
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
+#include <optional>
 #include <vector>
 
 struct Vertex {
@@ -37,19 +38,29 @@ struct Vertex {
 class Geometry {
  public:
   Geometry() {};
-  ~Geometry() {};
 
-  std::vector<Vertex> data;
+  std::vector<Vertex> vertices;
+  std::optional<std::vector<unsigned int>> indices;
 };
 
 class TriangleGeometry : public Geometry {
  public:
   TriangleGeometry() {
-    data = {
+    vertices = {
         {{0.0f, 0.5f, 0.0f}, {0.0f, 0.1f, 0.0f}, {0.5f, 1.0f}},
         {{0.5f, -0.5f, 0.0f}, {0.0f, 0.1f, 0.0f}, {1.0f, 0.0f}},
         {{-0.5f, -0.5f, 0.0f}, {0.0f, 0.1f, 0.0f}, {0.0f, 0.0f}},
     };
   };
-  ~TriangleGeometry() {};
+};
+
+class CubeGeometry : public Geometry {
+ public:
+  CubeGeometry(float width, float height, float depth,
+               unsigned int widthSegments, unsigned int heightSegments,
+               unsigned int depthSegments);
+  // CubeGeometry(float width, float height, float depth) {
+  //   CubeGeometry(width, height, depth, 1, 1, 1);
+  // };
+  // CubeGeometry() { CubeGeometry(1.0f, 1.0f, 1.0f, 1, 1, 1); };
 };
