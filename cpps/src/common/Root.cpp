@@ -28,7 +28,7 @@
 
 void Root::addMesh(const Geometry& geometry, MaterialType material_type) {
   unsigned int vertex_object_index =
-      gpu_resource_manager->createVertexObject(geometry.data, 3);
+      gpu_resource_manager->createVertexObject(geometry.data);
 
   scene_manager->meshes.push_back(Mesh(vertex_object_index, material_type));
 }

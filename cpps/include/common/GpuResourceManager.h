@@ -28,6 +28,7 @@
 #include <memory>
 #include <vector>
 
+#include "./Geometry.h"
 #include "./Material.h"
 
 struct VertexObject {
@@ -42,8 +43,8 @@ class GpuResourceManager {
   virtual ~GpuResourceManager() = 0;
 
   unsigned int getShaderProgram(MaterialType type);
-  virtual unsigned int createVertexObject(std::vector<float> vertices,
-                                          unsigned int vertex_count) = 0;
+  virtual unsigned int createVertexObject(
+      const std::vector<Vertex>& vertices) = 0;
   const VertexObject& getVertexObject(unsigned int index);
 
   void cleanup();

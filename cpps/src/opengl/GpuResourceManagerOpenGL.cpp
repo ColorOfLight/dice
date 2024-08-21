@@ -24,15 +24,29 @@
 
 #include "./GpuResourceManagerOpenGL.h"
 
-#include <iostream>
 #include <string>
+#include <vector>
 
 #include "./shader_source.h"
 
 GpuResourceManagerOpenGL::~GpuResourceManagerOpenGL() { cleanup(); }
 
 unsigned int GpuResourceManagerOpenGL::createVertexObject(
-    std::vector<float> vertices, unsigned int vertex_count) {
+    const std::vector<Vertex>& vertices) {
+  unsigned int vertex_count = vertices.size();
+
+  std::vector<float> raw_vertices = std::vector<float>(vertex_count * 8);
+  for (int i = 0; i < vertex_count; i++) {
+    raw_vertices[i * 8] = vertices[i].position.x;
+    raw_vertices[i * 8 + 1] = vertices[i].position.y;
+    raw_vertices[i * 8 + 2] = vertices[i].position.z;
+    raw_vertices[i * 8 + 3] = vertices[i].normal.x;
+    raw_vertices[i * 8 + 4] = vertices[i].normal.y;
+    raw_vertices[i * 8 + 5] = vertices[i].normal.z;
+    raw_vertices[i * 8 + 6] = vertices[i].texture_coord.x;
+    raw_vertices[i * 8 + 7] = vertices[i].texture_coord.y;
+  }
+
   GLuint VAO, VBO;
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
@@ -42,7 +56,7 @@ unsigned int GpuResourceManagerOpenGL::createVertexObject(
   glBindVertexArray(VAO);
 
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, vertices.size() * 4, vertices.data(),
+  glBufferData(GL_ARRAY_BUFFER, raw_vertices.size() * 4, raw_vertices.data(),
                GL_STATIC_DRAW);
 
   // Position attribute
@@ -50,11 +64,13 @@ unsigned int GpuResourceManagerOpenGL::createVertexObject(
   glEnableVertexAttribArray(0);
 
   // Normal attribute
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)12);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
+                        (void*)(4 * 3));
   glEnableVertexAttribArray(1);
 
   // Texture Coordinate attribute
-  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)24);
+  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
+                        (void*)(4 * (3 + 3)));
   glEnableVertexAttribArray(2);
 
   // Unbind VBO and VAO for safety

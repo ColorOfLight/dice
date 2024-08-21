@@ -24,22 +24,32 @@
 
 #pragma once
 
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
 #include <vector>
+
+struct Vertex {
+  glm::vec3 position;
+  glm::vec3 normal;
+  glm::vec2 texture_coord;
+};
 
 class Geometry {
  public:
   Geometry() {};
   ~Geometry() {};
 
-  std::vector<float> data;
+  std::vector<Vertex> data;
 };
 
 class TriangleGeometry : public Geometry {
  public:
   TriangleGeometry() {
-    data = {0.0f,  0.5f,  0.0f, 0.0f, 0.1f, 0.0f, 0.5f, 1.0f,   // top
-            0.5f,  -0.5f, 0.0f, 0.0f, 0.1f, 0.0f, 1.0f, 0.0f,   // right
-            -0.5f, -0.5f, 0.0f, 0.0f, 0.1f, 0.0f, 0.0f, 0.0f};  // left
+    data = {
+        {{0.0f, 0.5f, 0.0f}, {0.0f, 0.1f, 0.0f}, {0.5f, 1.0f}},
+        {{0.5f, -0.5f, 0.0f}, {0.0f, 0.1f, 0.0f}, {1.0f, 0.0f}},
+        {{-0.5f, -0.5f, 0.0f}, {0.0f, 0.1f, 0.0f}, {0.0f, 0.0f}},
+    };
   };
   ~TriangleGeometry() {};
 };
