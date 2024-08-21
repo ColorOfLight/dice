@@ -24,7 +24,10 @@
 
 #include "./GpuResourceManagerOpenGL.h"
 
+#include <iostream>
 #include <string>
+
+#include "./shader_source.h"
 
 GpuResourceManagerOpenGL::~GpuResourceManagerOpenGL() { cleanup(); }
 
@@ -64,44 +67,12 @@ unsigned int GpuResourceManagerOpenGL::createVertexObject(
   return vertex_object_index++;
 }
 
-unsigned int GpuResourceManagerOpenGL::createShaderProgram(ShaderType type) {
-  std::string shader_prefix = SHADER_PREFIX;
-  std::string fragment_precision = FRAGMENT_PRECISION;
+unsigned int GpuResourceManagerOpenGL::createShaderProgram(MaterialType type) {
+  ShaderSource shader_source = getShaderSource(type);
 
-  switch (type) {
-    case ShaderType::BASIC: {
-      std::string vertex_shader_content = R"(
-          layout (location = 0) in vec3 aPos;
-          void main()
-          {
-              gl_Position = vec4(aPos, 1.0);
-          }
-      )";
-
-      // Fragment shader source code
-      std::string fragment_shader_content = R"(
-          out vec4 FragColor;
-          void main()
-          {
-              FragColor = vec4(1.0, 0.0, 0.0, 1.0); // Red color
-          }
-      )";
-
-      std::string full_vertex_source = shader_prefix + vertex_shader_content;
-      std::string full_fragment_source =
-          shader_prefix + fragment_precision + fragment_shader_content;
-
-      const char* vertex_shader_source = full_vertex_source.c_str();
-      const char* fragment_shader_source = full_fragment_source.c_str();
-
-      return createShaderProgramWithSources(vertex_shader_source,
-                                            fragment_shader_source);
-    }
-    default:
-      throw std::runtime_error("ShaderProgramType is not supported");
-  }
-
-  throw std::runtime_error("Failed to create a shader program");
+    return createShaderProgramWithSources(
+      shader_source.vertex_shader_source.c_str(),
+      shader_source.fragment_shader_source.c_str());
 }
 
 unsigned int GpuResourceManagerOpenGL::createShaderProgramWithSources(
@@ -155,7 +126,7 @@ unsigned int GpuResourceManagerOpenGL::createShaderProgramWithSources(
   return shaderProgram;
 }
 
-void GpuResourceManagerOpenGL::deleteShaderProgram(ShaderType type) {
+void GpuResourceManagerOpenGL::deleteShaderProgram(MaterialType type) {
   unsigned int shader_program = shader_programs[type];
   glDeleteProgram(shader_program);
 }

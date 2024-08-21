@@ -28,6 +28,7 @@
 
 #include "./Geometry.h"
 #include "./GpuResourceManager.h"
+#include "./Material.h"
 #include "./RenderSystem.h"
 #include "./SceneManager.h"
 
@@ -40,7 +41,7 @@ class Root {
  public:
   Root(RootOptions options);
 
-  void addMesh(const Geometry& geometry, ShaderType shader_type);
+  void addMesh(const Geometry& geometry, MaterialType material_type);
 
   void renderScene();
 

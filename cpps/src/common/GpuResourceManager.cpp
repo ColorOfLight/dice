@@ -28,7 +28,7 @@ GpuResourceManager::~GpuResourceManager() {
   // Empty definition
 }
 
-unsigned int GpuResourceManager::getShaderProgram(ShaderType type) {
+unsigned int GpuResourceManager::getShaderProgram(MaterialType type) {
   if (shader_programs.find(type) == shader_programs.end()) {
     shader_programs[type] = createShaderProgram(type);
   }

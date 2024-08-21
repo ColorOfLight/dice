@@ -26,11 +26,11 @@
 
 #include <vector>
 
-void Root::addMesh(const Geometry& geometry, ShaderType shader_type) {
+void Root::addMesh(const Geometry& geometry, MaterialType material_type) {
   unsigned int vertex_object_index =
       gpu_resource_manager->createVertexObject(geometry.data, 3);
 
-  scene_manager->meshes.push_back(Mesh(vertex_object_index, shader_type));
+  scene_manager->meshes.push_back(Mesh(vertex_object_index, material_type));
 }
 
 void Root::renderScene() {
@@ -38,7 +38,7 @@ void Root::renderScene() {
     auto& mesh = scene_manager->meshes[0];
 
     unsigned int shader_program =
-        gpu_resource_manager->getShaderProgram(mesh.shader_type);
+        gpu_resource_manager->getShaderProgram(mesh.material_type);
     auto& vertex_object =
         gpu_resource_manager->getVertexObject(mesh.vertex_object_index);
 

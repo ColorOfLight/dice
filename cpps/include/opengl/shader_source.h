@@ -24,6 +24,13 @@
 
 #pragma once
 
-#include <memory>
+#include <string>
 
-enum class ShaderType : size_t { BASIC = 0 };
+#include "Material.h"
+
+struct ShaderSource {
+  std::string vertex_shader_source;
+  std::string fragment_shader_source;
+};
+
+ShaderSource getShaderSource(MaterialType type);

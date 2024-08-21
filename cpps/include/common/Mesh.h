@@ -24,14 +24,15 @@
 
 #pragma once
 
-#include "./ShaderType.h"
+#include "./Material.h"
 
 class Mesh {
  public:
-  Mesh(unsigned int vertex_object_index, ShaderType shader_type)
-      : vertex_object_index(vertex_object_index), shader_type(shader_type) {};
+  Mesh(unsigned int vertex_object_index, MaterialType material_type)
+      : vertex_object_index(vertex_object_index),
+        material_type(material_type) {};
 
-  ShaderType shader_type;
+  MaterialType material_type;
   unsigned int vertex_object_index;
 
  private:

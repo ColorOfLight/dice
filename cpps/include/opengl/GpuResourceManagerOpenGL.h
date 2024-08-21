@@ -38,9 +38,9 @@ class GpuResourceManagerOpenGL : public GpuResourceManager {
                                   unsigned int vertex_count) override;
 
  private:
-  unsigned int createShaderProgram(ShaderType type) override;
+  unsigned int createShaderProgram(MaterialType type) override;
   unsigned int createShaderProgramWithSources(
       const char* vertex_shader_source, const char* fragment_shader_source);
-  void deleteShaderProgram(ShaderType type) override;
+  void deleteShaderProgram(MaterialType type) override;
   void deleteVertexObject(unsigned int index) override;
 };

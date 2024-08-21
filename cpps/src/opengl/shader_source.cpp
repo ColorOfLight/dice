@@ -22,20 +22,47 @@
  * SOFTWARE.
  */
 
-#include <iostream>
+#include "./shader_source.h"
 
-#include "./Geometry.h"
-#include "./Material.h"
-#include "./Root.h"
+#include "./opengl.h"
 
-int main() {
-  Root root({800, 600});
+std::string basic_vertex_source = R"(
+    layout (location = 0) in vec3 aPos;
 
-  TriangleGeometry triangle_geometry;
+    void main()
+    {
+        gl_Position = vec4(aPos, 1.0);
+    }
+)";
 
-  root.addMesh(triangle_geometry, MaterialType::BASIC);
+std::string basic_fragment_source = R"(
+    out vec4 FragColor;
 
-  root.renderScene();
+    void main()
+    {
+        FragColor = vec4(1.0, 0.0, 0.0, 1.0); // Red color
+    }
+)";
 
-  return 0;
+ShaderSource getShaderSource(MaterialType type) {
+  std::string shader_prefix = SHADER_PREFIX;
+  std::string fragment_precision = FRAGMENT_PRECISION;
+
+  std::string base_vertex_source;
+  std::string base_fragment_source;
+
+  switch (type) {
+    case MaterialType::BASIC:
+      base_vertex_source = basic_vertex_source;
+      base_fragment_source = basic_fragment_source;
+      break;
+    default:
+      throw std::runtime_error("Invalid MaterialType");
+  }
+
+  std::string vertex_shader_source = shader_prefix + base_vertex_source;
+  std::string fragment_shader_source =
+      shader_prefix + fragment_precision + base_fragment_source;
+
+  return {std::move(vertex_shader_source), std::move(fragment_shader_source)};
 }

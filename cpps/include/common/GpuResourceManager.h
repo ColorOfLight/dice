@@ -28,7 +28,7 @@
 #include <memory>
 #include <vector>
 
-#include "./ShaderType.h"
+#include "./Material.h"
 
 struct VertexObject {
   unsigned int vao;
@@ -41,7 +41,7 @@ class GpuResourceManager {
   GpuResourceManager() : shader_programs() {};
   virtual ~GpuResourceManager() = 0;
 
-  unsigned int getShaderProgram(ShaderType type);
+  unsigned int getShaderProgram(MaterialType type);
   virtual unsigned int createVertexObject(std::vector<float> vertices,
                                           unsigned int vertex_count) = 0;
   const VertexObject& getVertexObject(unsigned int index);
@@ -49,12 +49,12 @@ class GpuResourceManager {
   void cleanup();
 
  protected:
-  std::unordered_map<ShaderType, unsigned int> shader_programs;
+  std::unordered_map<MaterialType, unsigned int> shader_programs;
   std::unordered_map<unsigned int, VertexObject> vertex_objects;
   unsigned int vertex_object_index = 0;
 
  private:
-  virtual unsigned int createShaderProgram(ShaderType type) = 0;
-  virtual void deleteShaderProgram(ShaderType type) = 0;
+  virtual unsigned int createShaderProgram(MaterialType type) = 0;
+  virtual void deleteShaderProgram(MaterialType type) = 0;
   virtual void deleteVertexObject(unsigned int index) = 0;
 };

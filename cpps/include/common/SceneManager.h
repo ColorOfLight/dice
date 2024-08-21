@@ -28,7 +28,6 @@
 
 #include "./Geometry.h"
 #include "./Mesh.h"
-#include "./ShaderType.h"
 
 class SceneManager {
  public:

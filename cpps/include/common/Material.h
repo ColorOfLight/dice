@@ -22,20 +22,25 @@
  * SOFTWARE.
  */
 
-#include <iostream>
+#pragma once
 
-#include "./Geometry.h"
-#include "./Material.h"
-#include "./Root.h"
+#include <memory>
 
-int main() {
-  Root root({800, 600});
+enum class MaterialType : size_t { BASIC = 0, NORMAL = 1 };
 
-  TriangleGeometry triangle_geometry;
+class Material {
+ public:
+  Material() {};
 
-  root.addMesh(triangle_geometry, MaterialType::BASIC);
+  MaterialType type;
+};
 
-  root.renderScene();
+class BasicMaterial : public Material {
+ public:
+  BasicMaterial() { type = MaterialType::BASIC; };
+};
 
-  return 0;
-}
+class NormalMaterial : public Material {
+ public:
+  NormalMaterial() { type = MaterialType::NORMAL; };
+};
