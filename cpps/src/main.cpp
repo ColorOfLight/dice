@@ -33,7 +33,7 @@ int main() {
 
   TriangleGeometry triangle_geometry;
 
-  root.addMesh(triangle_geometry, MaterialType::NORMAL);
+  root.addMesh(triangle_geometry, MaterialType::TEXTURE_COORD);
 
   root.renderScene();
 

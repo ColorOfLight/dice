@@ -26,7 +26,7 @@
 
 #include <memory>
 
-enum class MaterialType : size_t { BASIC = 0, NORMAL = 1 };
+enum class MaterialType : size_t { BASIC = 0, NORMAL = 1, TEXTURE_COORD = 2 };
 
 class Material {
  public:
@@ -43,4 +43,9 @@ class BasicMaterial : public Material {
 class NormalMaterial : public Material {
  public:
   NormalMaterial() { type = MaterialType::NORMAL; };
+};
+
+class TextureCoordMaterial : public Material {
+ public:
+  TextureCoordMaterial() { type = MaterialType::TEXTURE_COORD; };
 };

@@ -64,6 +64,17 @@ std::string normal_fragment_source = R"(
     }
 )";
 
+std::string texture_coord_fragment_source = R"(
+    out vec4 FragColor;
+
+    in vec2 vTexCoord;
+
+    void main()
+    {
+        FragColor = vec4(vTexCoord, 0.0, 1.0);
+    }
+)";
+
 ShaderSource getShaderSource(MaterialType type) {
   std::string shader_prefix = SHADER_PREFIX;
   std::string fragment_precision = FRAGMENT_PRECISION;
@@ -79,6 +90,10 @@ ShaderSource getShaderSource(MaterialType type) {
     case MaterialType::NORMAL:
       base_vertex_source = basic_vertex_source;
       base_fragment_source = normal_fragment_source;
+      break;
+    case MaterialType::TEXTURE_COORD:
+      base_vertex_source = basic_vertex_source;
+      base_fragment_source = texture_coord_fragment_source;
       break;
     default:
       throw std::runtime_error("Invalid MaterialType");
