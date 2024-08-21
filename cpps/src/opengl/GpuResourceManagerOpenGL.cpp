@@ -65,15 +65,8 @@ unsigned int GpuResourceManagerOpenGL::createVertexObject(
 }
 
 unsigned int GpuResourceManagerOpenGL::createShaderProgram(ShaderType type) {
-  std::string shader_prefix = "";
-  std::string fragment_precision = "";
-
-#if defined(TARGET_GLFW)
-  shader_prefix = "#version 330 core\n";
-#elif defined(TARGET_EMSCRIPTEN)
-  shader_prefix = "#version 300 es\n";
-  fragment_precision = "precision mediump float;\n";
-#endif
+  std::string shader_prefix = SHADER_PREFIX;
+  std::string fragment_precision = FRAGMENT_PRECISION;
 
   switch (type) {
     case ShaderType::BASIC: {

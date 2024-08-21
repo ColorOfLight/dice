@@ -24,28 +24,7 @@
 
 #pragma once
 
-#include <vector>
-
-#include "./GpuResourceManager.h"
-
-#if defined(TARGET_GLFW)
 #include <glad/gl.h>
-#elif defined(TARGET_EMSCRIPTEN)
-#include <GLES3/gl3.h>
-#endif
 
-class GpuResourceManagerOpenGL : public GpuResourceManager {
- public:
-  GpuResourceManagerOpenGL() = default;
-  ~GpuResourceManagerOpenGL() override;
-
-  unsigned int createVertexObject(std::vector<float> vertices,
-                                  unsigned int vertex_count) override;
-
- private:
-  unsigned int createShaderProgram(ShaderType type) override;
-  unsigned int createShaderProgramWithSources(
-      const char* vertex_shader_source, const char* fragment_shader_source);
-  void deleteShaderProgram(ShaderType type) override;
-  void deleteVertexObject(unsigned int index) override;
-};
+const static std::string SHADER_PREFIX = "#version 330 core\n";
+const static std::string FRAGMENT_PRECISION = "";

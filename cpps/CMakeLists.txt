@@ -9,9 +9,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # Set Common directories
-set(COMMON_INCLUDE_DIR include/common include/shaders)
+set(COMMON_INCLUDE_DIR include/common)
 file(GLOB COMMON_HEADERS "${COMMON_INCLUDE_DIR}/*.h")
 file(GLOB COMMON_SOURCE_FILES src/common/*.cpp src/main.cpp)
+
+# Set Opengl directories
+set(OPENGL_INCLUDE_DIR include/opengl)
+file(GLOB OPENGL_HEADERS "${OpenGL_INCLUDE_DIR}/*.h")
+file(GLOB OPENGL_SOURCE_FILES src/opengl/*.cpp)
 
 if(NOT DEFINED TARGET)
   message(FATAL_ERROR "TARGET is not defined. Please set the TARGET variable.")
@@ -37,9 +42,9 @@ if (${TARGET} STREQUAL "WEBGL_EMSCRIPTEN")
       message(FATAL_ERROR "Emscripten.cmake toolchain file not found")
   endif()
 
-  include_directories(${COMMON_INCLUDE_DIR} include/emscripten)
+  include_directories(${COMMON_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR} include/emscripten)
 
-  file(GLOB_RECURSE DICE_SOURCES ${COMMON_HEADERS} ${COMMON_SOURCE_FILES} src/emscripten/*.cpp include/emscripten/*.h)
+  file(GLOB_RECURSE DICE_SOURCES ${COMMON_HEADERS} ${OPENGL_HEADERS} ${COMMON_SOURCE_FILES} ${OPENGL_SOURCE_FILES} src/emscripten/*.cpp include/emscripten/*.h)
 
   add_executable(DiceProject ${DICE_SOURCES})
 
@@ -47,9 +52,9 @@ if (${TARGET} STREQUAL "WEBGL_EMSCRIPTEN")
   target_compile_definitions(DiceProject PRIVATE TARGET_EMSCRIPTEN)
 
 elseif(${TARGET} STREQUAL "OPENGL_GLAD_GLFW")
-  include_directories(${COMMON_INCLUDE_DIR} include/glfw)
+  include_directories(${COMMON_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR} include/glfw)
 
-  file(GLOB_RECURSE DICE_SOURCES ${COMMON_HEADERS} ${COMMON_SOURCE_FILES} src/glfw/*.cpp include/glfw/*.h)
+  file(GLOB_RECURSE DICE_SOURCES ${COMMON_HEADERS} ${OPENGL_HEADERS} ${COMMON_SOURCE_FILES} ${OPENGL_SOURCE_FILES} src/glfw/*.cpp include/glfw/*.h)
 
   add_executable(DiceProject ${DICE_SOURCES})
 
