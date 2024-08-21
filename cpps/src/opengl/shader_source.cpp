@@ -28,10 +28,17 @@
 
 std::string basic_vertex_source = R"(
     layout (location = 0) in vec3 aPos;
+    layout (location = 1) in vec3 aNormal;
+    layout (location = 2) in vec2 aTexCoord;
+
+    out vec3 vNormal;
+    out vec2 vTexCoord;
 
     void main()
     {
         gl_Position = vec4(aPos, 1.0);
+        vNormal = aNormal;
+        vTexCoord = aTexCoord;
     }
 )";
 
@@ -41,6 +48,19 @@ std::string basic_fragment_source = R"(
     void main()
     {
         FragColor = vec4(1.0, 0.0, 0.0, 1.0); // Red color
+    }
+)";
+
+std::string normal_fragment_source = R"(
+    out vec4 FragColor;
+
+    in vec3 vNormal;
+
+    void main()
+    {
+        vec3 normalizedNormal = normalize(vNormal);
+        vec3 positiveNormal = (normalizedNormal + 1.0) * 0.5;
+        FragColor = vec4(positiveNormal, 1.0);
     }
 )";
 
@@ -55,6 +75,10 @@ ShaderSource getShaderSource(MaterialType type) {
     case MaterialType::BASIC:
       base_vertex_source = basic_vertex_source;
       base_fragment_source = basic_fragment_source;
+      break;
+    case MaterialType::NORMAL:
+      base_vertex_source = basic_vertex_source;
+      base_fragment_source = normal_fragment_source;
       break;
     default:
       throw std::runtime_error("Invalid MaterialType");
