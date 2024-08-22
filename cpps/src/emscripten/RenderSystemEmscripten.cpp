@@ -72,9 +72,9 @@ void RenderSystemEmscripten::runRenderLoop(std::function<void()> render_func) {
 void RenderSystemEmscripten::drawTriangles(ShaderProgramId shader_program_id,
                                            const VertexObject& vertex_object) {
   glUseProgram(shader_program_id);
-  glBindVertexArray(vertex_object.vao);
+  glBindVertexArray(vertex_object.vao_id);
 
-  if (vertex_object.ebo.has_value()) {
+  if (vertex_object.ebo_id.has_value()) {
     glDrawElements(GL_TRIANGLES, vertex_object.vertex_count, GL_UNSIGNED_INT,
                    (void*)0);
   } else {

@@ -80,8 +80,8 @@ void RenderSystemGlfw::runRenderLoop(std::function<void()> render_func) {
 void RenderSystemGlfw::drawTriangles(ShaderProgramId shader_program_id,
                                      const VertexObject& vertex_object) {
   glUseProgram(shader_program_id);
-  glBindVertexArray(vertex_object.vao);
-  if (vertex_object.ebo.has_value()) {
+  glBindVertexArray(vertex_object.vao_id);
+  if (vertex_object.ebo_id.has_value()) {
     glDrawElements(GL_TRIANGLES, vertex_object.vertex_count, GL_UNSIGNED_INT,
                    0);
   } else {

@@ -51,21 +51,21 @@ VertexObjectKey GpuResourceManagerOpenGL::createVertexObject(
     raw_vertices[i * 8 + 7] = vertices[i].texture_coord.y;
   }
 
-  GLuint VAO, VBO, EBO;
-  glGenVertexArrays(1, &VAO);
-  glGenBuffers(1, &VBO);
+  GLuint vao_id, vbo_id, ebo_id;
+  glGenVertexArrays(1, &vao_id);
+  glGenBuffers(1, &vbo_id);
 
   // Bind the Vertex Array Object first, then bind and set vertex buffer(s), and
   // then configure vertex attributes(s).
-  glBindVertexArray(VAO);
+  glBindVertexArray(vao_id);
 
-  glBindBuffer(GL_ARRAY_BUFFER, VBO);
+  glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
   glBufferData(GL_ARRAY_BUFFER, raw_vertices.size() * 4, raw_vertices.data(),
                GL_STATIC_DRAW);
 
   if (indices.has_value()) {
-    glGenBuffers(1, &EBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glGenBuffers(1, &ebo_id);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_id);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.value().size() * 4,
                  indices.value().data(), GL_STATIC_DRAW);
   }
@@ -88,10 +88,10 @@ VertexObjectKey GpuResourceManagerOpenGL::createVertexObject(
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
 
-  VertexObject vertex_object = {VAO, VBO, vertex_count};
+  VertexObject vertex_object = {vao_id, vbo_id, vertex_count};
 
   if (indices.has_value()) {
-    vertex_object.ebo = EBO;
+    vertex_object.ebo_id = ebo_id;
   }
 
   vertex_objects[vertex_object_index] = vertex_object;
@@ -166,9 +166,9 @@ void GpuResourceManagerOpenGL::deleteShaderProgram(MaterialType type) {
 
 void GpuResourceManagerOpenGL::deleteVertexObject(VertexObjectKey index) {
   VertexObject vertex_object = vertex_objects[index];
-  glDeleteVertexArrays(1, &vertex_object.vao);
-  glDeleteBuffers(1, &vertex_object.vbo);
-  if (vertex_object.ebo.has_value()) {
-    glDeleteBuffers(1, &vertex_object.ebo.value());
+  glDeleteVertexArrays(1, &vertex_object.vao_id);
+  glDeleteBuffers(1, &vertex_object.vbo_id);
+  if (vertex_object.ebo_id.has_value()) {
+    glDeleteBuffers(1, &vertex_object.ebo_id.value());
   }
 }

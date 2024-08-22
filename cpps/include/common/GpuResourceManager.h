@@ -38,10 +38,10 @@ typedef unsigned int VertexObjectKey;
 typedef unsigned int ShaderProgramId;
 
 struct VertexObject {
-  unsigned int vao;
-  unsigned int vbo;
+  unsigned int vao_id;
+  unsigned int vbo_id;
   unsigned int vertex_count;
-  std::optional<unsigned int> ebo;
+  std::optional<unsigned int> ebo_id;
 };
 
 class GpuResourceManager {
