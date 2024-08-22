@@ -27,22 +27,22 @@
 #include <vector>
 
 void Root::addMesh(const Geometry& geometry, MaterialType material_type) {
-  unsigned int vertex_object_index =
+  VertexObjectKey vertex_object_key =
       gpu_resource_manager->createVertexObject(geometry);
 
-  scene_manager->meshes.push_back(Mesh(vertex_object_index, material_type));
+  scene_manager->meshes.push_back(Mesh(vertex_object_key, material_type));
 }
 
 void Root::renderScene() {
   auto renderItems = [this]() -> void {
     auto& mesh = scene_manager->meshes[0];
 
-    unsigned int shader_program =
+    ShaderProgramId shader_program_id =
         gpu_resource_manager->getShaderProgram(mesh.material_type);
     auto& vertex_object =
         gpu_resource_manager->getVertexObject(mesh.vertex_object_index);
 
-    render_system->drawTriangles(shader_program, vertex_object);
+    render_system->drawTriangles(shader_program_id, vertex_object);
   };
 
   render_system->runRenderLoop(renderItems);

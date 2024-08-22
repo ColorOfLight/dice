@@ -77,9 +77,9 @@ void RenderSystemGlfw::runRenderLoop(std::function<void()> render_func) {
   }
 }
 
-void RenderSystemGlfw::drawTriangles(unsigned int shader_program,
+void RenderSystemGlfw::drawTriangles(ShaderProgramId shader_program_id,
                                      const VertexObject& vertex_object) {
-  glUseProgram(shader_program);
+  glUseProgram(shader_program_id);
   glBindVertexArray(vertex_object.vao);
   if (vertex_object.ebo.has_value()) {
     glDrawElements(GL_TRIANGLES, vertex_object.vertex_count, GL_UNSIGNED_INT,

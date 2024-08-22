@@ -31,7 +31,7 @@
 
 GpuResourceManagerOpenGL::~GpuResourceManagerOpenGL() { cleanup(); }
 
-unsigned int GpuResourceManagerOpenGL::createVertexObject(
+VertexObjectKey GpuResourceManagerOpenGL::createVertexObject(
     const Geometry& geometry) {
   auto& vertices = geometry.vertices;
   auto& indices = geometry.indices;
@@ -99,7 +99,8 @@ unsigned int GpuResourceManagerOpenGL::createVertexObject(
   return vertex_object_index++;
 }
 
-unsigned int GpuResourceManagerOpenGL::createShaderProgram(MaterialType type) {
+ShaderProgramId GpuResourceManagerOpenGL::createShaderProgram(
+    MaterialType type) {
   ShaderSource shader_source = getShaderSource(type);
 
   return createShaderProgramWithSources(
@@ -107,7 +108,7 @@ unsigned int GpuResourceManagerOpenGL::createShaderProgram(MaterialType type) {
       shader_source.fragment_shader_source.c_str());
 }
 
-unsigned int GpuResourceManagerOpenGL::createShaderProgramWithSources(
+ShaderProgramId GpuResourceManagerOpenGL::createShaderProgramWithSources(
     const char* vertex_shader_source, const char* fragment_shader_source) {
   int success;
   char infoLog[512];
@@ -159,11 +160,11 @@ unsigned int GpuResourceManagerOpenGL::createShaderProgramWithSources(
 }
 
 void GpuResourceManagerOpenGL::deleteShaderProgram(MaterialType type) {
-  unsigned int shader_program = shader_programs[type];
-  glDeleteProgram(shader_program);
+  ShaderProgramId shader_program_id = shader_program_ids[type];
+  glDeleteProgram(shader_program_id);
 }
 
-void GpuResourceManagerOpenGL::deleteVertexObject(unsigned int index) {
+void GpuResourceManagerOpenGL::deleteVertexObject(VertexObjectKey index) {
   VertexObject vertex_object = vertex_objects[index];
   glDeleteVertexArrays(1, &vertex_object.vao);
   glDeleteBuffers(1, &vertex_object.vbo);

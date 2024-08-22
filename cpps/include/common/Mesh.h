@@ -28,12 +28,12 @@
 
 class Mesh {
  public:
-  Mesh(unsigned int vertex_object_index, MaterialType material_type)
+  Mesh(VertexObjectKey vertex_object_index, MaterialType material_type)
       : vertex_object_index(vertex_object_index),
         material_type(material_type) {};
 
   MaterialType material_type;
-  unsigned int vertex_object_index;
+  VertexObjectKey vertex_object_index;
 
  private:
 };

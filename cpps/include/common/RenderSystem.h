@@ -31,7 +31,7 @@
 #include "./SceneManager.h"
 
 struct RenderItem {
-  unsigned int shader_program;
+  ShaderProgramId shader_program_id;
   VertexObject vertex_object;
 };
 
@@ -45,7 +45,7 @@ class RenderSystem {
 
   virtual void updateWindowSize(int width, int height) = 0;
   virtual void runRenderLoop(std::function<void()> render_func) = 0;
-  virtual void drawTriangles(unsigned int shader_program,
+  virtual void drawTriangles(ShaderProgramId shader_program_id,
                              const VertexObject& vertex_object) = 0;
 
  private:

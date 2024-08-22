@@ -31,6 +31,12 @@
 #include "./Geometry.h"
 #include "./Material.h"
 
+// Types for key of unordered_map
+typedef unsigned int VertexObjectKey;
+
+// Id for graphic resources
+typedef unsigned int ShaderProgramId;
+
 struct VertexObject {
   unsigned int vao;
   unsigned int vbo;
@@ -40,22 +46,22 @@ struct VertexObject {
 
 class GpuResourceManager {
  public:
-  GpuResourceManager() : shader_programs() {};
+  GpuResourceManager() : shader_program_ids() {};
   virtual ~GpuResourceManager() = 0;
 
-  unsigned int getShaderProgram(MaterialType type);
-  virtual unsigned int createVertexObject(const Geometry& geometry) = 0;
-  const VertexObject& getVertexObject(unsigned int index);
+  ShaderProgramId getShaderProgram(MaterialType type);
+  virtual VertexObjectKey createVertexObject(const Geometry& geometry) = 0;
+  const VertexObject& getVertexObject(VertexObjectKey index);
 
   void cleanup();
 
  protected:
-  std::unordered_map<MaterialType, unsigned int> shader_programs;
-  std::unordered_map<unsigned int, VertexObject> vertex_objects;
+  std::unordered_map<MaterialType, ShaderProgramId> shader_program_ids;
+  std::unordered_map<VertexObjectKey, VertexObject> vertex_objects;
   unsigned int vertex_object_index = 0;
 
  private:
-  virtual unsigned int createShaderProgram(MaterialType type) = 0;
+  virtual ShaderProgramId createShaderProgram(MaterialType type) = 0;
   virtual void deleteShaderProgram(MaterialType type) = 0;
-  virtual void deleteVertexObject(unsigned int index) = 0;
+  virtual void deleteVertexObject(VertexObjectKey index) = 0;
 };

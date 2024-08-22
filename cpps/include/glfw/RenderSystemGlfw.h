@@ -42,7 +42,7 @@ class RenderSystemGlfw : public RenderSystem {
 
   void updateWindowSize(int width, int height) override;
   void runRenderLoop(std::function<void()> render_func) override;
-  void drawTriangles(unsigned int shader_program,
+  void drawTriangles(ShaderProgramId shader_program_id,
                      const VertexObject& vertex_object) override;
 
  private:

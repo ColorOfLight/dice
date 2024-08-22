@@ -28,19 +28,19 @@ GpuResourceManager::~GpuResourceManager() {
   // Empty definition
 }
 
-unsigned int GpuResourceManager::getShaderProgram(MaterialType type) {
-  if (shader_programs.find(type) == shader_programs.end()) {
-    shader_programs[type] = createShaderProgram(type);
+ShaderProgramId GpuResourceManager::getShaderProgram(MaterialType type) {
+  if (shader_program_ids.find(type) == shader_program_ids.end()) {
+    shader_program_ids[type] = createShaderProgram(type);
   }
-  return shader_programs[type];
+  return shader_program_ids[type];
 }
 
-const VertexObject& GpuResourceManager::getVertexObject(unsigned int index) {
+const VertexObject& GpuResourceManager::getVertexObject(VertexObjectKey index) {
   return vertex_objects[index];
 }
 
 void GpuResourceManager::cleanup() {
-  for (auto& [type, _] : shader_programs) {
+  for (auto& [type, _] : shader_program_ids) {
     deleteShaderProgram(type);
   }
 
