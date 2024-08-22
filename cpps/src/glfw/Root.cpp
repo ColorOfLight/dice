@@ -28,7 +28,7 @@
 #include "./RenderSystemGlfw.h"
 #include "./SceneManager.h"
 
-Root::Root(RootOptions options) {
+Root::Root(const RootOptions& options) {
   render_system = std::make_unique<RenderSystemGlfw>(options.initial_width,
                                                      options.initial_height);
   gpu_resource_manager = std::make_unique<GpuResourceManagerOpenGL>();

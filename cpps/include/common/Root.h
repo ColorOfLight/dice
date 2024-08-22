@@ -39,7 +39,7 @@ struct RootOptions {
 
 class Root {
  public:
-  Root(RootOptions options);
+  Root(const RootOptions& options);
 
   void addMesh(const Geometry& geometry, MaterialType material_type);
 
