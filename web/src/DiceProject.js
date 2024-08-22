@@ -2734,6 +2734,12 @@ function dbg(...args) {
   
     };
 
+  var _glDrawElements = (mode, count, type, indices) => {
+  
+      GLctx.drawElements(mode, count, type, indices);
+  
+    };
+
   var _glEnableVertexAttribArray = (index) => {
       GLctx.enableVertexAttribArray(index);
     };
@@ -3023,6 +3029,8 @@ var wasmImports = {
   /** @export */
   glDrawArrays: _glDrawArrays,
   /** @export */
+  glDrawElements: _glDrawElements,
+  /** @export */
   glEnableVertexAttribArray: _glEnableVertexAttribArray,
   /** @export */
   glGenBuffers: _glGenBuffers,
@@ -3048,8 +3056,6 @@ var wasmImports = {
   invoke_ii,
   /** @export */
   invoke_iii,
-  /** @export */
-  invoke_iiii,
   /** @export */
   invoke_v,
   /** @export */
@@ -3122,17 +3128,6 @@ function invoke_vi(index,a1) {
   var sp = stackSave();
   try {
     getWasmTableEntry(index)(a1);
-  } catch(e) {
-    stackRestore(sp);
-    if (!(e instanceof EmscriptenEH)) throw e;
-    _setThrew(1, 0);
-  }
-}
-
-function invoke_iiii(index,a1,a2,a3) {
-  var sp = stackSave();
-  try {
-    return getWasmTableEntry(index)(a1,a2,a3);
   } catch(e) {
     stackRestore(sp);
     if (!(e instanceof EmscriptenEH)) throw e;

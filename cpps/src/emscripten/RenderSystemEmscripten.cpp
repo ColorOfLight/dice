@@ -73,5 +73,11 @@ void RenderSystemEmscripten::drawTriangles(unsigned int shader_program,
                                            const VertexObject& vertex_object) {
   glUseProgram(shader_program);
   glBindVertexArray(vertex_object.vao);
-  glDrawArrays(GL_TRIANGLES, 0, vertex_object.vertex_count);
+
+  if (vertex_object.ebo.has_value()) {
+    glDrawElements(GL_TRIANGLES, vertex_object.vertex_count, GL_UNSIGNED_INT,
+                   (void*)0);
+  } else {
+    glDrawArrays(GL_TRIANGLES, 0, vertex_object.vertex_count);
+  }
 }
