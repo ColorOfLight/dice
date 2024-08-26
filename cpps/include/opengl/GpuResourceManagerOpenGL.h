@@ -46,7 +46,11 @@ class GpuResourceManagerOpenGL : public GpuResourceManager {
       const Camera* camera) override;
   void updateCameraUniformBuffer(const Camera* camera) override;
 
+  ModelUniformBufferId createModelUniformBuffer(const Mesh* mesh) override;
+  void updateModelUniformBuffer(const Mesh* mesh) override;
+
   void deleteShaderProgram(MaterialType type) override;
   void deleteVertexObject(const Geometry* geometry) override;
   void deleteCameraUniformBuffer(const Camera* index) override;
+  void deleteModelUniformBuffer(const Mesh* index) override;
 };

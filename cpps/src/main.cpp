@@ -37,7 +37,7 @@ int main() {
 
   std::unique_ptr<PerspectiveCamera> camera =
       std::make_unique<PerspectiveCamera>(glm::radians(90.0f), aspect_ratio);
-  camera.get()->lookAt(glm::vec3(1, 1, 1), glm::vec3(0, 0, 0));
+  camera.get()->lookAt(glm::vec3(0, 0, 3), glm::vec3(0, 0, 0));
 
   Root root({width, height, *camera});
 
@@ -46,10 +46,20 @@ int main() {
   std::unique_ptr<TextureCoordMaterial> texture_coord_material =
       std::make_unique<TextureCoordMaterial>();
 
-  std::unique_ptr<Mesh> mesh =
+  std::unique_ptr<Mesh> mesh1 =
+      std::make_unique<Mesh>(*cube_geometry, *texture_coord_material);
+  std::unique_ptr<Mesh> mesh2 =
+      std::make_unique<Mesh>(*cube_geometry, *texture_coord_material);
+  std::unique_ptr<Mesh> mesh3 =
       std::make_unique<Mesh>(*cube_geometry, *texture_coord_material);
 
-  root.scene_manager->meshes.push_back(*mesh);
+  mesh1.get()->translate(glm::vec3(-2, 0, 0));
+  mesh3.get()->translate(glm::vec3(2, 0, 0));
+  mesh3.get()->rotate(glm::radians(45.0f), glm::vec3(1, 0, 0));
+
+  root.scene_manager->meshes.push_back(*mesh1);
+  root.scene_manager->meshes.push_back(*mesh2);
+  root.scene_manager->meshes.push_back(*mesh3);
 
   root.renderScene();
 

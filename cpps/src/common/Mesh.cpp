@@ -22,28 +22,24 @@
  * SOFTWARE.
  */
 
-#pragma once
+#include "./Mesh.h"
 
-#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
-#include "./Geometry.h"
-#include "./Material.h"
-#include "./SceneObject.h"
+void Mesh::translate(const glm::vec3& translation) {
+  model_matrix = glm::translate(model_matrix, translation);
 
-class Mesh : public SceneObject {
- public:
-  Mesh(Geometry& geometry, Material& material)
-      : geometry(geometry), material(material) {}
+  need_to_update = true;
+}
 
-  const glm::mat4& getModelMatrix() const { return model_matrix; }
+void Mesh::scale(const glm::vec3& scaling) {
+  model_matrix = glm::scale(model_matrix, scaling);
 
-  void translate(const glm::vec3& translation);
-  void scale(const glm::vec3& scaling);
-  void rotate(float angle, const glm::vec3& axis);
+  need_to_update = true;
+}
 
-  std::reference_wrapper<Geometry> geometry;
-  std::reference_wrapper<Material> material;
+void Mesh::rotate(float angle, const glm::vec3& axis) {
+  model_matrix = glm::rotate(model_matrix, angle, axis);
 
- private:
-  glm::mat4 model_matrix = glm::mat4(1.0f);
-};
+  need_to_update = true;
+}

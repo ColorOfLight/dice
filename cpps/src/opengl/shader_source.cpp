@@ -33,6 +33,11 @@ std::string basic_vertex_source = R"(
         mat4 projection_matrix;
     };
 
+    layout (std140) uniform ModelBlock
+    {
+        mat4 model_matrix;
+    };
+
     layout (location = 0) in vec3 aPosition;
     layout (location = 1) in vec3 aNormal;
     layout (location = 2) in vec2 aTexCoord;
@@ -42,7 +47,7 @@ std::string basic_vertex_source = R"(
 
     void main()
     {
-        gl_Position = projection_matrix * view_matrix * vec4(aPosition, 1.0);
+        gl_Position = projection_matrix * view_matrix * model_matrix * vec4(aPosition, 1.0);
         vNormal = aNormal;
         vTexCoord = aTexCoord;
     }

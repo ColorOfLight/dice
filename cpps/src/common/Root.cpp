@@ -34,13 +34,16 @@ void Root::updateGpuResources() {
   }
 
   for (auto& mesh : scene_manager->meshes) {
+    if (mesh.need_to_update) {
+      gpu_resource_manager->upsertModelUniformBuffer(&mesh);
+      mesh.need_to_update = false;
+    }
+
     auto& geometry = mesh.geometry.get();
     if (geometry.need_to_update) {
       gpu_resource_manager->upsertVertexObject(&geometry);
       geometry.need_to_update = false;
     }
-
-    // TODO: upsert materials and meshes
   }
 }
 
@@ -48,20 +51,25 @@ void Root::renderScene() {
   auto renderItems = [this]() -> void {
     updateGpuResources();
 
-    auto& mesh = scene_manager->meshes[0];
-    auto camera_uniform_buffer_id =
-        gpu_resource_manager->getCameraUniformBufferId(
-            &scene_manager->camera.get());
-
     for (auto& mesh : scene_manager->meshes) {
-      ShaderProgramId shader_program_id =
-          gpu_resource_manager->getShaderProgram(mesh.material.get().getType());
-      auto& vertex_object =
-          gpu_resource_manager->getVertexObject(&mesh.geometry.get());
-      std::vector<unsigned int> uniform_buffer_ids = {camera_uniform_buffer_id};
+      auto camera_uniform_buffer_id =
+          gpu_resource_manager->getCameraUniformBufferId(
+              &scene_manager->camera.get());
+      auto model_uniform_buffer_id =
+          gpu_resource_manager->getModelUniformBufferId(&mesh);
 
-      render_system->drawTriangles(shader_program_id, vertex_object,
-                                   uniform_buffer_ids);
+      for (auto& mesh : scene_manager->meshes) {
+        ShaderProgramId shader_program_id =
+            gpu_resource_manager->getShaderProgram(
+                mesh.material.get().getType());
+        auto& vertex_object =
+            gpu_resource_manager->getVertexObject(&mesh.geometry.get());
+        std::vector<unsigned int> uniform_buffer_ids = {
+            camera_uniform_buffer_id, model_uniform_buffer_id};
+
+        render_system->drawTriangles(shader_program_id, vertex_object,
+                                     uniform_buffer_ids);
+      }
     }
   };
 
