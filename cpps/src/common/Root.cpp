@@ -26,21 +26,28 @@
 
 #include <vector>
 
-void Root::addMesh(const Geometry& geometry, MaterialType material_type) {
-  VertexObjectKey vertex_object_key =
-      gpu_resource_manager->createVertexObject(geometry);
+void Root::updateGpuResources() {
+  for (auto& mesh : scene_manager->meshes) {
+    auto& geometry = mesh.geometry.get();
+    if (geometry.need_to_update) {
+      gpu_resource_manager->upsertVertexObject(&geometry);
+      geometry.need_to_update = false;
+    }
 
-  scene_manager->meshes.push_back(Mesh(vertex_object_key, material_type));
+    // TODO: upsert materials and meshes
+  }
 }
 
 void Root::renderScene() {
   auto renderItems = [this]() -> void {
+    updateGpuResources();
+
     auto& mesh = scene_manager->meshes[0];
 
     ShaderProgramId shader_program_id =
-        gpu_resource_manager->getShaderProgram(mesh.material_type);
+        gpu_resource_manager->getShaderProgram(mesh.material.get().getType());
     auto& vertex_object =
-        gpu_resource_manager->getVertexObject(mesh.vertex_object_index);
+        gpu_resource_manager->getVertexObject(&mesh.geometry.get());
 
     render_system->drawTriangles(shader_program_id, vertex_object);
   };

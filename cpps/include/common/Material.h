@@ -26,12 +26,17 @@
 
 #include <memory>
 
+#include "./SceneObject.h"
+
 enum class MaterialType : size_t { BASIC = 0, NORMAL = 1, TEXTURE_COORD = 2 };
 
-class Material {
+class Material : public SceneObject {
  public:
   Material() {};
 
+  MaterialType getType() const { return type; };
+
+ protected:
   MaterialType type;
 };
 

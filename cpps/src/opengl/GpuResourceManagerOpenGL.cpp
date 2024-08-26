@@ -24,6 +24,8 @@
 
 #include "./GpuResourceManagerOpenGL.h"
 
+#include <iostream>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -31,10 +33,10 @@
 
 GpuResourceManagerOpenGL::~GpuResourceManagerOpenGL() { cleanup(); }
 
-VertexObjectKey GpuResourceManagerOpenGL::createVertexObject(
-    const Geometry& geometry) {
-  auto& vertices = geometry.vertices;
-  auto& indices = geometry.indices;
+const VertexObject& GpuResourceManagerOpenGL::createVertexObject(
+    const Geometry* geometry) {
+  auto& vertices = geometry->getVertices();
+  auto& indices = geometry->getIndices();
 
   unsigned int vertex_count =
       indices.has_value() ? indices.value().size() : vertices.size();
@@ -94,9 +96,16 @@ VertexObjectKey GpuResourceManagerOpenGL::createVertexObject(
     vertex_object.ebo_id = ebo_id;
   }
 
-  vertex_objects[vertex_object_index] = vertex_object;
+  vertex_objects[geometry] = vertex_object;
 
-  return vertex_object_index++;
+  return vertex_objects[geometry];
+}
+
+const VertexObject& GpuResourceManagerOpenGL::updateVertexObject(
+    const Geometry* geometry) {
+  // regenerate vertex object, because vertex object is not frequently updated
+  deleteVertexObject(geometry);
+  return createVertexObject(geometry);
 }
 
 ShaderProgramId GpuResourceManagerOpenGL::createShaderProgram(
@@ -164,8 +173,8 @@ void GpuResourceManagerOpenGL::deleteShaderProgram(MaterialType type) {
   glDeleteProgram(shader_program_id);
 }
 
-void GpuResourceManagerOpenGL::deleteVertexObject(VertexObjectKey index) {
-  VertexObject vertex_object = vertex_objects[index];
+void GpuResourceManagerOpenGL::deleteVertexObject(const Geometry* geometry) {
+  VertexObject vertex_object = vertex_objects[geometry];
   glDeleteVertexArrays(1, &vertex_object.vao_id);
   glDeleteBuffers(1, &vertex_object.vbo_id);
   if (vertex_object.ebo_id.has_value()) {

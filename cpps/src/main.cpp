@@ -26,14 +26,21 @@
 
 #include "./Geometry.h"
 #include "./Material.h"
+#include "./Mesh.h"
 #include "./Root.h"
 
 int main() {
   Root root({800, 600});
 
-  CubeGeometry cube_geometry(1.0f, 1.0f, 1.0f, 1, 1, 1);
+  std::unique_ptr<CubeGeometry> cube_geometry =
+      std::make_unique<CubeGeometry>();
+  std::unique_ptr<TextureCoordMaterial> texture_coord_material =
+      std::make_unique<TextureCoordMaterial>();
 
-  root.addMesh(cube_geometry, MaterialType::TEXTURE_COORD);
+  std::unique_ptr<Mesh> mesh =
+      std::make_unique<Mesh>(*cube_geometry, *texture_coord_material);
+
+  root.scene_manager->meshes.push_back(*mesh);
 
   root.renderScene();
 

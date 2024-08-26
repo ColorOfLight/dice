@@ -28,6 +28,16 @@ GpuResourceManager::~GpuResourceManager() {
   // Empty definition
 }
 
+const VertexObject& GpuResourceManager::upsertVertexObject(
+    const Geometry* geometry) {
+  if (vertex_objects.find(geometry) == vertex_objects.end()) {
+    vertex_objects[geometry] = createVertexObject(geometry);
+  } else {
+    updateVertexObject(geometry);
+  }
+  return vertex_objects[geometry];
+}
+
 ShaderProgramId GpuResourceManager::getShaderProgram(MaterialType type) {
   if (shader_program_ids.find(type) == shader_program_ids.end()) {
     shader_program_ids[type] = createShaderProgram(type);
@@ -35,8 +45,9 @@ ShaderProgramId GpuResourceManager::getShaderProgram(MaterialType type) {
   return shader_program_ids[type];
 }
 
-const VertexObject& GpuResourceManager::getVertexObject(VertexObjectKey index) {
-  return vertex_objects[index];
+const VertexObject& GpuResourceManager::getVertexObject(
+    const Geometry* geometry) {
+  return vertex_objects[geometry];
 }
 
 void GpuResourceManager::cleanup() {

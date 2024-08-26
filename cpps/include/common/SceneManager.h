@@ -34,6 +34,4 @@ class SceneManager {
   SceneManager() {};
 
   std::vector<Mesh> meshes;
-
- private:
 };

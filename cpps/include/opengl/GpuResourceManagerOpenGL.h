@@ -34,12 +34,13 @@ class GpuResourceManagerOpenGL : public GpuResourceManager {
   GpuResourceManagerOpenGL() = default;
   ~GpuResourceManagerOpenGL() override;
 
-  VertexObjectKey createVertexObject(const Geometry& geometry) override;
+  const VertexObject& createVertexObject(const Geometry* geometry) override;
+  const VertexObject& updateVertexObject(const Geometry* geometry) override;
 
  private:
   ShaderProgramId createShaderProgram(MaterialType type) override;
   ShaderProgramId createShaderProgramWithSources(
       const char* vertex_shader_source, const char* fragment_shader_source);
   void deleteShaderProgram(MaterialType type) override;
-  void deleteVertexObject(VertexObjectKey index) override;
+  void deleteVertexObject(const Geometry* geometry) override;
 };

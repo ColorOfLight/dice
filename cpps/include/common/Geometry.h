@@ -29,16 +29,24 @@
 #include <optional>
 #include <vector>
 
+#include "./SceneObject.h"
+
 struct Vertex {
   glm::vec3 position;
   glm::vec3 normal;
   glm::vec2 texture_coord;
 };
 
-class Geometry {
+class Geometry : public SceneObject {
  public:
   Geometry() {};
 
+  const std::vector<Vertex>& getVertices() const { return vertices; };
+  const std::optional<std::vector<unsigned int>>& getIndices() const {
+    return indices;
+  };
+
+ protected:
   std::vector<Vertex> vertices;
   std::optional<std::vector<unsigned int>> indices;
 };

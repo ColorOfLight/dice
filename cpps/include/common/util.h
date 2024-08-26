@@ -24,32 +24,23 @@
 
 #pragma once
 
+#include <map>
 #include <memory>
 
-#include "./Geometry.h"
-#include "./GpuResourceManager.h"
-#include "./Material.h"
-#include "./RenderSystem.h"
-#include "./SceneManager.h"
-
-struct RootOptions {
-  int initial_width;
-  int initial_height;
+struct PointerMapHash {
+  template <class T>
+  std::size_t operator()(const T* ptr) const {
+    return std::hash<const T*>()(ptr);
+  }
 };
 
-class Root {
- public:
-  Root(const RootOptions& options);
-
-  void renderScene();
-
- private:
-  void updateGpuResources();
-
- public:
-  std::unique_ptr<SceneManager> scene_manager;
-
- private:
-  std::unique_ptr<RenderSystem> render_system;
-  std::unique_ptr<GpuResourceManager> gpu_resource_manager;
+struct PointerMapEqual {
+  template <class T>
+  bool operator()(const T* lhs, const T* rhs) const {
+    return lhs == rhs;
+  }
 };
+
+template <class K, class V>
+using UnorderedPointerMap =
+    std::unordered_map<const K*, V, PointerMapHash, PointerMapEqual>;

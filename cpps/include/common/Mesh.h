@@ -24,16 +24,15 @@
 
 #pragma once
 
+#include "./Geometry.h"
 #include "./Material.h"
+#include "./SceneObject.h"
 
-class Mesh {
+class Mesh : public SceneObject {
  public:
-  Mesh(VertexObjectKey vertex_object_index, MaterialType material_type)
-      : vertex_object_index(vertex_object_index),
-        material_type(material_type) {};
+  Mesh(Geometry& geometry, Material& material)
+      : geometry(geometry), material(material) {}
 
-  MaterialType material_type;
-  VertexObjectKey vertex_object_index;
-
- private:
+  std::reference_wrapper<Geometry> geometry;
+  std::reference_wrapper<Material> material;
 };

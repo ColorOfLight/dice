@@ -30,6 +30,7 @@
 
 #include "./Geometry.h"
 #include "./Material.h"
+#include "./util.h"
 
 // Types for key of unordered_map
 typedef unsigned int VertexObjectKey;
@@ -46,22 +47,23 @@ struct VertexObject {
 
 class GpuResourceManager {
  public:
-  GpuResourceManager() : shader_program_ids() {};
+  GpuResourceManager() {};
   virtual ~GpuResourceManager() = 0;
 
   ShaderProgramId getShaderProgram(MaterialType type);
-  virtual VertexObjectKey createVertexObject(const Geometry& geometry) = 0;
-  const VertexObject& getVertexObject(VertexObjectKey index);
+  virtual const VertexObject& createVertexObject(const Geometry* geometry) = 0;
+  virtual const VertexObject& updateVertexObject(const Geometry* geometry) = 0;
+  const VertexObject& upsertVertexObject(const Geometry* geometry);
+  const VertexObject& getVertexObject(const Geometry* geometry);
 
   void cleanup();
 
  protected:
   std::unordered_map<MaterialType, ShaderProgramId> shader_program_ids;
-  std::unordered_map<VertexObjectKey, VertexObject> vertex_objects;
-  unsigned int vertex_object_index = 0;
+  UnorderedPointerMap<Geometry, VertexObject> vertex_objects;
 
  private:
   virtual ShaderProgramId createShaderProgram(MaterialType type) = 0;
   virtual void deleteShaderProgram(MaterialType type) = 0;
-  virtual void deleteVertexObject(VertexObjectKey index) = 0;
+  virtual void deleteVertexObject(const Geometry* index) = 0;
 };

@@ -24,32 +24,9 @@
 
 #pragma once
 
-#include <memory>
-
-#include "./Geometry.h"
-#include "./GpuResourceManager.h"
-#include "./Material.h"
-#include "./RenderSystem.h"
-#include "./SceneManager.h"
-
-struct RootOptions {
-  int initial_width;
-  int initial_height;
-};
-
-class Root {
+class SceneObject {
  public:
-  Root(const RootOptions& options);
+  SceneObject() {};
 
-  void renderScene();
-
- private:
-  void updateGpuResources();
-
- public:
-  std::unique_ptr<SceneManager> scene_manager;
-
- private:
-  std::unique_ptr<RenderSystem> render_system;
-  std::unique_ptr<GpuResourceManager> gpu_resource_manager;
+  bool need_to_update = true;
 };
