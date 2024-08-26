@@ -31,17 +31,11 @@
 
 class Camera : public SceneObject {
  public:
-  Camera() {
-    setView(glm::vec3(0, 0, 1), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-  }
+  Camera() { lookAt(glm::vec3(0, 0, 1), glm::vec3(0, 0, 0)); }
 
-  void setView(const glm::vec3& eye, const glm::vec3& center,
-               const glm::vec3& up) {
-    view_matrix = glm::lookAt(eye, center, up);
-    view_vector = eye - center;
-
-    need_to_update = true;
-  }
+  void lookAt(const glm::vec3& eye, const glm::vec3& center);
+  void lookAt(const glm::vec3& eye, const glm::vec3& center,
+              const glm::vec3& up);
 
   const glm::mat4& getProjectionMatrix() const { return projection_matrix; };
   const glm::mat4& getViewMatrix() const { return view_matrix; };

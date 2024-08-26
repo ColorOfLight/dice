@@ -22,36 +22,19 @@
  * SOFTWARE.
  */
 
-#include <iostream>
-
 #include "./Camera.h"
-#include "./Geometry.h"
-#include "./Material.h"
-#include "./Mesh.h"
-#include "./Root.h"
 
-int main() {
-  int width = 800;
-  int height = 600;
-  float aspect_ratio = static_cast<float>(width) / height;
+void Camera::lookAt(const glm::vec3& eye, const glm::vec3& center) {
+  view_matrix = glm::lookAt(eye, center, glm::vec3(0, 1, 0));
+  view_vector = eye - center;
 
-  std::unique_ptr<PerspectiveCamera> camera =
-      std::make_unique<PerspectiveCamera>(glm::radians(90.0f), aspect_ratio);
-  camera.get()->lookAt(glm::vec3(1, 1, 1), glm::vec3(0, 0, 0));
+  need_to_update = true;
+}
 
-  Root root({width, height, *camera});
+void Camera::lookAt(const glm::vec3& eye, const glm::vec3& center,
+                    const glm::vec3& up) {
+  view_matrix = glm::lookAt(eye, center, up);
+  view_vector = eye - center;
 
-  std::unique_ptr<CubeGeometry> cube_geometry =
-      std::make_unique<CubeGeometry>();
-  std::unique_ptr<TextureCoordMaterial> texture_coord_material =
-      std::make_unique<TextureCoordMaterial>();
-
-  std::unique_ptr<Mesh> mesh =
-      std::make_unique<Mesh>(*cube_geometry, *texture_coord_material);
-
-  root.scene_manager->meshes.push_back(*mesh);
-
-  root.renderScene();
-
-  return 0;
+  need_to_update = true;
 }
