@@ -64,7 +64,7 @@ class TriangleGeometry : public Geometry {
 
 class CubeGeometry : public Geometry {
  public:
-  CubeGeometry(float width = 1.0f, float height = 1.0f, float depth = 10.f,
+  CubeGeometry(float width = 1.0f, float height = 1.0f, float depth = 1.f,
                int width_segments = 1, int height_segments = 1,
                int depth_segments = 1);
 };
