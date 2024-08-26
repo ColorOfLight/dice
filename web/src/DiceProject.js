@@ -2904,6 +2904,10 @@ function dbg(...args) {
       }
     };
 
+  var _glGetUniformBlockIndex = (program, uniformBlockName) => {
+      return GLctx.getUniformBlockIndex(GL.programs[program], UTF8ToString(uniformBlockName));
+    };
+
   var _glLinkProgram = (program) => {
       program = GL.programs[program];
       GLctx.linkProgram(program);
@@ -2917,6 +2921,12 @@ function dbg(...args) {
       var source = GL.getSource(shader, count, string, length);
   
       GLctx.shaderSource(GL.shaders[shader], source);
+    };
+
+  var _glUniformBlockBinding = (program, uniformBlockIndex, uniformBlockBinding) => {
+      program = GL.programs[program];
+  
+      GLctx.uniformBlockBinding(program, uniformBlockIndex, uniformBlockBinding);
     };
 
   var _glUseProgram = (program) => {
@@ -3061,9 +3071,13 @@ var wasmImports = {
   /** @export */
   glGetShaderiv: _glGetShaderiv,
   /** @export */
+  glGetUniformBlockIndex: _glGetUniformBlockIndex,
+  /** @export */
   glLinkProgram: _glLinkProgram,
   /** @export */
   glShaderSource: _glShaderSource,
+  /** @export */
+  glUniformBlockBinding: _glUniformBlockBinding,
   /** @export */
   glUseProgram: _glUseProgram,
   /** @export */
