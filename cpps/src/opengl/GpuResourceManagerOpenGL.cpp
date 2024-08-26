@@ -34,12 +34,31 @@
 
 GpuResourceManagerOpenGL::~GpuResourceManagerOpenGL() { cleanup(); }
 
-const VertexObject& GpuResourceManagerOpenGL::createVertexObject(
+VertexObject GpuResourceManagerOpenGL::createVertexObject(
     const Geometry* geometry) {
+  GLuint vao_id, vbo_id, ebo_id;
+
+  glGenVertexArrays(1, &vao_id);
+  glGenBuffers(1, &vbo_id);
+  glGenBuffers(1, &ebo_id);
+
+  unsigned int vertex_count = geometry->getIndices().size();
+
+  VertexObject vertex_object = {vao_id, vbo_id, ebo_id, vertex_count};
+
+  return vertex_object;
+}
+
+void GpuResourceManagerOpenGL::updateVertexObject(const Geometry* geometry) {
+  auto& vertex_object = vertex_objects[geometry];
+
   auto& vertices = geometry->getVertices();
   auto& indices = geometry->getIndices();
 
-  unsigned int vertex_count = indices.size();
+  GLuint vao_id = vertex_object.vao_id;
+  GLuint vbo_id = vertex_object.vbo_id;
+  GLuint ebo_id = vertex_object.ebo_id;
+  unsigned int vertex_count = vertex_object.vertex_count;
 
   std::vector<float> raw_vertices = std::vector<float>(vertices.size() * 8);
   for (int i = 0; i < vertices.size(); i++) {
@@ -53,10 +72,6 @@ const VertexObject& GpuResourceManagerOpenGL::createVertexObject(
     raw_vertices[i * 8 + 7] = vertices[i].texture_coord.y;
   }
 
-  GLuint vao_id, vbo_id, ebo_id;
-  glGenVertexArrays(1, &vao_id);
-  glGenBuffers(1, &vbo_id);
-
   // Bind the Vertex Array Object first, then bind and set vertex buffer(s), and
   // then configure vertex attributes(s).
   glBindVertexArray(vao_id);
@@ -65,7 +80,6 @@ const VertexObject& GpuResourceManagerOpenGL::createVertexObject(
   glBufferData(GL_ARRAY_BUFFER, raw_vertices.size() * 4, raw_vertices.data(),
                GL_STATIC_DRAW);
 
-  glGenBuffers(1, &ebo_id);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_id);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * 4, indices.data(),
                GL_STATIC_DRAW);
@@ -84,24 +98,10 @@ const VertexObject& GpuResourceManagerOpenGL::createVertexObject(
                         (void*)(4 * (3 + 3)));
   glEnableVertexAttribArray(2);
 
-  // Unbind VBO and VAO for safety
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  // Unbind buffers safely
   glBindVertexArray(0);
-
-  VertexObject vertex_object = {vao_id, vbo_id, vertex_count};
-
-  vertex_object.ebo_id = ebo_id;
-
-  vertex_objects[geometry] = vertex_object;
-
-  return vertex_objects[geometry];
-}
-
-const VertexObject& GpuResourceManagerOpenGL::updateVertexObject(
-    const Geometry* geometry) {
-  // regenerate vertex object, because vertex object is not frequently updated
-  deleteVertexObject(geometry);
-  return createVertexObject(geometry);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 ShaderProgramId GpuResourceManagerOpenGL::createShaderProgram(

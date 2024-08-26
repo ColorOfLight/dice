@@ -43,8 +43,8 @@ typedef unsigned int CameraUniformBufferId;
 struct VertexObject {
   unsigned int vao_id;
   unsigned int vbo_id;
-  unsigned int vertex_count;
   unsigned int ebo_id;
+  unsigned int vertex_count;
 };
 
 class GpuResourceManager {
@@ -54,9 +54,9 @@ class GpuResourceManager {
 
   ShaderProgramId getShaderProgram(MaterialType type);
 
-  virtual const VertexObject& createVertexObject(const Geometry* geometry) = 0;
-  virtual const VertexObject& updateVertexObject(const Geometry* geometry) = 0;
-  const VertexObject& upsertVertexObject(const Geometry* geometry);
+  virtual VertexObject createVertexObject(const Geometry* geometry) = 0;
+  virtual void updateVertexObject(const Geometry* geometry) = 0;
+  void upsertVertexObject(const Geometry* geometry);
   const VertexObject& getVertexObject(const Geometry* geometry);
 
   virtual const CameraUniformBufferId createCameraUniformBuffer(

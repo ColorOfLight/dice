@@ -28,14 +28,11 @@ GpuResourceManager::~GpuResourceManager() {
   // Empty definition
 }
 
-const VertexObject& GpuResourceManager::upsertVertexObject(
-    const Geometry* geometry) {
+void GpuResourceManager::upsertVertexObject(const Geometry* geometry) {
   if (vertex_objects.find(geometry) == vertex_objects.end()) {
     vertex_objects[geometry] = createVertexObject(geometry);
-  } else {
-    updateVertexObject(geometry);
   }
-  return vertex_objects[geometry];
+  updateVertexObject(geometry);
 }
 
 const CameraUniformBufferId GpuResourceManager::upsertCameraUniformBuffer(

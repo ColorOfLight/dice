@@ -34,8 +34,8 @@ class GpuResourceManagerOpenGL : public GpuResourceManager {
   GpuResourceManagerOpenGL() = default;
   ~GpuResourceManagerOpenGL() override;
 
-  const VertexObject& createVertexObject(const Geometry* geometry) override;
-  const VertexObject& updateVertexObject(const Geometry* geometry) override;
+  VertexObject createVertexObject(const Geometry* geometry) override;
+  void updateVertexObject(const Geometry* geometry) override;
 
   const CameraUniformBufferId createCameraUniformBuffer(
       const Camera* camera) override;
