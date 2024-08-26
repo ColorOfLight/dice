@@ -69,10 +69,15 @@ void RenderSystemEmscripten::runRenderLoop(std::function<void()> render_func) {
   emscripten_set_main_loop(func_ptr, 0, 1);
 }
 
-void RenderSystemEmscripten::drawTriangles(ShaderProgramId shader_program_id,
-                                           const VertexObject& vertex_object) {
+void RenderSystemEmscripten::drawTriangles(
+    ShaderProgramId shader_program_id, const VertexObject& vertex_object,
+    const std::vector<unsigned int> uniform_buffer_ids) {
   glUseProgram(shader_program_id);
   glBindVertexArray(vertex_object.vao_id);
+
+  for (int i = 0; i < uniform_buffer_ids.size(); i++) {
+    glBindBufferBase(GL_UNIFORM_BUFFER, i, uniform_buffer_ids[i]);
+  }
 
   if (vertex_object.ebo_id.has_value()) {
     glDrawElements(GL_TRIANGLES, vertex_object.vertex_count, GL_UNSIGNED_INT,

@@ -2626,6 +2626,10 @@ function dbg(...args) {
       GLctx.bindBuffer(target, GL.buffers[buffer]);
     };
 
+  var _glBindBufferBase = (target, index, buffer) => {
+      GLctx.bindBufferBase(target, index, GL.buffers[buffer]);
+    };
+
   var _glBindVertexArray = (vao) => {
       GLctx.bindVertexArray(GL.vaos[vao]);
     };
@@ -2649,6 +2653,14 @@ function dbg(...args) {
       // randomly mixing both uses in calling code, to avoid any potential JS
       // engine JIT issues.
       GLctx.bufferData(target, data ? HEAPU8.subarray(data, data+size) : size, usage);
+    };
+
+  var _glBufferSubData = (target, offset, size, data) => {
+      if (true) {
+        size && GLctx.bufferSubData(target, offset, HEAPU8, data, size);
+        return;
+      }
+      GLctx.bufferSubData(target, offset, HEAPU8.subarray(data, data+size));
     };
 
   var _glCompileShader = (shader) => {
@@ -3009,9 +3021,13 @@ var wasmImports = {
   /** @export */
   glBindBuffer: _glBindBuffer,
   /** @export */
+  glBindBufferBase: _glBindBufferBase,
+  /** @export */
   glBindVertexArray: _glBindVertexArray,
   /** @export */
   glBufferData: _glBufferData,
+  /** @export */
+  glBufferSubData: _glBufferSubData,
   /** @export */
   glCompileShader: _glCompileShader,
   /** @export */
