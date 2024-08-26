@@ -53,17 +53,11 @@ class GpuResourceManager {
   virtual ~GpuResourceManager() = 0;
 
   ShaderProgramId getShaderProgram(MaterialType type);
-
-  virtual VertexObject createVertexObject(const Geometry* geometry) = 0;
-  virtual void updateVertexObject(const Geometry* geometry) = 0;
-  void upsertVertexObject(const Geometry* geometry);
   const VertexObject& getVertexObject(const Geometry* geometry);
-
-  virtual CameraUniformBufferId createCameraUniformBuffer(
-      const Camera* camera) = 0;
-  virtual void updateCameraUniformBuffer(const Camera* camera) = 0;
-  void upsertCameraUniformBuffer(const Camera* camera);
   const CameraUniformBufferId getCameraUniformBufferId(const Camera* camera);
+
+  void upsertVertexObject(const Geometry* geometry);
+  void upsertCameraUniformBuffer(const Camera* camera);
 
   void cleanup();
 
@@ -74,6 +68,12 @@ class GpuResourceManager {
 
  private:
   virtual ShaderProgramId createShaderProgram(MaterialType type) = 0;
+  virtual VertexObject createVertexObject(const Geometry* geometry) = 0;
+  virtual void updateVertexObject(const Geometry* geometry) = 0;
+  virtual CameraUniformBufferId createCameraUniformBuffer(
+      const Camera* camera) = 0;
+  virtual void updateCameraUniformBuffer(const Camera* camera) = 0;
+
   virtual void deleteShaderProgram(MaterialType type) = 0;
   virtual void deleteVertexObject(const Geometry* index) = 0;
   virtual void deleteCameraUniformBuffer(const Camera* index) = 0;
