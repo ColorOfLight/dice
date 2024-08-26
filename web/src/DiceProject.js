@@ -2742,12 +2742,6 @@ function dbg(...args) {
       }
     };
 
-  var _glDrawArrays = (mode, first, count) => {
-  
-      GLctx.drawArrays(mode, first, count);
-  
-    };
-
   var _glDrawElements = (mode, count, type, indices) => {
   
       GLctx.drawElements(mode, count, type, indices);
@@ -3048,8 +3042,6 @@ var wasmImports = {
   glDeleteShader: _glDeleteShader,
   /** @export */
   glDeleteVertexArrays: _glDeleteVertexArrays,
-  /** @export */
-  glDrawArrays: _glDrawArrays,
   /** @export */
   glDrawElements: _glDrawElements,
   /** @export */

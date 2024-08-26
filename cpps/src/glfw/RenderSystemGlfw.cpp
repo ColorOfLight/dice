@@ -93,10 +93,5 @@ void RenderSystemGlfw::drawTriangles(
       glGetUniformBlockIndex(shader_program_id, "CameraBlock");
   glUniformBlockBinding(shader_program_id, cameraBlockIndex, 0);
 
-  if (vertex_object.ebo_id.has_value()) {
-    glDrawElements(GL_TRIANGLES, vertex_object.vertex_count, GL_UNSIGNED_INT,
-                   0);
-  } else {
-    glDrawArrays(GL_TRIANGLES, 0, vertex_object.vertex_count);
-  }
+  glDrawElements(GL_TRIANGLES, vertex_object.vertex_count, GL_UNSIGNED_INT, 0);
 }

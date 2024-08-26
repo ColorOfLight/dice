@@ -44,7 +44,7 @@ struct VertexObject {
   unsigned int vao_id;
   unsigned int vbo_id;
   unsigned int vertex_count;
-  std::optional<unsigned int> ebo_id;
+  unsigned int ebo_id;
 };
 
 class GpuResourceManager {

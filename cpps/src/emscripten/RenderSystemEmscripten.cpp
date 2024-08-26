@@ -85,10 +85,6 @@ void RenderSystemEmscripten::drawTriangles(
     glBindBufferBase(GL_UNIFORM_BUFFER, i, uniform_buffer_ids[i]);
   }
 
-  if (vertex_object.ebo_id.has_value()) {
-    glDrawElements(GL_TRIANGLES, vertex_object.vertex_count, GL_UNSIGNED_INT,
-                   (void*)0);
-  } else {
-    glDrawArrays(GL_TRIANGLES, 0, vertex_object.vertex_count);
-  }
+  glDrawElements(GL_TRIANGLES, vertex_object.vertex_count, GL_UNSIGNED_INT,
+                 (void*)0);
 }

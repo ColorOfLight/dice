@@ -39,8 +39,7 @@ const VertexObject& GpuResourceManagerOpenGL::createVertexObject(
   auto& vertices = geometry->getVertices();
   auto& indices = geometry->getIndices();
 
-  unsigned int vertex_count =
-      indices.has_value() ? indices.value().size() : vertices.size();
+  unsigned int vertex_count = indices.size();
 
   std::vector<float> raw_vertices = std::vector<float>(vertices.size() * 8);
   for (int i = 0; i < vertices.size(); i++) {
@@ -66,12 +65,10 @@ const VertexObject& GpuResourceManagerOpenGL::createVertexObject(
   glBufferData(GL_ARRAY_BUFFER, raw_vertices.size() * 4, raw_vertices.data(),
                GL_STATIC_DRAW);
 
-  if (indices.has_value()) {
-    glGenBuffers(1, &ebo_id);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_id);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.value().size() * 4,
-                 indices.value().data(), GL_STATIC_DRAW);
-  }
+  glGenBuffers(1, &ebo_id);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo_id);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * 4, indices.data(),
+               GL_STATIC_DRAW);
 
   // Position attribute
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
@@ -93,9 +90,7 @@ const VertexObject& GpuResourceManagerOpenGL::createVertexObject(
 
   VertexObject vertex_object = {vao_id, vbo_id, vertex_count};
 
-  if (indices.has_value()) {
-    vertex_object.ebo_id = ebo_id;
-  }
+  vertex_object.ebo_id = ebo_id;
 
   vertex_objects[geometry] = vertex_object;
 
@@ -211,9 +206,7 @@ void GpuResourceManagerOpenGL::deleteVertexObject(const Geometry* geometry) {
   VertexObject vertex_object = vertex_objects[geometry];
   glDeleteVertexArrays(1, &vertex_object.vao_id);
   glDeleteBuffers(1, &vertex_object.vbo_id);
-  if (vertex_object.ebo_id.has_value()) {
-    glDeleteBuffers(1, &vertex_object.ebo_id.value());
-  }
+  glDeleteBuffers(1, &vertex_object.ebo_id);
 }
 
 void GpuResourceManagerOpenGL::deleteCameraUniformBuffers(

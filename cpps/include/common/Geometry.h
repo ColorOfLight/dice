@@ -26,7 +26,6 @@
 
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
-#include <optional>
 #include <vector>
 
 #include "./SceneObject.h"
@@ -42,13 +41,11 @@ class Geometry : public SceneObject {
   Geometry() {};
 
   const std::vector<Vertex>& getVertices() const { return vertices; };
-  const std::optional<std::vector<unsigned int>>& getIndices() const {
-    return indices;
-  };
+  const std::vector<unsigned int>& getIndices() const { return indices; };
 
  protected:
   std::vector<Vertex> vertices;
-  std::optional<std::vector<unsigned int>> indices;
+  std::vector<unsigned int> indices;
 };
 
 class TriangleGeometry : public Geometry {
@@ -59,6 +56,7 @@ class TriangleGeometry : public Geometry {
         {{0.5f, -0.5f, 0.0f}, {0.0f, 0.1f, 0.0f}, {1.0f, 0.0f}},
         {{-0.5f, -0.5f, 0.0f}, {0.0f, 0.1f, 0.0f}, {0.0f, 0.0f}},
     };
+    indices = {0, 1, 2};
   };
 };
 
