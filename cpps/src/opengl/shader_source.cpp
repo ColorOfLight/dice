@@ -33,7 +33,7 @@ std::string basic_vertex_source = R"(
         mat4 projection_matrix;
     };
 
-    layout (location = 0) in vec3 aPos;
+    layout (location = 0) in vec3 aPosition;
     layout (location = 1) in vec3 aNormal;
     layout (location = 2) in vec2 aTexCoord;
 
@@ -42,7 +42,7 @@ std::string basic_vertex_source = R"(
 
     void main()
     {
-        gl_Position = projection_matrix * view_matrix * vec4(aPos, 1.0);
+        gl_Position = projection_matrix * view_matrix * vec4(aPosition, 1.0);
         vNormal = aNormal;
         vTexCoord = aTexCoord;
     }
@@ -64,9 +64,9 @@ std::string normal_fragment_source = R"(
 
     void main()
     {
-        vec3 normalizedNormal = normalize(vNormal);
-        vec3 positiveNormal = (normalizedNormal + 1.0) * 0.5;
-        FragColor = vec4(positiveNormal, 1.0);
+        vec3 normalized_normal = normalize(vNormal);
+        vec3 positive_normal = (normalized_normal + 1.0) * 0.5;
+        FragColor = vec4(positive_normal, 1.0);
     }
 )";
 
