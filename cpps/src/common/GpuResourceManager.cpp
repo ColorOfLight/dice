@@ -68,4 +68,8 @@ void GpuResourceManager::cleanup() {
   for (auto& [index, _] : vertex_objects) {
     deleteVertexObject(index);
   }
+
+  for (auto& [index, _] : camera_uniform_buffer_ids) {
+    deleteCameraUniformBuffer(index);
+  }
 }

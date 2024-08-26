@@ -197,8 +197,7 @@ void GpuResourceManagerOpenGL::deleteVertexObject(const Geometry* geometry) {
   glDeleteBuffers(1, &vertex_object.ebo_id);
 }
 
-void GpuResourceManagerOpenGL::deleteCameraUniformBuffers(
-    const Camera* camera) {
+void GpuResourceManagerOpenGL::deleteCameraUniformBuffer(const Camera* camera) {
   CameraUniformBufferId camera_uniform_buffer_id =
       camera_uniform_buffer_ids[camera];
   glDeleteBuffers(1, &camera_uniform_buffer_id);

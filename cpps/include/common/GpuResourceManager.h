@@ -76,5 +76,5 @@ class GpuResourceManager {
   virtual ShaderProgramId createShaderProgram(MaterialType type) = 0;
   virtual void deleteShaderProgram(MaterialType type) = 0;
   virtual void deleteVertexObject(const Geometry* index) = 0;
-  virtual void deleteCameraUniformBuffers(const Camera* index) = 0;
+  virtual void deleteCameraUniformBuffer(const Camera* index) = 0;
 };
