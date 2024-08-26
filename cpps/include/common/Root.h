@@ -26,6 +26,7 @@
 
 #include <memory>
 
+#include "./Camera.h"
 #include "./Geometry.h"
 #include "./GpuResourceManager.h"
 #include "./Material.h"
@@ -35,6 +36,7 @@
 struct RootOptions {
   int initial_width;
   int initial_height;
+  std::reference_wrapper<Camera> camera;
 };
 
 class Root {

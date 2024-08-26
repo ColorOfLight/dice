@@ -26,12 +26,14 @@
 
 #include <vector>
 
+#include "./Camera.h"
 #include "./Geometry.h"
 #include "./Mesh.h"
 
 class SceneManager {
  public:
-  SceneManager() {};
+  SceneManager(std::reference_wrapper<Camera> camera) : camera(camera) {};
 
   std::vector<Mesh> meshes;
+  std::reference_wrapper<Camera> camera;
 };

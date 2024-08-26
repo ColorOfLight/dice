@@ -24,6 +24,7 @@
 
 #include "./GpuResourceManagerOpenGL.h"
 
+#include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 #include <memory>
 #include <string>
@@ -168,6 +169,39 @@ ShaderProgramId GpuResourceManagerOpenGL::createShaderProgramWithSources(
   return shaderProgram;
 }
 
+const CameraUniformBufferId GpuResourceManagerOpenGL::createCameraUniformBuffer(
+    const Camera* camera) {
+  GLuint camera_uniform_buffer_id;
+  glGenBuffers(1, &camera_uniform_buffer_id);
+  glBindBuffer(GL_UNIFORM_BUFFER, camera_uniform_buffer_id);
+  glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), NULL, GL_STATIC_DRAW);
+
+  // Upload the view and projection matrices to the UBO
+  glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4),
+                  glm::value_ptr(camera->getViewMatrix()));
+  glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4),
+                  glm::value_ptr(camera->getProjectionMatrix()));
+
+  // Unbind the buffer (optional)
+  glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+  return camera_uniform_buffer_id;
+}
+
+const CameraUniformBufferId GpuResourceManagerOpenGL::updateCameraUniformBuffer(
+    const Camera* camera) {
+  CameraUniformBufferId camera_uniform_buffer_id =
+      camera_uniform_buffer_ids[camera];
+  glBindBuffer(GL_UNIFORM_BUFFER, camera_uniform_buffer_id);
+  glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4),
+                  glm::value_ptr(camera->getViewMatrix()));
+  glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4),
+                  glm::value_ptr(camera->getProjectionMatrix()));
+  glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+  return camera_uniform_buffer_id;
+}
+
 void GpuResourceManagerOpenGL::deleteShaderProgram(MaterialType type) {
   ShaderProgramId shader_program_id = shader_program_ids[type];
   glDeleteProgram(shader_program_id);
@@ -180,4 +214,11 @@ void GpuResourceManagerOpenGL::deleteVertexObject(const Geometry* geometry) {
   if (vertex_object.ebo_id.has_value()) {
     glDeleteBuffers(1, &vertex_object.ebo_id.value());
   }
+}
+
+void GpuResourceManagerOpenGL::deleteCameraUniformBuffers(
+    const Camera* camera) {
+  CameraUniformBufferId camera_uniform_buffer_id =
+      camera_uniform_buffer_ids[camera];
+  glDeleteBuffers(1, &camera_uniform_buffer_id);
 }

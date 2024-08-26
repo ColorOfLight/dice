@@ -24,13 +24,21 @@
 
 #include <iostream>
 
+#include "./Camera.h"
 #include "./Geometry.h"
 #include "./Material.h"
 #include "./Mesh.h"
 #include "./Root.h"
 
 int main() {
-  Root root({800, 600});
+  int width = 800;
+  int height = 600;
+  float aspect_ratio = static_cast<float>(width) / height;
+
+  std::unique_ptr<PerspectiveCamera> camera =
+      std::make_unique<PerspectiveCamera>(glm::radians(120.0f), aspect_ratio);
+
+  Root root({width, height, *camera});
 
   std::unique_ptr<CubeGeometry> cube_geometry =
       std::make_unique<CubeGeometry>();

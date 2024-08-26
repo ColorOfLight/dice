@@ -45,8 +45,9 @@ class RenderSystem {
 
   virtual void updateWindowSize(int width, int height) = 0;
   virtual void runRenderLoop(std::function<void()> render_func) = 0;
-  virtual void drawTriangles(ShaderProgramId shader_program_id,
-                             const VertexObject& vertex_object) = 0;
+  virtual void drawTriangles(
+      ShaderProgramId shader_program_id, const VertexObject& vertex_object,
+      const std::vector<unsigned int> uniform_buffer_ids) = 0;
 
  private:
 };

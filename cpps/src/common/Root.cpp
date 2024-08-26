@@ -27,6 +27,12 @@
 #include <vector>
 
 void Root::updateGpuResources() {
+  auto& camera = scene_manager->camera.get();
+  if (camera.need_to_update) {
+    gpu_resource_manager->upsertCameraUniformBuffer(&camera);
+    camera.need_to_update = false;
+  }
+
   for (auto& mesh : scene_manager->meshes) {
     auto& geometry = mesh.geometry.get();
     if (geometry.need_to_update) {
@@ -43,13 +49,20 @@ void Root::renderScene() {
     updateGpuResources();
 
     auto& mesh = scene_manager->meshes[0];
+    auto camera_uniform_buffer_id =
+        gpu_resource_manager->getCameraUniformBufferId(
+            &scene_manager->camera.get());
 
-    ShaderProgramId shader_program_id =
-        gpu_resource_manager->getShaderProgram(mesh.material.get().getType());
-    auto& vertex_object =
-        gpu_resource_manager->getVertexObject(&mesh.geometry.get());
+    for (auto& mesh : scene_manager->meshes) {
+      ShaderProgramId shader_program_id =
+          gpu_resource_manager->getShaderProgram(mesh.material.get().getType());
+      auto& vertex_object =
+          gpu_resource_manager->getVertexObject(&mesh.geometry.get());
+      std::vector<unsigned int> uniform_buffer_ids = {camera_uniform_buffer_id};
 
-    render_system->drawTriangles(shader_program_id, vertex_object);
+      render_system->drawTriangles(shader_program_id, vertex_object,
+                                   uniform_buffer_ids);
+    }
   };
 
   render_system->runRenderLoop(renderItems);

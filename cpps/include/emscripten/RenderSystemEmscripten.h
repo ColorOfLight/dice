@@ -41,8 +41,9 @@ class RenderSystemEmscripten : public RenderSystem {
 
   void updateWindowSize(int width, int height) override;
   void runRenderLoop(std::function<void()> render_func) override;
-  void drawTriangles(ShaderProgramId shader_program_id,
-                     const VertexObject& vertex_object) override;
+  void drawTriangles(
+      ShaderProgramId shader_program_id, const VertexObject& vertex_object,
+      const std::vector<unsigned int> uniform_buffer_ids) override;
 
  private:
 };

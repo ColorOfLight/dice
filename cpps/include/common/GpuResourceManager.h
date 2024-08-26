@@ -28,6 +28,7 @@
 #include <memory>
 #include <vector>
 
+#include "./Camera.h"
 #include "./Geometry.h"
 #include "./Material.h"
 #include "./util.h"
@@ -37,6 +38,7 @@ typedef unsigned int VertexObjectKey;
 
 // Id for graphic resources
 typedef unsigned int ShaderProgramId;
+typedef unsigned int CameraUniformBufferId;
 
 struct VertexObject {
   unsigned int vao_id;
@@ -51,19 +53,29 @@ class GpuResourceManager {
   virtual ~GpuResourceManager() = 0;
 
   ShaderProgramId getShaderProgram(MaterialType type);
+
   virtual const VertexObject& createVertexObject(const Geometry* geometry) = 0;
   virtual const VertexObject& updateVertexObject(const Geometry* geometry) = 0;
   const VertexObject& upsertVertexObject(const Geometry* geometry);
   const VertexObject& getVertexObject(const Geometry* geometry);
+
+  virtual const CameraUniformBufferId createCameraUniformBuffer(
+      const Camera* camera) = 0;
+  virtual const CameraUniformBufferId updateCameraUniformBuffer(
+      const Camera* camera) = 0;
+  const CameraUniformBufferId upsertCameraUniformBuffer(const Camera* camera);
+  const CameraUniformBufferId getCameraUniformBufferId(const Camera* camera);
 
   void cleanup();
 
  protected:
   std::unordered_map<MaterialType, ShaderProgramId> shader_program_ids;
   UnorderedPointerMap<Geometry, VertexObject> vertex_objects;
+  UnorderedPointerMap<Camera, CameraUniformBufferId> camera_uniform_buffer_ids;
 
  private:
   virtual ShaderProgramId createShaderProgram(MaterialType type) = 0;
   virtual void deleteShaderProgram(MaterialType type) = 0;
   virtual void deleteVertexObject(const Geometry* index) = 0;
+  virtual void deleteCameraUniformBuffers(const Camera* index) = 0;
 };

@@ -38,6 +38,17 @@ const VertexObject& GpuResourceManager::upsertVertexObject(
   return vertex_objects[geometry];
 }
 
+const CameraUniformBufferId GpuResourceManager::upsertCameraUniformBuffer(
+    const Camera* camera) {
+  if (camera_uniform_buffer_ids.find(camera) ==
+      camera_uniform_buffer_ids.end()) {
+    camera_uniform_buffer_ids[camera] = createCameraUniformBuffer(camera);
+  } else {
+    updateCameraUniformBuffer(camera);
+  }
+  return camera_uniform_buffer_ids[camera];
+}
+
 ShaderProgramId GpuResourceManager::getShaderProgram(MaterialType type) {
   if (shader_program_ids.find(type) == shader_program_ids.end()) {
     shader_program_ids[type] = createShaderProgram(type);
@@ -48,6 +59,11 @@ ShaderProgramId GpuResourceManager::getShaderProgram(MaterialType type) {
 const VertexObject& GpuResourceManager::getVertexObject(
     const Geometry* geometry) {
   return vertex_objects[geometry];
+}
+
+const CameraUniformBufferId GpuResourceManager::getCameraUniformBufferId(
+    const Camera* camera) {
+  return camera_uniform_buffer_ids[camera];
 }
 
 void GpuResourceManager::cleanup() {

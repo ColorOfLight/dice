@@ -27,6 +27,12 @@
 #include "./opengl.h"
 
 std::string basic_vertex_source = R"(
+    layout (std140) uniform CameraBlock
+    {
+        mat4 view_matrix;
+        mat4 projection_matrix;
+    };
+
     layout (location = 0) in vec3 aPos;
     layout (location = 1) in vec3 aNormal;
     layout (location = 2) in vec2 aTexCoord;
@@ -36,7 +42,7 @@ std::string basic_vertex_source = R"(
 
     void main()
     {
-        gl_Position = vec4(aPos, 1.0);
+        gl_Position = projection_matrix * view_matrix * vec4(aPos, 1.0);
         vNormal = aNormal;
         vTexCoord = aTexCoord;
     }

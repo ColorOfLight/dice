@@ -32,5 +32,5 @@ Root::Root(const RootOptions& options) {
   render_system = std::make_unique<RenderSystemEmscripten>(
       options.initial_width, options.initial_height);
   gpu_resource_manager = std::make_unique<GpuResourceManagerOpenGL>();
-  scene_manager = std::make_unique<SceneManager>();
+  scene_manager = std::make_unique<SceneManager>(options.camera);
 }
