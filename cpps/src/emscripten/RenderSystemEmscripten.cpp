@@ -27,16 +27,19 @@
 // Store the std::function in a static/global variable
 static std::function<void()> stored_function;
 
-extern "C" void function_wrapper() {
+extern "C" void renderFrame() {
+  // Clear the color and depth buffers
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
   if (stored_function) {
     stored_function();  // Call the stored std::function
   }
 }
 
 // Convert std::function<void()> to void(*)()
-void* convert_function(const std::function<void()>& func) {
+void* getRenderFrame(const std::function<void()>& func) {
   stored_function = func;
-  return (void*)function_wrapper;
+  return (void*)renderFrame;
 }
 
 RenderSystemEmscripten::RenderSystemEmscripten(int width, int height) {
@@ -55,6 +58,9 @@ RenderSystemEmscripten::RenderSystemEmscripten(int width, int height) {
   }
 
   emscripten_webgl_make_context_current(context);
+
+  // Enable depth testing (Z-buffer)
+  glEnable(GL_DEPTH_TEST);
 }
 
 RenderSystemEmscripten::~RenderSystemEmscripten() {}
@@ -64,9 +70,9 @@ void RenderSystemEmscripten::updateWindowSize(int width, int height) {
 }
 
 void RenderSystemEmscripten::runRenderLoop(std::function<void()> render_func) {
-  void (*func_ptr)() = (void (*)())convert_function(render_func);
+  void (*render_frame)() = (void (*)())getRenderFrame(render_func);
 
-  emscripten_set_main_loop(func_ptr, 0, 1);
+  emscripten_set_main_loop(render_frame, 0, 1);
 }
 
 void RenderSystemEmscripten::drawTriangles(

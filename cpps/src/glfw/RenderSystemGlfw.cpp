@@ -48,6 +48,8 @@ RenderSystemGlfw::RenderSystemGlfw(int width, int height) {
   if (!gladLoadGL(glfwGetProcAddress)) {
     throw std::runtime_error("Failed to initialize GLAD!");
   }
+
+  glEnable(GL_DEPTH_TEST);
 }
 
 RenderSystemGlfw::~RenderSystemGlfw() {
@@ -67,7 +69,7 @@ void RenderSystemGlfw::runRenderLoop(std::function<void()> render_func) {
       glfwSetWindowShouldClose(window, true);
 
     // Rendering commands here
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     render_func();
 

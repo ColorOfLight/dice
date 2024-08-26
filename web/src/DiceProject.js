@@ -2663,6 +2663,8 @@ function dbg(...args) {
       GLctx.bufferSubData(target, offset, HEAPU8.subarray(data, data+size));
     };
 
+  var _glClear = (x0) => GLctx.clear(x0);
+
   var _glCompileShader = (shader) => {
       GLctx.compileShader(GL.shaders[shader]);
     };
@@ -2751,6 +2753,8 @@ function dbg(...args) {
       GLctx.drawElements(mode, count, type, indices);
   
     };
+
+  var _glEnable = (x0) => GLctx.enable(x0);
 
   var _glEnableVertexAttribArray = (index) => {
       GLctx.enableVertexAttribArray(index);
@@ -3029,6 +3033,8 @@ var wasmImports = {
   /** @export */
   glBufferSubData: _glBufferSubData,
   /** @export */
+  glClear: _glClear,
+  /** @export */
   glCompileShader: _glCompileShader,
   /** @export */
   glCreateProgram: _glCreateProgram,
@@ -3046,6 +3052,8 @@ var wasmImports = {
   glDrawArrays: _glDrawArrays,
   /** @export */
   glDrawElements: _glDrawElements,
+  /** @export */
+  glEnable: _glEnable,
   /** @export */
   glEnableVertexAttribArray: _glEnableVertexAttribArray,
   /** @export */
