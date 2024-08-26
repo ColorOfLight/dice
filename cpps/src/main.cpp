@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 
-#include <iostream>
-
 #include "./Camera.h"
 #include "./Geometry.h"
 #include "./Material.h"
