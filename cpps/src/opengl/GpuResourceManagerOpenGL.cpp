@@ -164,37 +164,25 @@ ShaderProgramId GpuResourceManagerOpenGL::createShaderProgramWithSources(
   return shaderProgram;
 }
 
-const CameraUniformBufferId GpuResourceManagerOpenGL::createCameraUniformBuffer(
+CameraUniformBufferId GpuResourceManagerOpenGL::createCameraUniformBuffer(
     const Camera* camera) {
   GLuint camera_uniform_buffer_id;
   glGenBuffers(1, &camera_uniform_buffer_id);
-  glBindBuffer(GL_UNIFORM_BUFFER, camera_uniform_buffer_id);
-  glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), NULL, GL_STATIC_DRAW);
-
-  // Upload the view and projection matrices to the UBO
-  glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4),
-                  glm::value_ptr(camera->getViewMatrix()));
-  glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4),
-                  glm::value_ptr(camera->getProjectionMatrix()));
-
-  // Unbind the buffer (optional)
-  glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
   return camera_uniform_buffer_id;
 }
 
-const CameraUniformBufferId GpuResourceManagerOpenGL::updateCameraUniformBuffer(
-    const Camera* camera) {
+void GpuResourceManagerOpenGL::updateCameraUniformBuffer(const Camera* camera) {
   CameraUniformBufferId camera_uniform_buffer_id =
       camera_uniform_buffer_ids[camera];
   glBindBuffer(GL_UNIFORM_BUFFER, camera_uniform_buffer_id);
+  glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), NULL, GL_STATIC_DRAW);
   glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4),
                   glm::value_ptr(camera->getViewMatrix()));
   glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4),
                   glm::value_ptr(camera->getProjectionMatrix()));
-  glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-  return camera_uniform_buffer_id;
+  glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
 void GpuResourceManagerOpenGL::deleteShaderProgram(MaterialType type) {

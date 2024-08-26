@@ -37,10 +37,9 @@ class GpuResourceManagerOpenGL : public GpuResourceManager {
   VertexObject createVertexObject(const Geometry* geometry) override;
   void updateVertexObject(const Geometry* geometry) override;
 
-  const CameraUniformBufferId createCameraUniformBuffer(
+  CameraUniformBufferId createCameraUniformBuffer(
       const Camera* camera) override;
-  const CameraUniformBufferId updateCameraUniformBuffer(
-      const Camera* camera) override;
+  void updateCameraUniformBuffer(const Camera* camera) override;
 
  private:
   ShaderProgramId createShaderProgram(MaterialType type) override;

@@ -59,11 +59,10 @@ class GpuResourceManager {
   void upsertVertexObject(const Geometry* geometry);
   const VertexObject& getVertexObject(const Geometry* geometry);
 
-  virtual const CameraUniformBufferId createCameraUniformBuffer(
+  virtual CameraUniformBufferId createCameraUniformBuffer(
       const Camera* camera) = 0;
-  virtual const CameraUniformBufferId updateCameraUniformBuffer(
-      const Camera* camera) = 0;
-  const CameraUniformBufferId upsertCameraUniformBuffer(const Camera* camera);
+  virtual void updateCameraUniformBuffer(const Camera* camera) = 0;
+  void upsertCameraUniformBuffer(const Camera* camera);
   const CameraUniformBufferId getCameraUniformBufferId(const Camera* camera);
 
   void cleanup();
