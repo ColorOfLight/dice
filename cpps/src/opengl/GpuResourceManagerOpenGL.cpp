@@ -171,6 +171,21 @@ CameraUniformBufferId GpuResourceManagerOpenGL::createCameraUniformBuffer(
   return camera_uniform_buffer_id;
 }
 
+UniformBufferId GpuResourceManagerOpenGL::createUniformBuffer() {
+  GLuint uniform_buffer_id;
+  glGenBuffers(1, &uniform_buffer_id);
+
+  return uniform_buffer_id;
+}
+
+void GpuResourceManagerOpenGL::updateUniformBuffer(
+    UniformBufferId uniform_buffer_id, void* data_ptr, size_t size) {
+  glBindBuffer(GL_UNIFORM_BUFFER, uniform_buffer_id);
+  glBufferData(GL_UNIFORM_BUFFER, size, data_ptr, GL_STATIC_DRAW);
+
+  glBindBuffer(GL_UNIFORM_BUFFER, 0);
+}
+
 void GpuResourceManagerOpenGL::updateCameraUniformBuffer(const Camera* camera) {
   CameraUniformBufferId camera_uniform_buffer_id =
       camera_uniform_buffer_ids[camera];
@@ -223,4 +238,9 @@ void GpuResourceManagerOpenGL::deleteCameraUniformBuffer(const Camera* camera) {
 void GpuResourceManagerOpenGL::deleteModelUniformBuffer(const Mesh* mesh) {
   ModelUniformBufferId model_uniform_buffer_id = model_uniform_buffer_ids[mesh];
   glDeleteBuffers(1, &model_uniform_buffer_id);
+}
+
+void GpuResourceManagerOpenGL::deleteUniformBuffer(
+    UniformBufferId uniform_buffer_id) {
+  glDeleteBuffers(1, &uniform_buffer_id);
 }

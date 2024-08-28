@@ -42,6 +42,8 @@ typedef unsigned int ShaderProgramId;
 typedef unsigned int CameraUniformBufferId;
 typedef unsigned int ModelUniformBufferId;
 
+typedef unsigned int UniformBufferId;
+
 struct VertexObject {
   unsigned int vao_id;
   unsigned int vbo_id;
@@ -59,17 +61,13 @@ class GpuResourceManager {
   const CameraUniformBufferId getCameraUniformBufferId(const Camera* camera);
   const ModelUniformBufferId getModelUniformBufferId(const Mesh* mesh);
 
+  const UniformBufferId getUniformBufferId(void* key);
+
   void upsertVertexObject(const Geometry* geometry);
   void upsertCameraUniformBuffer(const Camera* camera);
   void upsertModelUniformBuffer(const Mesh* mesh);
 
   void cleanup();
-
- protected:
-  std::unordered_map<MaterialType, ShaderProgramId> shader_program_ids;
-  UnorderedPointerMap<Geometry, VertexObject> vertex_objects;
-  UnorderedPointerMap<Camera, CameraUniformBufferId> camera_uniform_buffer_ids;
-  UnorderedPointerMap<Mesh, ModelUniformBufferId> model_uniform_buffer_ids;
 
  private:
   virtual ShaderProgramId createShaderProgram(MaterialType type) = 0;
@@ -77,13 +75,24 @@ class GpuResourceManager {
   virtual CameraUniformBufferId createCameraUniformBuffer(
       const Camera* camera) = 0;
   virtual ModelUniformBufferId createModelUniformBuffer(const Mesh* mesh) = 0;
+  virtual UniformBufferId createUniformBuffer() = 0;
 
   virtual void updateVertexObject(const Geometry* geometry) = 0;
   virtual void updateCameraUniformBuffer(const Camera* camera) = 0;
   virtual void updateModelUniformBuffer(const Mesh* mesh) = 0;
+  virtual void updateUniformBuffer(UniformBufferId uniform_buffer_id,
+                                   void* data_ptr, size_t size) = 0;
 
   virtual void deleteShaderProgram(MaterialType type) = 0;
   virtual void deleteVertexObject(const Geometry* index) = 0;
   virtual void deleteCameraUniformBuffer(const Camera* index) = 0;
   virtual void deleteModelUniformBuffer(const Mesh* index) = 0;
+  virtual void deleteUniformBuffer(UniformBufferId uniform_buffer_id) = 0;
+
+ protected:
+  std::unordered_map<MaterialType, ShaderProgramId> shader_program_ids;
+  UnorderedPointerMap<Geometry, VertexObject> vertex_objects;
+  UnorderedPointerMap<Camera, CameraUniformBufferId> camera_uniform_buffer_ids;
+  UnorderedPointerMap<Mesh, ModelUniformBufferId> model_uniform_buffer_ids;
+  std::unordered_map<void*, UniformBufferId> uniform_buffer_ids;
 };

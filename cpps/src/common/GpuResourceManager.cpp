@@ -72,6 +72,10 @@ const ModelUniformBufferId GpuResourceManager::getModelUniformBufferId(
   return model_uniform_buffer_ids[mesh];
 }
 
+const UniformBufferId GpuResourceManager::getUniformBufferId(void* key) {
+  return uniform_buffer_ids[key];
+}
+
 void GpuResourceManager::cleanup() {
   for (auto& [type, _] : shader_program_ids) {
     deleteShaderProgram(type);
