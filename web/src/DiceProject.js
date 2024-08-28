@@ -2655,14 +2655,6 @@ function dbg(...args) {
       GLctx.bufferData(target, data ? HEAPU8.subarray(data, data+size) : size, usage);
     };
 
-  var _glBufferSubData = (target, offset, size, data) => {
-      if (true) {
-        size && GLctx.bufferSubData(target, offset, HEAPU8, data, size);
-        return;
-      }
-      GLctx.bufferSubData(target, offset, HEAPU8.subarray(data, data+size));
-    };
-
   var _glClear = (x0) => GLctx.clear(x0);
 
   var _glCompileShader = (shader) => {
@@ -3034,8 +3026,6 @@ var wasmImports = {
   glBindVertexArray: _glBindVertexArray,
   /** @export */
   glBufferData: _glBufferData,
-  /** @export */
-  glBufferSubData: _glBufferSubData,
   /** @export */
   glClear: _glClear,
   /** @export */

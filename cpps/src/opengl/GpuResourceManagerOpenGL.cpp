@@ -178,24 +178,6 @@ void GpuResourceManagerOpenGL::updateUniformBuffer(
   glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
-ModelUniformBufferId GpuResourceManagerOpenGL::createModelUniformBuffer(
-    const Mesh* mesh) {
-  GLuint model_uniform_buffer_id;
-  glGenBuffers(1, &model_uniform_buffer_id);
-
-  return model_uniform_buffer_id;
-}
-
-void GpuResourceManagerOpenGL::updateModelUniformBuffer(const Mesh* mesh) {
-  ModelUniformBufferId model_uniform_buffer_id = model_uniform_buffer_ids[mesh];
-  glBindBuffer(GL_UNIFORM_BUFFER, model_uniform_buffer_id);
-  glBufferData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), NULL, GL_STATIC_DRAW);
-  glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4),
-                  glm::value_ptr(mesh->getModelMatrix()));
-
-  glBindBuffer(GL_UNIFORM_BUFFER, 0);
-}
-
 void GpuResourceManagerOpenGL::deleteShaderProgram(MaterialType type) {
   ShaderProgramId shader_program_id = shader_program_ids[type];
   glDeleteProgram(shader_program_id);
@@ -206,11 +188,6 @@ void GpuResourceManagerOpenGL::deleteVertexObject(const Geometry* geometry) {
   glDeleteVertexArrays(1, &vertex_object.vao_id);
   glDeleteBuffers(1, &vertex_object.vbo_id);
   glDeleteBuffers(1, &vertex_object.ebo_id);
-}
-
-void GpuResourceManagerOpenGL::deleteModelUniformBuffer(const Mesh* mesh) {
-  ModelUniformBufferId model_uniform_buffer_id = model_uniform_buffer_ids[mesh];
-  glDeleteBuffers(1, &model_uniform_buffer_id);
 }
 
 void GpuResourceManagerOpenGL::deleteUniformBuffer(

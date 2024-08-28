@@ -27,19 +27,21 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 void Mesh::translate(const glm::vec3& translation) {
-  model_matrix = glm::translate(model_matrix, translation);
+  uniform_data.model_matrix =
+      glm::translate(uniform_data.model_matrix, translation);
 
   need_to_update = true;
 }
 
 void Mesh::scale(const glm::vec3& scaling) {
-  model_matrix = glm::scale(model_matrix, scaling);
+  uniform_data.model_matrix = glm::scale(uniform_data.model_matrix, scaling);
 
   need_to_update = true;
 }
 
 void Mesh::rotate(float angle, const glm::vec3& axis) {
-  model_matrix = glm::rotate(model_matrix, angle, axis);
+  uniform_data.model_matrix =
+      glm::rotate(uniform_data.model_matrix, angle, axis);
 
   need_to_update = true;
 }

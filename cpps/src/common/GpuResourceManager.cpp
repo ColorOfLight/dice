@@ -45,10 +45,11 @@ void GpuResourceManager::upsertCameraUniformBuffer(const Camera* camera) {
 }
 
 void GpuResourceManager::upsertModelUniformBuffer(const Mesh* mesh) {
-  if (model_uniform_buffer_ids.find(mesh) == model_uniform_buffer_ids.end()) {
-    model_uniform_buffer_ids[mesh] = createModelUniformBuffer(mesh);
+  if (uniform_buffer_ids.find(mesh) == uniform_buffer_ids.end()) {
+    uniform_buffer_ids[mesh] = createUniformBuffer();
   }
-  updateModelUniformBuffer(mesh);
+  updateUniformBuffer(uniform_buffer_ids[mesh], mesh->getUniformDataPtr(),
+                      mesh->getUniformDataSize());
 }
 
 ShaderProgramId GpuResourceManager::getShaderProgram(MaterialType type) {
@@ -63,11 +64,6 @@ const VertexObject& GpuResourceManager::getVertexObject(
   return vertex_objects[geometry];
 }
 
-const ModelUniformBufferId GpuResourceManager::getModelUniformBufferId(
-    const Mesh* mesh) {
-  return model_uniform_buffer_ids[mesh];
-}
-
 const UniformBufferId GpuResourceManager::getUniformBufferId(
     const UniformDataObject* uniform_data_object) {
   return uniform_buffer_ids[uniform_data_object];
@@ -80,10 +76,6 @@ void GpuResourceManager::cleanup() {
 
   for (auto& [index, _] : vertex_objects) {
     deleteVertexObject(index);
-  }
-
-  for (auto& [index, _] : model_uniform_buffer_ids) {
-    deleteModelUniformBuffer(index);
   }
 
   for (auto& [_, uniform_buffer_id] : uniform_buffer_ids) {

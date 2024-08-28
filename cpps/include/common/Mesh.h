@@ -29,13 +29,20 @@
 #include "./Geometry.h"
 #include "./Material.h"
 #include "./SceneObject.h"
+#include "./UniformDataObject.h"
 
-class Mesh : public SceneObject {
+struct MeshUniformData {
+  glm::mat4 model_matrix;
+};
+
+class Mesh : public SceneObject, public UniformDataObject {
  public:
   Mesh(Geometry& geometry, Material& material)
-      : geometry(geometry), material(material) {}
+      : geometry(geometry),
+        material(material),
+        UniformDataObject(&uniform_data, sizeof(MeshUniformData)) {}
 
-  const glm::mat4& getModelMatrix() const { return model_matrix; }
+  const glm::mat4& getModelMatrix() const { return uniform_data.model_matrix; }
 
   void translate(const glm::vec3& translation);
   void scale(const glm::vec3& scaling);
@@ -45,5 +52,5 @@ class Mesh : public SceneObject {
   std::reference_wrapper<Material> material;
 
  private:
-  glm::mat4 model_matrix = glm::mat4(1.0f);
+  MeshUniformData uniform_data = {glm::mat4(1.0f)};
 };

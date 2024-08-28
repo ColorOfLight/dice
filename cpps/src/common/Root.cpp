@@ -54,8 +54,8 @@ void Root::renderScene() {
     for (auto& mesh : scene_manager->meshes) {
       auto camera_uniform_buffer_id = gpu_resource_manager->getUniformBufferId(
           &scene_manager->camera.get());
-      auto model_uniform_buffer_id =
-          gpu_resource_manager->getModelUniformBufferId(&mesh);
+      auto mesh_uniform_buffer_id =
+          gpu_resource_manager->getUniformBufferId(&mesh);
 
       for (auto& mesh : scene_manager->meshes) {
         ShaderProgramId shader_program_id =
@@ -64,7 +64,7 @@ void Root::renderScene() {
         auto& vertex_object =
             gpu_resource_manager->getVertexObject(&mesh.geometry.get());
         std::vector<unsigned int> uniform_buffer_ids = {
-            camera_uniform_buffer_id, model_uniform_buffer_id};
+            camera_uniform_buffer_id, mesh_uniform_buffer_id};
 
         render_system->drawTriangles(shader_program_id, vertex_object,
                                      uniform_buffer_ids);

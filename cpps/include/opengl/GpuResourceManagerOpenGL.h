@@ -42,15 +42,11 @@ class GpuResourceManagerOpenGL : public GpuResourceManager {
   VertexObject createVertexObject(const Geometry* geometry) override;
   void updateVertexObject(const Geometry* geometry) override;
 
-  ModelUniformBufferId createModelUniformBuffer(const Mesh* mesh) override;
-  void updateModelUniformBuffer(const Mesh* mesh) override;
-
   UniformBufferId createUniformBuffer() override;
   void updateUniformBuffer(UniformBufferId uniform_buffer_id,
                            const void* data_ptr, size_t size) override;
 
   void deleteShaderProgram(MaterialType type) override;
   void deleteVertexObject(const Geometry* geometry) override;
-  void deleteModelUniformBuffer(const Mesh* index) override;
   void deleteUniformBuffer(UniformBufferId uniform_buffer_id) override;
 };

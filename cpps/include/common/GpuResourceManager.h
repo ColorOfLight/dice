@@ -40,7 +40,6 @@ typedef unsigned int VertexObjectKey;
 
 // Id for graphic resources
 typedef unsigned int ShaderProgramId;
-typedef unsigned int ModelUniformBufferId;
 
 typedef unsigned int UniformBufferId;
 
@@ -58,7 +57,6 @@ class GpuResourceManager {
 
   ShaderProgramId getShaderProgram(MaterialType type);
   const VertexObject& getVertexObject(const Geometry* geometry);
-  const ModelUniformBufferId getModelUniformBufferId(const Mesh* mesh);
 
   const UniformBufferId getUniformBufferId(
       const UniformDataObject* uniform_data_object);
@@ -72,22 +70,19 @@ class GpuResourceManager {
  private:
   virtual ShaderProgramId createShaderProgram(MaterialType type) = 0;
   virtual VertexObject createVertexObject(const Geometry* geometry) = 0;
-  virtual ModelUniformBufferId createModelUniformBuffer(const Mesh* mesh) = 0;
+
   virtual UniformBufferId createUniformBuffer() = 0;
 
   virtual void updateVertexObject(const Geometry* geometry) = 0;
-  virtual void updateModelUniformBuffer(const Mesh* mesh) = 0;
   virtual void updateUniformBuffer(UniformBufferId uniform_buffer_id,
                                    const void* data_ptr, size_t size) = 0;
 
   virtual void deleteShaderProgram(MaterialType type) = 0;
   virtual void deleteVertexObject(const Geometry* index) = 0;
-  virtual void deleteModelUniformBuffer(const Mesh* index) = 0;
   virtual void deleteUniformBuffer(UniformBufferId uniform_buffer_id) = 0;
 
  protected:
   std::unordered_map<MaterialType, ShaderProgramId> shader_program_ids;
   UnorderedPointerMap<Geometry, VertexObject> vertex_objects;
-  UnorderedPointerMap<Mesh, ModelUniformBufferId> model_uniform_buffer_ids;
   UnorderedPointerMap<UniformDataObject, UniformBufferId> uniform_buffer_ids;
 };
