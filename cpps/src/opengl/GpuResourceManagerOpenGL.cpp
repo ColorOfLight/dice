@@ -115,52 +115,52 @@ ShaderProgramId GpuResourceManagerOpenGL::createShaderProgram(
 ShaderProgramId GpuResourceManagerOpenGL::createShaderProgramWithSources(
     const char* vertex_shader_source, const char* fragment_shader_source) {
   int success;
-  char infoLog[512];
+  char info_log[512];
 
   // Compile the vertex shader
-  GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-  glShaderSource(vertexShader, 1, &vertex_shader_source, nullptr);
-  glCompileShader(vertexShader);
+  GLuint vertex_shader_id = glCreateShader(GL_VERTEX_SHADER);
+  glShaderSource(vertex_shader_id, 1, &vertex_shader_source, nullptr);
+  glCompileShader(vertex_shader_id);
 
   // Check for vertex shader compile errors
-  glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+  glGetShaderiv(vertex_shader_id, GL_COMPILE_STATUS, &success);
   if (!success) {
-    glGetShaderInfoLog(vertexShader, 512, nullptr, infoLog);
+    glGetShaderInfoLog(vertex_shader_id, 512, nullptr, info_log);
     throw std::runtime_error("ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" +
-                             std::string(infoLog));
+                             std::string(info_log));
   }
 
   // Compile the fragment shader
-  GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(fragmentShader, 1, &fragment_shader_source, nullptr);
-  glCompileShader(fragmentShader);
+  GLuint fragment_shader_id = glCreateShader(GL_FRAGMENT_SHADER);
+  glShaderSource(fragment_shader_id, 1, &fragment_shader_source, nullptr);
+  glCompileShader(fragment_shader_id);
 
   // Check for fragment shader compile errors
-  glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+  glGetShaderiv(fragment_shader_id, GL_COMPILE_STATUS, &success);
   if (!success) {
-    glGetShaderInfoLog(fragmentShader, 512, nullptr, infoLog);
+    glGetShaderInfoLog(fragment_shader_id, 512, nullptr, info_log);
     throw std::runtime_error("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" +
-                             std::string(infoLog));
+                             std::string(info_log));
   }
 
   // Link shaders to create a shader program
-  GLuint shaderProgram = glCreateProgram();
-  glAttachShader(shaderProgram, vertexShader);
-  glAttachShader(shaderProgram, fragmentShader);
-  glLinkProgram(shaderProgram);
+  GLuint shader_program_id = glCreateProgram();
+  glAttachShader(shader_program_id, vertex_shader_id);
+  glAttachShader(shader_program_id, fragment_shader_id);
+  glLinkProgram(shader_program_id);
 
   // Check for linking errors
-  glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+  glGetProgramiv(shader_program_id, GL_LINK_STATUS, &success);
   if (!success) {
-    glGetProgramInfoLog(shaderProgram, 512, nullptr, infoLog);
+    glGetProgramInfoLog(shader_program_id, 512, nullptr, info_log);
     throw std::runtime_error("ERROR::SHADER::PROGRAM::LINKING_FAILED\n" +
-                             std::string(infoLog));
+                             std::string(info_log));
   }
 
-  glDeleteShader(vertexShader);
-  glDeleteShader(fragmentShader);
+  glDeleteShader(vertex_shader_id);
+  glDeleteShader(fragment_shader_id);
 
-  return shaderProgram;
+  return shader_program_id;
 }
 
 UniformBufferId GpuResourceManagerOpenGL::createUniformBuffer() {
