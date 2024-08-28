@@ -53,11 +53,13 @@ int main() {
       std::make_unique<TextureCoordMaterial>();
   std::unique_ptr<SingleColorMaterial> blue_color_material =
       std::make_unique<SingleColorMaterial>(glm::vec3(0.f, 0.f, 1.f));
+  std::unique_ptr<PhongMaterial> phong_material =
+      std::make_unique<PhongMaterial>();
 
   std::unique_ptr<Mesh> mesh1 =
       std::make_unique<Mesh>(*cube_geometry, *texture_coord_material);
   std::unique_ptr<Mesh> mesh2 =
-      std::make_unique<Mesh>(*cube_geometry, *texture_coord_material);
+      std::make_unique<Mesh>(*cube_geometry, *phong_material);
   std::unique_ptr<Mesh> mesh3 =
       std::make_unique<Mesh>(*cube_geometry, *blue_color_material);
 

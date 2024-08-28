@@ -28,3 +28,23 @@ void SingleColorMaterial::setColor(const glm::vec3& color) {
   uniform_data.color = color;
   needs_to_update = true;
 }
+
+void PhongMaterial::setDiffuse(float diffuse) {
+  uniform_data.diffuse = diffuse;
+  needs_to_update = true;
+}
+
+void PhongMaterial::setColor(const glm::vec3& color) {
+  uniform_data.color = color;
+  needs_to_update = true;
+}
+
+void PhongMaterial::setSpecular(float specular) {
+  uniform_data.specular = specular;
+  needs_to_update = true;
+}
+
+void PhongMaterial::setAlpha(float alpha) {
+  uniform_data.alpha = alpha;
+  needs_to_update = true;
+}

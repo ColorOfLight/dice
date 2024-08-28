@@ -34,7 +34,8 @@ enum class MaterialType : size_t {
   BASIC = 0,
   NORMAL = 1,
   TEXTURE_COORD = 2,
-  SINGLE_COLOR = 3
+  SINGLE_COLOR = 3,
+  PHONG = 4,
 };
 
 class Material : public SceneObject, public UniformDataObject {
@@ -78,4 +79,28 @@ class SingleColorMaterial : public Material {
 
  private:
   SingleColorMaterialUniformData uniform_data;
+};
+
+struct PhongMaterialUniformData {
+  alignas(16) glm::vec3 color;
+  float diffuse;
+  float specular;
+  alignas(8) float alpha;
+};
+
+class PhongMaterial : public Material {
+ public:
+  PhongMaterial(glm::vec3 color = glm::vec3(1.0f), float diffuse = 0.5f,
+                float specular = 0.5f, float alpha = 32.0f)
+      : Material(&uniform_data, sizeof(PhongMaterialUniformData)),
+        uniform_data({color, diffuse, specular, alpha}) {
+    type = MaterialType::PHONG;
+  };
+  void setDiffuse(float diffuse);
+  void setColor(const glm::vec3& color);
+  void setSpecular(float specular);
+  void setAlpha(float alpha);
+
+ private:
+  PhongMaterialUniformData uniform_data;
 };
