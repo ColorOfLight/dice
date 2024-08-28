@@ -24,6 +24,7 @@
 
 #include "./Camera.h"
 #include "./Geometry.h"
+#include "./Light.h"
 #include "./Material.h"
 #include "./Mesh.h"
 #include "./Root.h"
@@ -37,7 +38,13 @@ int main() {
       std::make_unique<PerspectiveCamera>(glm::radians(90.0f), aspect_ratio);
   camera.get()->lookAt(glm::vec3(0, 0, 3), glm::vec3(0, 0, 0));
 
-  Root root({width, height, *camera});
+  std::unique_ptr<AmbientLight> ambient_light =
+      std::make_unique<AmbientLight>(0.1f, glm::vec3(1.f, 1.f, 1.f));
+  std::unique_ptr<DirectionalLight> directional_light =
+      std::make_unique<DirectionalLight>(0.5f, glm::vec3(1.f, 1.f, 1.f),
+                                         glm::vec3(0.f, 0.f, -1.f));
+
+  Root root({width, height, *camera, *ambient_light, *directional_light});
 
   std::unique_ptr<CubeGeometry> cube_geometry =
       std::make_unique<CubeGeometry>();

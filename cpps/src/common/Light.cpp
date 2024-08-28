@@ -22,26 +22,29 @@
  * SOFTWARE.
  */
 
-#pragma once
-
-#include <vector>
-
-#include "./Camera.h"
-#include "./Geometry.h"
 #include "./Light.h"
-#include "./Mesh.h"
 
-class SceneManager {
- public:
-  SceneManager(std::reference_wrapper<Camera> camera,
-               std::reference_wrapper<AmbientLight> ambient_light,
-               std::reference_wrapper<DirectionalLight> directional_light)
-      : camera(camera),
-        ambient_light(ambient_light),
-        directional_light(directional_light) {};
+void AmbientLight::setIntensity(int intensity) {
+  uniform_data.intensity = intensity;
+  needs_to_update = true;
+}
 
-  std::vector<Mesh> meshes;
-  std::reference_wrapper<Camera> camera;
-  std::reference_wrapper<AmbientLight> ambient_light;
-  std::reference_wrapper<DirectionalLight> directional_light;
-};
+void AmbientLight::setColor(const glm::vec3& color) {
+  uniform_data.color = color;
+  needs_to_update = true;
+}
+
+void DirectionalLight::setIntensity(int intensity) {
+  uniform_data.intensity = intensity;
+  needs_to_update = true;
+}
+
+void DirectionalLight::setColor(const glm::vec3& color) {
+  uniform_data.color = color;
+  needs_to_update = true;
+}
+
+void DirectionalLight::setDirection(const glm::vec3& direction) {
+  uniform_data.direction = direction;
+  needs_to_update = true;
+}

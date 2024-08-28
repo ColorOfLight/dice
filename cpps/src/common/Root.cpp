@@ -33,6 +33,18 @@ void Root::updateGpuResources() {
     camera.needs_to_update = false;
   }
 
+  auto& ambient_light = scene_manager->ambient_light.get();
+  if (ambient_light.needs_to_update) {
+    gpu_resource_manager->upsertUniformBuffer(&ambient_light);
+    ambient_light.needs_to_update = false;
+  }
+
+  auto& directional_light = scene_manager->directional_light.get();
+  if (directional_light.needs_to_update) {
+    gpu_resource_manager->upsertUniformBuffer(&directional_light);
+    directional_light.needs_to_update = false;
+  }
+
   for (auto& mesh : scene_manager->meshes) {
     if (mesh.needs_to_update) {
       gpu_resource_manager->upsertUniformBuffer(&mesh);
@@ -59,6 +71,12 @@ void Root::renderScene() {
 
     auto camera_uniform_buffer_id =
         gpu_resource_manager->getUniformBufferId(&scene_manager->camera.get());
+    auto ambient_light_uniform_buffer_id =
+        gpu_resource_manager->getUniformBufferId(
+            &scene_manager->ambient_light.get());
+    auto directional_light_uniform_buffer_id =
+        gpu_resource_manager->getUniformBufferId(
+            &scene_manager->directional_light.get());
 
     for (auto& mesh : scene_manager->meshes) {
       ShaderProgramId shader_program_id =
@@ -71,7 +89,8 @@ void Root::renderScene() {
           gpu_resource_manager->getUniformBufferId(&mesh.material.get());
 
       std::vector<unsigned int> uniform_buffer_ids = {
-          camera_uniform_buffer_id, mesh_uniform_buffer_id,
+          camera_uniform_buffer_id, ambient_light_uniform_buffer_id,
+          directional_light_uniform_buffer_id, mesh_uniform_buffer_id,
           material_uniform_buffer_id};
 
       render_system->drawTriangles(shader_program_id, vertex_object,

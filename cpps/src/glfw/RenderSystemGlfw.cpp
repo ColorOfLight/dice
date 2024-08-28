@@ -93,13 +93,21 @@ void RenderSystemGlfw::drawTriangles(
       glGetUniformBlockIndex(shader_program_id, "CameraBlock");
   glUniformBlockBinding(shader_program_id, cameraBlockIndex, 0);
 
+  unsigned int ambientLightBlockIndex =
+      glGetUniformBlockIndex(shader_program_id, "AmbientLightBlock");
+  glUniformBlockBinding(shader_program_id, ambientLightBlockIndex, 1);
+
+  unsigned int directionalLightBlockIndex =
+      glGetUniformBlockIndex(shader_program_id, "DirectionalLightBlock");
+  glUniformBlockBinding(shader_program_id, directionalLightBlockIndex, 2);
+
   unsigned int modelBlockIndex =
       glGetUniformBlockIndex(shader_program_id, "ModelBlock");
-  glUniformBlockBinding(shader_program_id, modelBlockIndex, 1);
+  glUniformBlockBinding(shader_program_id, modelBlockIndex, 3);
 
   unsigned int materialBlockIndex =
       glGetUniformBlockIndex(shader_program_id, "MaterialBlock");
-  glUniformBlockBinding(shader_program_id, materialBlockIndex, 2);
+  glUniformBlockBinding(shader_program_id, materialBlockIndex, 4);
 
   glDrawElements(GL_TRIANGLES, vertex_object.vertex_count, GL_UNSIGNED_INT, 0);
 }

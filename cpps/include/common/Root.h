@@ -29,6 +29,7 @@
 #include "./Camera.h"
 #include "./Geometry.h"
 #include "./GpuResourceManager.h"
+#include "./Light.h"
 #include "./Material.h"
 #include "./RenderSystem.h"
 #include "./SceneManager.h"
@@ -37,6 +38,8 @@ struct RootOptions {
   int initial_width;
   int initial_height;
   std::reference_wrapper<Camera> camera;
+  std::reference_wrapper<AmbientLight> ambient_light;
+  std::reference_wrapper<DirectionalLight> directional_light;
 };
 
 class Root {
