@@ -36,10 +36,10 @@ int main() {
 
   std::unique_ptr<PerspectiveCamera> camera =
       std::make_unique<PerspectiveCamera>(glm::radians(90.0f), aspect_ratio);
-  camera.get()->lookAt(glm::vec3(0, 0, 3), glm::vec3(0, 0, 0));
+  camera.get()->lookAt(glm::vec3(1, 1, 3), glm::vec3(0, 0, 0));
 
   std::unique_ptr<AmbientLight> ambient_light =
-      std::make_unique<AmbientLight>(0.1f, glm::vec3(1.f, 1.f, 1.f));
+      std::make_unique<AmbientLight>(0.2f, glm::vec3(1.f, 1.f, 1.f));
   std::unique_ptr<DirectionalLight> directional_light =
       std::make_unique<DirectionalLight>(0.5f, glm::vec3(1.f, 1.f, 1.f),
                                          glm::vec3(0.f, 0.f, -1.f));

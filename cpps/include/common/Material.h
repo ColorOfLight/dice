@@ -84,8 +84,8 @@ class SingleColorMaterial : public Material {
 struct PhongMaterialUniformData {
   alignas(16) glm::vec3 color;
   float diffuse;
-  float specular;
-  alignas(8) float alpha;
+  alignas(16) float specular;
+  float alpha;
 };
 
 class PhongMaterial : public Material {

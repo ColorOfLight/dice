@@ -31,6 +31,7 @@ std::string basic_vertex_source = R"(
     {
         mat4 view_matrix;
         mat4 projection_matrix;
+        vec3 eye;
     };
 
     layout (std140) uniform ModelBlock
@@ -42,12 +43,17 @@ std::string basic_vertex_source = R"(
     layout (location = 1) in vec3 aNormal;
     layout (location = 2) in vec2 aTexCoord;
 
+    out vec3 vPosition;
     out vec3 vNormal;
     out vec2 vTexCoord;
 
     void main()
     {
         gl_Position = projection_matrix * view_matrix * model_matrix * vec4(aPosition, 1.0);
+
+        vec4 model_position = model_matrix * vec4(aPosition, 1.0);
+        vPosition = model_position.xyz;
+
         vNormal = aNormal;
         vTexCoord = aTexCoord;
     }
@@ -102,20 +108,52 @@ std::string single_color_fragment_source = R"(
 
 // TODO: Implement Phong shading
 std::string phong_fragment_source = R"(
+    layout (std140) uniform CameraBlock
+    {
+        mat4 view_matrix;
+        mat4 projection_matrix;
+        vec3 eye;
+    };
+
     layout (std140) uniform MaterialBlock
     {
-        vec3 color;
-        float diffuse;
-        float specular;
-        float alpha;
+        vec3 material_color;
+        float material_diffuse;
+        float material_specular;
+        float material_alpha;
+    };
+
+    layout (std140) uniform AmbientLightBlock
+    {
+        vec3 ambient_color;
+        float ambient_intensity;
+    };
+
+    layout (std140) uniform DirectionalLightBlock
+    {
+        vec3 directional_color;
+        vec3 directional_direction;
+        float directional_intensity;
     };
 
     in vec3 vNormal;
+    in vec3 vPosition;
 
     out vec4 FragColor;
 
     void main()
     {
+        vec3 ambient_color = material_color * ambient_color * ambient_intensity * material_diffuse;
+
+        vec3 normal = normalize(vNormal);
+        vec3 light_vector = normalize(-directional_direction);
+        vec3 directional_diffuse_color = material_diffuse * max(dot(normal, light_vector), 0.0) * material_color * directional_color * directional_intensity;
+
+        vec3 view_vector = normalize(eye - vPosition);
+        vec3 reflection = reflect(directional_direction, normal);
+        vec3 directional_specular_color = material_specular * pow(max(0.0, dot(reflection, view_vector)), material_alpha) * directional_color * directional_intensity;
+        
+        vec3 color = ambient_color + directional_diffuse_color + directional_specular_color;
         FragColor = vec4(color, 1.0);
     }
 )";

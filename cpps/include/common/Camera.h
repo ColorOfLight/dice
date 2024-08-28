@@ -33,7 +33,7 @@
 struct CameraUniformData {
   glm::mat4 view_matrix;
   glm::mat4 projection_matrix;
-  glm::vec3 view_vector;
+  alignas(16) glm::vec3 eye;
 };
 
 class Camera : public SceneObject, public UniformDataObject {

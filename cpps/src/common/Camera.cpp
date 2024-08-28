@@ -27,7 +27,7 @@
 void Camera::lookAt(const glm::vec3& eye, const glm::vec3& center) {
   camera_uniform_data.view_matrix =
       glm::lookAt(eye, center, glm::vec3(0, 1, 0));
-  camera_uniform_data.view_vector = eye - center;
+  camera_uniform_data.eye = eye;
 
   needs_to_update = true;
 }
@@ -35,7 +35,7 @@ void Camera::lookAt(const glm::vec3& eye, const glm::vec3& center) {
 void Camera::lookAt(const glm::vec3& eye, const glm::vec3& center,
                     const glm::vec3& up) {
   camera_uniform_data.view_matrix = glm::lookAt(eye, center, up);
-  camera_uniform_data.view_vector = eye - center;
+  camera_uniform_data.eye = eye;
 
   needs_to_update = true;
 }
