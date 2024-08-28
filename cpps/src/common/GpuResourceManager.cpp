@@ -35,21 +35,12 @@ void GpuResourceManager::upsertVertexObject(const Geometry* geometry) {
   updateVertexObject(geometry);
 }
 
-void GpuResourceManager::upsertCameraUniformBuffer(const Camera* camera) {
-  if (uniform_buffer_ids.find(camera) == uniform_buffer_ids.end()) {
-    uniform_buffer_ids[camera] = createUniformBuffer();
+void GpuResourceManager::upsertUniformBuffer(const UniformDataObject* object) {
+  if (uniform_buffer_ids.find(object) == uniform_buffer_ids.end()) {
+    uniform_buffer_ids[object] = createUniformBuffer();
   }
-
-  updateUniformBuffer(uniform_buffer_ids[camera], camera->getUniformDataPtr(),
-                      camera->getUniformDataSize());
-}
-
-void GpuResourceManager::upsertModelUniformBuffer(const Mesh* mesh) {
-  if (uniform_buffer_ids.find(mesh) == uniform_buffer_ids.end()) {
-    uniform_buffer_ids[mesh] = createUniformBuffer();
-  }
-  updateUniformBuffer(uniform_buffer_ids[mesh], mesh->getUniformDataPtr(),
-                      mesh->getUniformDataSize());
+  updateUniformBuffer(uniform_buffer_ids[object], object->getUniformDataPtr(),
+                      object->getUniformDataSize());
 }
 
 ShaderProgramId GpuResourceManager::getShaderProgram(MaterialType type) {

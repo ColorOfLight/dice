@@ -62,8 +62,7 @@ class GpuResourceManager {
       const UniformDataObject* uniform_data_object);
 
   void upsertVertexObject(const Geometry* geometry);
-  void upsertCameraUniformBuffer(const Camera* camera);
-  void upsertModelUniformBuffer(const Mesh* mesh);
+  void upsertUniformBuffer(const UniformDataObject* uniform_data_object);
 
   void cleanup();
 

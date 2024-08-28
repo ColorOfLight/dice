@@ -29,13 +29,13 @@
 void Root::updateGpuResources() {
   auto& camera = scene_manager->camera.get();
   if (camera.needs_to_update) {
-    gpu_resource_manager->upsertCameraUniformBuffer(&camera);
+    gpu_resource_manager->upsertUniformBuffer(&camera);
     camera.needs_to_update = false;
   }
 
   for (auto& mesh : scene_manager->meshes) {
     if (mesh.needs_to_update) {
-      gpu_resource_manager->upsertModelUniformBuffer(&mesh);
+      gpu_resource_manager->upsertUniformBuffer(&mesh);
       mesh.needs_to_update = false;
     }
 
