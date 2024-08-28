@@ -86,6 +86,20 @@ std::string texture_coord_fragment_source = R"(
     }
 )";
 
+std::string single_color_fragment_source = R"(
+    layout (std140) uniform MaterialBlock
+    {
+        vec3 color;
+    };
+
+    out vec4 FragColor;
+
+    void main()
+    {
+        FragColor = vec4(color, 1.0);
+    }
+)";
+
 ShaderSource getShaderSource(MaterialType type) {
   std::string shader_prefix = SHADER_PREFIX;
   std::string fragment_precision = FRAGMENT_PRECISION;
@@ -105,6 +119,10 @@ ShaderSource getShaderSource(MaterialType type) {
     case MaterialType::TEXTURE_COORD:
       base_vertex_source = basic_vertex_source;
       base_fragment_source = texture_coord_fragment_source;
+      break;
+    case MaterialType::SINGLE_COLOR:
+      base_vertex_source = basic_vertex_source;
+      base_fragment_source = single_color_fragment_source;
       break;
     default:
       throw std::runtime_error("Invalid MaterialType");

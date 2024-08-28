@@ -24,15 +24,23 @@
 
 #pragma once
 
+#include <glm/glm.hpp>
 #include <memory>
 
 #include "./SceneObject.h"
+#include "./UniformDataObject.h"
 
-enum class MaterialType : size_t { BASIC = 0, NORMAL = 1, TEXTURE_COORD = 2 };
+enum class MaterialType : size_t {
+  BASIC = 0,
+  NORMAL = 1,
+  TEXTURE_COORD = 2,
+  SINGLE_COLOR = 3
+};
 
-class Material : public SceneObject {
+class Material : public SceneObject, public UniformDataObject {
  public:
-  Material() {};
+  Material(void* uniform_data_ptr = nullptr, size_t uniform_data_size = 0)
+      : UniformDataObject(uniform_data_ptr, uniform_data_size) {};
 
   MaterialType getType() const { return type; };
 
@@ -53,4 +61,21 @@ class NormalMaterial : public Material {
 class TextureCoordMaterial : public Material {
  public:
   TextureCoordMaterial() { type = MaterialType::TEXTURE_COORD; };
+};
+
+struct SingleColorMaterialUniformData {
+  glm::vec3 color;
+};
+
+class SingleColorMaterial : public Material {
+ public:
+  SingleColorMaterial(glm::vec3 color = glm::vec3(1.0f))
+      : Material(&uniform_data, sizeof(SingleColorMaterialUniformData)),
+        uniform_data({color}) {
+    type = MaterialType::SINGLE_COLOR;
+  };
+  void setColor(const glm::vec3& color);
+
+ private:
+  SingleColorMaterialUniformData uniform_data;
 };

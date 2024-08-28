@@ -97,5 +97,9 @@ void RenderSystemGlfw::drawTriangles(
       glGetUniformBlockIndex(shader_program_id, "ModelBlock");
   glUniformBlockBinding(shader_program_id, modelBlockIndex, 1);
 
+  unsigned int materialBlockIndex =
+      glGetUniformBlockIndex(shader_program_id, "MaterialBlock");
+  glUniformBlockBinding(shader_program_id, materialBlockIndex, 2);
+
   glDrawElements(GL_TRIANGLES, vertex_object.vertex_count, GL_UNSIGNED_INT, 0);
 }

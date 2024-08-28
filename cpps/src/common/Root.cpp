@@ -44,6 +44,12 @@ void Root::updateGpuResources() {
       gpu_resource_manager->upsertVertexObject(&geometry);
       geometry.needs_to_update = false;
     }
+
+    auto& material = mesh.material.get();
+    if (material.needs_to_update) {
+      gpu_resource_manager->upsertUniformBuffer(&material);
+      material.needs_to_update = false;
+    }
   }
 }
 
@@ -51,24 +57,25 @@ void Root::renderScene() {
   auto renderItems = [this]() -> void {
     updateGpuResources();
 
+    auto camera_uniform_buffer_id =
+        gpu_resource_manager->getUniformBufferId(&scene_manager->camera.get());
+
     for (auto& mesh : scene_manager->meshes) {
-      auto camera_uniform_buffer_id = gpu_resource_manager->getUniformBufferId(
-          &scene_manager->camera.get());
+      ShaderProgramId shader_program_id =
+          gpu_resource_manager->getShaderProgram(mesh.material.get().getType());
+      auto& vertex_object =
+          gpu_resource_manager->getVertexObject(&mesh.geometry.get());
       auto mesh_uniform_buffer_id =
           gpu_resource_manager->getUniformBufferId(&mesh);
+      auto material_uniform_buffer_id =
+          gpu_resource_manager->getUniformBufferId(&mesh.material.get());
 
-      for (auto& mesh : scene_manager->meshes) {
-        ShaderProgramId shader_program_id =
-            gpu_resource_manager->getShaderProgram(
-                mesh.material.get().getType());
-        auto& vertex_object =
-            gpu_resource_manager->getVertexObject(&mesh.geometry.get());
-        std::vector<unsigned int> uniform_buffer_ids = {
-            camera_uniform_buffer_id, mesh_uniform_buffer_id};
+      std::vector<unsigned int> uniform_buffer_ids = {
+          camera_uniform_buffer_id, mesh_uniform_buffer_id,
+          material_uniform_buffer_id};
 
-        render_system->drawTriangles(shader_program_id, vertex_object,
-                                     uniform_buffer_ids);
-      }
+      render_system->drawTriangles(shader_program_id, vertex_object,
+                                   uniform_buffer_ids);
     }
   };
 

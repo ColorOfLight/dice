@@ -41,15 +41,18 @@ int main() {
 
   std::unique_ptr<CubeGeometry> cube_geometry =
       std::make_unique<CubeGeometry>();
+
   std::unique_ptr<TextureCoordMaterial> texture_coord_material =
       std::make_unique<TextureCoordMaterial>();
+  std::unique_ptr<SingleColorMaterial> blue_color_material =
+      std::make_unique<SingleColorMaterial>(glm::vec3(0.f, 0.f, 1.f));
 
   std::unique_ptr<Mesh> mesh1 =
       std::make_unique<Mesh>(*cube_geometry, *texture_coord_material);
   std::unique_ptr<Mesh> mesh2 =
       std::make_unique<Mesh>(*cube_geometry, *texture_coord_material);
   std::unique_ptr<Mesh> mesh3 =
-      std::make_unique<Mesh>(*cube_geometry, *texture_coord_material);
+      std::make_unique<Mesh>(*cube_geometry, *blue_color_material);
 
   mesh1.get()->translate(glm::vec3(-2, 0, 0));
   mesh3.get()->translate(glm::vec3(2, 0, 0));
