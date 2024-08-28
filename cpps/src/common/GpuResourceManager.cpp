@@ -92,4 +92,8 @@ void GpuResourceManager::cleanup() {
   for (auto& [index, _] : model_uniform_buffer_ids) {
     deleteModelUniformBuffer(index);
   }
+
+  for (auto& [_, uniform_buffer_id] : uniform_buffer_ids) {
+    deleteUniformBuffer(uniform_buffer_id);
+  }
 }
