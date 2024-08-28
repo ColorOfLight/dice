@@ -30,18 +30,18 @@ void Mesh::translate(const glm::vec3& translation) {
   uniform_data.model_matrix =
       glm::translate(uniform_data.model_matrix, translation);
 
-  need_to_update = true;
+  needs_to_update = true;
 }
 
 void Mesh::scale(const glm::vec3& scaling) {
   uniform_data.model_matrix = glm::scale(uniform_data.model_matrix, scaling);
 
-  need_to_update = true;
+  needs_to_update = true;
 }
 
 void Mesh::rotate(float angle, const glm::vec3& axis) {
   uniform_data.model_matrix =
       glm::rotate(uniform_data.model_matrix, angle, axis);
 
-  need_to_update = true;
+  needs_to_update = true;
 }

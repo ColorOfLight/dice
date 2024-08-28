@@ -28,5 +28,5 @@ class SceneObject {
  public:
   SceneObject() {};
 
-  bool need_to_update = true;
+  bool needs_to_update = true;
 };

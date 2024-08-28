@@ -70,7 +70,7 @@ class PerspectiveCamera : public Camera {
     camera_uniform_data.projection_matrix =
         glm::perspective(fov, aspect_ratio, near, far);
 
-    need_to_update = true;
+    needs_to_update = true;
   }
 };
 
@@ -86,6 +86,6 @@ class OrthographicCamera : public Camera {
     camera_uniform_data.projection_matrix =
         glm::ortho(left, right, bottom, top, near, far);
 
-    need_to_update = true;
+    needs_to_update = true;
   }
 };

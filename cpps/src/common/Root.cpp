@@ -28,21 +28,21 @@
 
 void Root::updateGpuResources() {
   auto& camera = scene_manager->camera.get();
-  if (camera.need_to_update) {
+  if (camera.needs_to_update) {
     gpu_resource_manager->upsertCameraUniformBuffer(&camera);
-    camera.need_to_update = false;
+    camera.needs_to_update = false;
   }
 
   for (auto& mesh : scene_manager->meshes) {
-    if (mesh.need_to_update) {
+    if (mesh.needs_to_update) {
       gpu_resource_manager->upsertModelUniformBuffer(&mesh);
-      mesh.need_to_update = false;
+      mesh.needs_to_update = false;
     }
 
     auto& geometry = mesh.geometry.get();
-    if (geometry.need_to_update) {
+    if (geometry.needs_to_update) {
       gpu_resource_manager->upsertVertexObject(&geometry);
-      geometry.need_to_update = false;
+      geometry.needs_to_update = false;
     }
   }
 }
