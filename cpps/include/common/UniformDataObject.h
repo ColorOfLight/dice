@@ -24,33 +24,16 @@
 
 #pragma once
 
-#include <vector>
+#include <memory>
 
-#include "./GpuResourceManager.h"
-#include "./opengl.h"
-
-class GpuResourceManagerOpenGL : public GpuResourceManager {
+class UniformDataObject {
  public:
-  GpuResourceManagerOpenGL() = default;
-  ~GpuResourceManagerOpenGL() override;
+  UniformDataObject(void* data_ptr, size_t size)
+      : uniform_data_ptr(data_ptr), uniform_data_size(size) {};
+  const void* getUniformDataPtr() const { return uniform_data_ptr; };
+  size_t getUniformDataSize() const { return uniform_data_size; };
 
  private:
-  ShaderProgramId createShaderProgram(MaterialType type) override;
-  ShaderProgramId createShaderProgramWithSources(
-      const char* vertex_shader_source, const char* fragment_shader_source);
-
-  VertexObject createVertexObject(const Geometry* geometry) override;
-  void updateVertexObject(const Geometry* geometry) override;
-
-  ModelUniformBufferId createModelUniformBuffer(const Mesh* mesh) override;
-  void updateModelUniformBuffer(const Mesh* mesh) override;
-
-  UniformBufferId createUniformBuffer() override;
-  void updateUniformBuffer(UniformBufferId uniform_buffer_id,
-                           const void* data_ptr, size_t size) override;
-
-  void deleteShaderProgram(MaterialType type) override;
-  void deleteVertexObject(const Geometry* geometry) override;
-  void deleteModelUniformBuffer(const Mesh* index) override;
-  void deleteUniformBuffer(UniformBufferId uniform_buffer_id) override;
+  void* uniform_data_ptr;
+  size_t uniform_data_size;
 };

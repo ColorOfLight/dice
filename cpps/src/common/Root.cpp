@@ -52,9 +52,8 @@ void Root::renderScene() {
     updateGpuResources();
 
     for (auto& mesh : scene_manager->meshes) {
-      auto camera_uniform_buffer_id =
-          gpu_resource_manager->getCameraUniformBufferId(
-              &scene_manager->camera.get());
+      auto camera_uniform_buffer_id = gpu_resource_manager->getUniformBufferId(
+          &scene_manager->camera.get());
       auto model_uniform_buffer_id =
           gpu_resource_manager->getModelUniformBufferId(&mesh);
 

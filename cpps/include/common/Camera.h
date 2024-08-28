@@ -28,24 +28,35 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "./SceneObject.h"
+#include "./UniformDataObject.h"
 
-class Camera : public SceneObject {
+struct CameraUniformData {
+  glm::mat4 view_matrix;
+  glm::mat4 projection_matrix;
+  glm::vec3 view_vector;
+};
+
+class Camera : public SceneObject, public UniformDataObject {
  public:
-  Camera() { lookAt(glm::vec3(0, 0, 1), glm::vec3(0, 0, 0)); }
+  Camera()
+      : UniformDataObject(&camera_uniform_data, sizeof(CameraUniformData)) {
+    lookAt(glm::vec3(0, 0, 1), glm::vec3(0, 0, 0));
+    camera_uniform_data.projection_matrix = glm::mat4(1.0f);
+  }
 
   void lookAt(const glm::vec3& eye, const glm::vec3& center);
   void lookAt(const glm::vec3& eye, const glm::vec3& center,
               const glm::vec3& up);
 
-  const glm::mat4& getProjectionMatrix() const { return projection_matrix; };
-  const glm::mat4& getViewMatrix() const { return view_matrix; };
+  const glm::mat4& getProjectionMatrix() const {
+    return camera_uniform_data.projection_matrix;
+  };
+  const glm::mat4& getViewMatrix() const {
+    return camera_uniform_data.view_matrix;
+  };
 
  protected:
-  glm::mat4 projection_matrix;
-
- private:
-  glm::mat4 view_matrix;
-  glm::vec3 view_vector;
+  CameraUniformData camera_uniform_data;
 };
 
 class PerspectiveCamera : public Camera {
@@ -56,7 +67,8 @@ class PerspectiveCamera : public Camera {
   }
 
   void setProjection(float fov, float aspect_ratio, float near, float far) {
-    projection_matrix = glm::perspective(fov, aspect_ratio, near, far);
+    camera_uniform_data.projection_matrix =
+        glm::perspective(fov, aspect_ratio, near, far);
 
     need_to_update = true;
   }
@@ -71,7 +83,8 @@ class OrthographicCamera : public Camera {
 
   void setProjection(float left, float right, float bottom, float top,
                      float near, float far) {
-    projection_matrix = glm::ortho(left, right, bottom, top, near, far);
+    camera_uniform_data.projection_matrix =
+        glm::ortho(left, right, bottom, top, near, far);
 
     need_to_update = true;
   }

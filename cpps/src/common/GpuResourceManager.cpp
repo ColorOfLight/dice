@@ -36,11 +36,12 @@ void GpuResourceManager::upsertVertexObject(const Geometry* geometry) {
 }
 
 void GpuResourceManager::upsertCameraUniformBuffer(const Camera* camera) {
-  if (camera_uniform_buffer_ids.find(camera) ==
-      camera_uniform_buffer_ids.end()) {
-    camera_uniform_buffer_ids[camera] = createCameraUniformBuffer(camera);
+  if (uniform_buffer_ids.find(camera) == uniform_buffer_ids.end()) {
+    uniform_buffer_ids[camera] = createUniformBuffer();
   }
-  updateCameraUniformBuffer(camera);
+
+  updateUniformBuffer(uniform_buffer_ids[camera], camera->getUniformDataPtr(),
+                      camera->getUniformDataSize());
 }
 
 void GpuResourceManager::upsertModelUniformBuffer(const Mesh* mesh) {
@@ -62,18 +63,14 @@ const VertexObject& GpuResourceManager::getVertexObject(
   return vertex_objects[geometry];
 }
 
-const CameraUniformBufferId GpuResourceManager::getCameraUniformBufferId(
-    const Camera* camera) {
-  return camera_uniform_buffer_ids[camera];
-}
-
 const ModelUniformBufferId GpuResourceManager::getModelUniformBufferId(
     const Mesh* mesh) {
   return model_uniform_buffer_ids[mesh];
 }
 
-const UniformBufferId GpuResourceManager::getUniformBufferId(void* key) {
-  return uniform_buffer_ids[key];
+const UniformBufferId GpuResourceManager::getUniformBufferId(
+    const UniformDataObject* uniform_data_object) {
+  return uniform_buffer_ids[uniform_data_object];
 }
 
 void GpuResourceManager::cleanup() {
@@ -83,10 +80,6 @@ void GpuResourceManager::cleanup() {
 
   for (auto& [index, _] : vertex_objects) {
     deleteVertexObject(index);
-  }
-
-  for (auto& [index, _] : camera_uniform_buffer_ids) {
-    deleteCameraUniformBuffer(index);
   }
 
   for (auto& [index, _] : model_uniform_buffer_ids) {

@@ -32,6 +32,7 @@
 #include "./Geometry.h"
 #include "./Material.h"
 #include "./Mesh.h"
+#include "./UniformDataObject.h"
 #include "./util.h"
 
 // Types for key of unordered_map
@@ -39,7 +40,6 @@ typedef unsigned int VertexObjectKey;
 
 // Id for graphic resources
 typedef unsigned int ShaderProgramId;
-typedef unsigned int CameraUniformBufferId;
 typedef unsigned int ModelUniformBufferId;
 
 typedef unsigned int UniformBufferId;
@@ -58,10 +58,10 @@ class GpuResourceManager {
 
   ShaderProgramId getShaderProgram(MaterialType type);
   const VertexObject& getVertexObject(const Geometry* geometry);
-  const CameraUniformBufferId getCameraUniformBufferId(const Camera* camera);
   const ModelUniformBufferId getModelUniformBufferId(const Mesh* mesh);
 
-  const UniformBufferId getUniformBufferId(void* key);
+  const UniformBufferId getUniformBufferId(
+      const UniformDataObject* uniform_data_object);
 
   void upsertVertexObject(const Geometry* geometry);
   void upsertCameraUniformBuffer(const Camera* camera);
@@ -72,27 +72,22 @@ class GpuResourceManager {
  private:
   virtual ShaderProgramId createShaderProgram(MaterialType type) = 0;
   virtual VertexObject createVertexObject(const Geometry* geometry) = 0;
-  virtual CameraUniformBufferId createCameraUniformBuffer(
-      const Camera* camera) = 0;
   virtual ModelUniformBufferId createModelUniformBuffer(const Mesh* mesh) = 0;
   virtual UniformBufferId createUniformBuffer() = 0;
 
   virtual void updateVertexObject(const Geometry* geometry) = 0;
-  virtual void updateCameraUniformBuffer(const Camera* camera) = 0;
   virtual void updateModelUniformBuffer(const Mesh* mesh) = 0;
   virtual void updateUniformBuffer(UniformBufferId uniform_buffer_id,
-                                   void* data_ptr, size_t size) = 0;
+                                   const void* data_ptr, size_t size) = 0;
 
   virtual void deleteShaderProgram(MaterialType type) = 0;
   virtual void deleteVertexObject(const Geometry* index) = 0;
-  virtual void deleteCameraUniformBuffer(const Camera* index) = 0;
   virtual void deleteModelUniformBuffer(const Mesh* index) = 0;
   virtual void deleteUniformBuffer(UniformBufferId uniform_buffer_id) = 0;
 
  protected:
   std::unordered_map<MaterialType, ShaderProgramId> shader_program_ids;
   UnorderedPointerMap<Geometry, VertexObject> vertex_objects;
-  UnorderedPointerMap<Camera, CameraUniformBufferId> camera_uniform_buffer_ids;
   UnorderedPointerMap<Mesh, ModelUniformBufferId> model_uniform_buffer_ids;
-  std::unordered_map<void*, UniformBufferId> uniform_buffer_ids;
+  UnorderedPointerMap<UniformDataObject, UniformBufferId> uniform_buffer_ids;
 };
