@@ -37,15 +37,15 @@ class Light : public SceneObject, public UniformDataObject {
 
 struct AmbientLightUniformData {
   alignas(16) glm::vec3 color;
-  alignas(16) int intensity;
+  alignas(16) float intensity;
 };
 
 class AmbientLight : public Light {
  public:
-  AmbientLight(int intensity, const glm::vec3& color)
+  AmbientLight(float intensity, const glm::vec3& color)
       : Light(&uniform_data, sizeof(AmbientLightUniformData)),
         uniform_data({color, intensity}) {}
-  void setIntensity(int intensity);
+  void setIntensity(float intensity);
   void setColor(const glm::vec3& color);
 
  private:
@@ -55,16 +55,16 @@ class AmbientLight : public Light {
 struct DirectionalLightUniformData {
   alignas(16) glm::vec3 color;
   alignas(16) glm::vec3 direction;
-  alignas(16) int intensity;
+  alignas(16) float intensity;
 };
 
 class DirectionalLight : public Light {
  public:
-  DirectionalLight(int intensity, const glm::vec3& color,
+  DirectionalLight(float intensity, const glm::vec3& color,
                    const glm::vec3& direction)
       : Light(&uniform_data, sizeof(DirectionalLightUniformData)),
         uniform_data({color, direction, intensity}) {}
-  void setIntensity(int intensity);
+  void setIntensity(float intensity);
   void setColor(const glm::vec3& color);
   void setDirection(const glm::vec3& direction);
 

@@ -24,7 +24,7 @@
 
 #include "./Light.h"
 
-void AmbientLight::setIntensity(int intensity) {
+void AmbientLight::setIntensity(float intensity) {
   uniform_data.intensity = intensity;
   needs_to_update = true;
 }
@@ -34,7 +34,7 @@ void AmbientLight::setColor(const glm::vec3& color) {
   needs_to_update = true;
 }
 
-void DirectionalLight::setIntensity(int intensity) {
+void DirectionalLight::setIntensity(float intensity) {
   uniform_data.intensity = intensity;
   needs_to_update = true;
 }
