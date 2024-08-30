@@ -48,7 +48,9 @@ void Root::updateGpuResources() {
     directional_light.needs_to_update = false;
   }
 
-  for (auto& mesh : scene_manager->meshes) {
+  for (auto& mesh_ref : scene_manager->meshes) {
+    auto& mesh = mesh_ref.get();
+
     if (mesh.needs_to_update) {
       gpu_resource_manager->upsertUniformBuffer(&mesh);
       mesh.needs_to_update = false;
@@ -84,7 +86,9 @@ void Root::renderScene(const std::function<void(float, float)>& loop_func) {
         gpu_resource_manager->getUniformBufferId(
             &scene_manager->directional_light.get());
 
-    for (auto& mesh : scene_manager->meshes) {
+    for (auto& mesh_ref : scene_manager->meshes) {
+      auto& mesh = mesh_ref.get();
+
       ShaderProgramId shader_program_id =
           gpu_resource_manager->getShaderProgram(mesh.material.get().getType());
       auto& vertex_object =
