@@ -63,7 +63,7 @@ void RenderSystemGlfw::updateWindowSize(int width, int height) {
 
 void RenderSystemGlfw::runRenderLoop(
     const std::function<void(float, float)>& render_func) {
-  double start_time = glfwGetTime();
+  double start_time = glfwGetTime() * 1000.0;
   double current_time;
   double prev_time = start_time;
 
@@ -75,7 +75,7 @@ void RenderSystemGlfw::runRenderLoop(
     // Rendering commands here
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    current_time = glfwGetTime();
+    current_time = glfwGetTime() * 1000.0;
 
     render_func(static_cast<float>(current_time - start_time),
                 static_cast<float>(current_time - prev_time));
