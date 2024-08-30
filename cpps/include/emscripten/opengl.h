@@ -28,5 +28,5 @@
 
 #include <string>
 
-const static std::string SHADER_PREFIX = "#version 300 es\n";
-const static std::string FRAGMENT_PRECISION = "precision mediump float;\n";
+const static std::string SHADER_PREFIX =
+    "#version 300 es\nprecision mediump float;\n";

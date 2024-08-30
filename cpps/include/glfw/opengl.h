@@ -26,5 +26,6 @@
 
 #include <glad/gl.h>
 
+#include <string>
+
 const static std::string SHADER_PREFIX = "#version 330 core\n";
-const static std::string FRAGMENT_PRECISION = "";

@@ -125,7 +125,7 @@ std::string phong_fragment_source = R"(
 
     layout (std140) uniform AmbientLightBlock
     {
-        vec3 ambient_color;
+        vec3 ambient_color_uniform;
         float ambient_intensity;
     };
 
@@ -143,7 +143,7 @@ std::string phong_fragment_source = R"(
 
     void main()
     {
-        vec3 ambient_color = material_color * ambient_color * ambient_intensity * material_diffuse;
+        vec3 ambient_color = material_color * ambient_color_uniform * ambient_intensity * material_diffuse;
 
         vec3 normal = normalize(vNormal);
         vec3 light_vector = normalize(-directional_direction);
@@ -160,7 +160,6 @@ std::string phong_fragment_source = R"(
 
 ShaderSource getShaderSource(MaterialType type) {
   std::string shader_prefix = SHADER_PREFIX;
-  std::string fragment_precision = FRAGMENT_PRECISION;
 
   std::string base_vertex_source;
   std::string base_fragment_source;
@@ -191,8 +190,7 @@ ShaderSource getShaderSource(MaterialType type) {
   }
 
   std::string vertex_shader_source = shader_prefix + base_vertex_source;
-  std::string fragment_shader_source =
-      shader_prefix + fragment_precision + base_fragment_source;
+  std::string fragment_shader_source = shader_prefix + base_fragment_source;
 
   return {std::move(vertex_shader_source), std::move(fragment_shader_source)};
 }
