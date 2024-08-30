@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+#include <functional>
+
 #include "./Camera.h"
 #include "./Geometry.h"
 #include "./Light.h"
@@ -71,7 +73,12 @@ int main() {
   root.scene_manager->meshes.push_back(*mesh2);
   root.scene_manager->meshes.push_back(*mesh3);
 
-  root.renderScene();
+  std::function<void(float, float)> loop_func = [&](float delta_time,
+                                                    float elapsed_time) {
+    // TODO: Implement the loop function
+  };
+
+  root.renderScene(loop_func);
 
   return 0;
 }

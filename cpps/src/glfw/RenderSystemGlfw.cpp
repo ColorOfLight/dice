@@ -61,8 +61,12 @@ void RenderSystemGlfw::updateWindowSize(int width, int height) {
   glfwSetWindowSize(window, width, height);
 }
 
-void RenderSystemGlfw::runRenderLoop(std::function<void()> render_func) {
-  // // Main loop
+void RenderSystemGlfw::runRenderLoop(
+    const std::function<void(float, float)>& render_func) {
+  double start_time = glfwGetTime();
+  double current_time;
+  double prev_time = start_time;
+
   while (!glfwWindowShouldClose(window)) {
     // Input
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -71,11 +75,16 @@ void RenderSystemGlfw::runRenderLoop(std::function<void()> render_func) {
     // Rendering commands here
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    render_func();
+    current_time = glfwGetTime();
+
+    render_func(static_cast<float>(current_time - start_time),
+                static_cast<float>(current_time - prev_time));
 
     // Swap buffers and poll IO events
     glfwSwapBuffers(window);
     glfwPollEvents();
+
+    prev_time = current_time;
   }
 }
 

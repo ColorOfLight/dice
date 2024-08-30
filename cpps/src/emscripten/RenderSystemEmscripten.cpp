@@ -25,19 +25,26 @@
 #include "./RenderSystemEmscripten.h"
 
 // Store the std::function in a static/global variable
-static std::function<void()> stored_function;
+static std::function<void(float, float)> stored_function;
+static double start_time = emscripten_get_now();
+static double prev_time = start_time;
 
 extern "C" void renderFrame() {
-  // Clear the color and depth buffers
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+  double current_time = emscripten_get_now();
+  float elapsed_time = static_cast<float>(current_time - start_time);
+  float delta_time = static_cast<float>(current_time - prev_time);
+
   if (stored_function) {
-    stored_function();  // Call the stored std::function
+    stored_function(elapsed_time, delta_time);
   }
+
+  prev_time = current_time;
 }
 
 // Convert std::function<void()> to void(*)()
-void* getRenderFrame(const std::function<void()>& func) {
+void* getRenderFrame(const std::function<void(float, float)>& func) {
   stored_function = func;
   return (void*)renderFrame;
 }
@@ -69,7 +76,8 @@ void RenderSystemEmscripten::updateWindowSize(int width, int height) {
   emscripten_set_canvas_element_size("#canvas", width, height);
 }
 
-void RenderSystemEmscripten::runRenderLoop(std::function<void()> render_func) {
+void RenderSystemEmscripten::runRenderLoop(
+    const std::function<void(float, float)>& render_func) {
   void (*render_frame)() = (void (*)())getRenderFrame(render_func);
 
   emscripten_set_main_loop(render_frame, 0, 1);

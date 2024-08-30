@@ -24,6 +24,7 @@
 
 #pragma once
 
+#include <functional>
 #include <memory>
 
 #include "./Camera.h"
@@ -46,7 +47,7 @@ class Root {
  public:
   Root(const RootOptions& options);
 
-  void renderScene();
+  void renderScene(const std::function<void(float, float)>& loop_func);
 
  private:
   void updateGpuResources();

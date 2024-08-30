@@ -68,8 +68,11 @@ void Root::updateGpuResources() {
   }
 }
 
-void Root::renderScene() {
-  auto renderItems = [this]() -> void {
+void Root::renderScene(const std::function<void(float, float)>& loop_func) {
+  auto renderItems = [this, &loop_func](float elapsed_ms,
+                                        float delta_ms) -> void {
+    loop_func(elapsed_ms, delta_ms);
+
     updateGpuResources();
 
     auto camera_uniform_buffer_id =
