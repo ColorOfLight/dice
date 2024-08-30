@@ -54,7 +54,9 @@ std::string basic_vertex_source = R"(
         vec4 model_position = model_matrix * vec4(aPosition, 1.0);
         vPosition = model_position.xyz;
 
-        vNormal = aNormal;
+        mat3 normal_matrix = transpose(inverse(mat3(model_matrix)));
+        vNormal = normalize(normal_matrix * aNormal);
+
         vTexCoord = aTexCoord;
     }
 )";
