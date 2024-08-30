@@ -23,6 +23,7 @@
  */
 
 #include <functional>
+#include <glm/glm.hpp>
 
 #include "./Camera.h"
 #include "./Geometry.h"
@@ -73,9 +74,12 @@ int main() {
   root.scene_manager->meshes.push_back(*mesh2);
   root.scene_manager->meshes.push_back(*mesh3);
 
-  std::function<void(float, float)> loop_func = [&](float delta_time,
-                                                    float elapsed_time) {
-    // TODO: Implement the loop function
+  std::function<void(float, float)> loop_func = [&](float elapsed_ms,
+                                                    float delta_ms) {
+    float rotation_per_second = 0.25f;
+    float radian_per_ms = rotation_per_second * 2 * glm::pi<float>() / 1000.f;
+
+    mesh2.get()->rotate(radian_per_ms * delta_ms, glm::vec3(0, 1, 0));
   };
 
   root.renderScene(loop_func);
