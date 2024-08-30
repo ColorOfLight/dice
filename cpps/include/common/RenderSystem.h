@@ -24,11 +24,13 @@
 
 #pragma once
 
+#include <map>
 #include <memory>
 
 #include "./GpuResourceManager.h"
 #include "./RenderSystem.h"
 #include "./SceneManager.h"
+#include "./UniformBlock.h"
 
 struct RenderItem {
   ShaderProgramId shader_program_id;
@@ -47,7 +49,8 @@ class RenderSystem {
   virtual void runRenderLoop(std::function<void()> render_func) = 0;
   virtual void drawTriangles(
       ShaderProgramId shader_program_id, const VertexObject& vertex_object,
-      const std::vector<unsigned int> uniform_buffer_ids) = 0;
+      const std::unordered_map<UniformBlockType, unsigned int>
+          uniform_buffer_map) = 0;
 
  private:
 };

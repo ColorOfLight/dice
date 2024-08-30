@@ -24,27 +24,20 @@
 
 #pragma once
 
-#include <GLES3/gl3.h>  // OpenGL ES 3.0 for WebGL 2.0
-#include <emscripten/emscripten.h>
-#include <emscripten/html5.h>
+#include <memory>
+#include <string>
+#include <vector>
 
-#include <functional>
+#include "./Material.h"
 
-#include "./GpuResourceManager.h"
-#include "./RenderSystem.h"
-#include "./SceneManager.h"
-
-class RenderSystemEmscripten : public RenderSystem {
- public:
-  RenderSystemEmscripten(int width, int height);
-  ~RenderSystemEmscripten() override;
-
-  void updateWindowSize(int width, int height) override;
-  void runRenderLoop(std::function<void()> render_func) override;
-  void drawTriangles(ShaderProgramId shader_program_id,
-                     const VertexObject& vertex_object,
-                     const std::unordered_map<UniformBlockType, unsigned int>
-                         uniform_buffer_map) override;
-
- private:
+enum class UniformBlockType : size_t {
+  CAMERA = 0,
+  MODEL = 1,
+  MATERIAL = 2,
+  AMBIENT_LIGHT = 3,
+  DIRECTIONAL_LIGHT = 4,
 };
+
+std::string getUniformBlockName(UniformBlockType type);
+
+std::vector<UniformBlockType> getUniformBlockTypes(MaterialType material_type);

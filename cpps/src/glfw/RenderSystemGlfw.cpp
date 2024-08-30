@@ -81,33 +81,20 @@ void RenderSystemGlfw::runRenderLoop(std::function<void()> render_func) {
 
 void RenderSystemGlfw::drawTriangles(
     ShaderProgramId shader_program_id, const VertexObject& vertex_object,
-    const std::vector<unsigned int> uniform_buffer_ids) {
+    const std::unordered_map<UniformBlockType, unsigned int>
+        uniform_buffer_map) {
   glUseProgram(shader_program_id);
   glBindVertexArray(vertex_object.vao_id);
 
-  for (int i = 0; i < uniform_buffer_ids.size(); i++) {
-    glBindBufferBase(GL_UNIFORM_BUFFER, i, uniform_buffer_ids[i]);
+  int uniform_binging_point = 0;
+  for (auto& [block_type, buffer_id] : uniform_buffer_map) {
+    glBindBufferBase(GL_UNIFORM_BUFFER, uniform_binging_point, buffer_id);
+    unsigned int block_index = glGetUniformBlockIndex(
+        shader_program_id, getUniformBlockName(block_type).c_str());
+    glUniformBlockBinding(shader_program_id, block_index,
+                          uniform_binging_point);
+    uniform_binging_point++;
   }
-
-  unsigned int cameraBlockIndex =
-      glGetUniformBlockIndex(shader_program_id, "CameraBlock");
-  glUniformBlockBinding(shader_program_id, cameraBlockIndex, 0);
-
-  unsigned int ambientLightBlockIndex =
-      glGetUniformBlockIndex(shader_program_id, "AmbientLightBlock");
-  glUniformBlockBinding(shader_program_id, ambientLightBlockIndex, 1);
-
-  unsigned int directionalLightBlockIndex =
-      glGetUniformBlockIndex(shader_program_id, "DirectionalLightBlock");
-  glUniformBlockBinding(shader_program_id, directionalLightBlockIndex, 2);
-
-  unsigned int modelBlockIndex =
-      glGetUniformBlockIndex(shader_program_id, "ModelBlock");
-  glUniformBlockBinding(shader_program_id, modelBlockIndex, 3);
-
-  unsigned int materialBlockIndex =
-      glGetUniformBlockIndex(shader_program_id, "MaterialBlock");
-  glUniformBlockBinding(shader_program_id, materialBlockIndex, 4);
 
   glDrawElements(GL_TRIANGLES, vertex_object.vertex_count, GL_UNSIGNED_INT, 0);
 }

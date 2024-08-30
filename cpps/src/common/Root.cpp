@@ -24,7 +24,10 @@
 
 #include "./Root.h"
 
+#include <map>
 #include <vector>
+
+#include "./UniformBlock.h"
 
 void Root::updateGpuResources() {
   auto& camera = scene_manager->camera.get();
@@ -83,18 +86,42 @@ void Root::renderScene() {
           gpu_resource_manager->getShaderProgram(mesh.material.get().getType());
       auto& vertex_object =
           gpu_resource_manager->getVertexObject(&mesh.geometry.get());
-      auto mesh_uniform_buffer_id =
-          gpu_resource_manager->getUniformBufferId(&mesh);
-      auto material_uniform_buffer_id =
-          gpu_resource_manager->getUniformBufferId(&mesh.material.get());
 
-      std::vector<unsigned int> uniform_buffer_ids = {
-          camera_uniform_buffer_id, ambient_light_uniform_buffer_id,
-          directional_light_uniform_buffer_id, mesh_uniform_buffer_id,
-          material_uniform_buffer_id};
+      auto uniform_block_types =
+          getUniformBlockTypes(mesh.material.get().getType());
+
+      std::unordered_map<UniformBlockType, unsigned int> uniform_buffer_map;
+
+      for (auto& uniform_buffer_type : uniform_block_types) {
+        switch (uniform_buffer_type) {
+          case UniformBlockType::CAMERA:
+            uniform_buffer_map[uniform_buffer_type] = camera_uniform_buffer_id;
+            break;
+          case UniformBlockType::MODEL:
+            uniform_buffer_map[uniform_buffer_type] =
+                gpu_resource_manager->getUniformBufferId(&mesh);
+            break;
+          case UniformBlockType::MATERIAL:
+            uniform_buffer_map[uniform_buffer_type] =
+                gpu_resource_manager->getUniformBufferId(&mesh.material.get());
+            break;
+          case UniformBlockType::AMBIENT_LIGHT:
+            uniform_buffer_map[uniform_buffer_type] =
+                ambient_light_uniform_buffer_id;
+            break;
+          case UniformBlockType::DIRECTIONAL_LIGHT:
+            uniform_buffer_map[uniform_buffer_type] =
+                directional_light_uniform_buffer_id;
+            break;
+          default:
+            throw std::runtime_error(
+                "You should define the uniform block types for the material "
+                "type.");
+        }
+      }
 
       render_system->drawTriangles(shader_program_id, vertex_object,
-                                   uniform_buffer_ids);
+                                   uniform_buffer_map);
     }
   };
 
