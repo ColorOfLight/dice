@@ -164,3 +164,12 @@ CubeGeometry::CubeGeometry(float width, float height, float depth,
   this->vertices = std::move(vertices);
   this->indices = std::move(indices);
 }
+
+PlaneGeometry::PlaneGeometry(float width, float height, int width_segments,
+                             int height_segments) {
+  vertices = generateCubePlaneVertices(
+      glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), width, height,
+      0.0f, width_segments, height_segments);
+
+  indices = generatePlaneIndices(width_segments, height_segments);
+}

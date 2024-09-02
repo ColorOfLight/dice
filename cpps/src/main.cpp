@@ -51,6 +51,8 @@ int main() {
 
   std::unique_ptr<CubeGeometry> cube_geometry =
       std::make_unique<CubeGeometry>();
+  std::unique_ptr<PlaneGeometry> plane_geometry =
+      std::make_unique<PlaneGeometry>(8.0f, 8.0f);
 
   std::unique_ptr<TextureCoordMaterial> texture_coord_material =
       std::make_unique<TextureCoordMaterial>();
@@ -66,13 +68,20 @@ int main() {
   std::unique_ptr<Mesh> mesh3 =
       std::make_unique<Mesh>(*cube_geometry, *blue_color_material);
 
+  std::unique_ptr<Mesh> plane =
+      std::make_unique<Mesh>(*plane_geometry, *texture_coord_material);
+
   mesh1.get()->translate(glm::vec3(-2, 0, 0));
   mesh3.get()->translate(glm::vec3(2, 0, 0));
   mesh3.get()->rotate(glm::radians(45.0f), glm::vec3(1, 0, 0));
 
+  plane.get()->rotate(glm::radians(-90.0f), glm::vec3(1, 0, 0));
+  plane.get()->translate(glm::vec3(0, 0, -3));
+
   root.scene_manager->meshes.push_back(*mesh1);
   root.scene_manager->meshes.push_back(*mesh2);
   root.scene_manager->meshes.push_back(*mesh3);
+  root.scene_manager->meshes.push_back(*plane);
 
   std::function<void(float, float)> loop_func = [&](float elapsed_ms,
                                                     float delta_ms) {
