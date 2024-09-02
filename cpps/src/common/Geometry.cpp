@@ -26,9 +26,11 @@
 
 #include <glm/glm.hpp>
 
-std::vector<Vertex> generateCubePlaneVertices(
-    const glm::vec3& right, const glm::vec3& up, float right_size,
-    float up_size, float front_size, int width_segments, int height_segments) {
+std::vector<Vertex> generatePlaneVertices(const glm::vec3& right,
+                                          const glm::vec3& up, float right_size,
+                                          float up_size, float front_size,
+                                          int width_segments,
+                                          int height_segments) {
   int vertex_count = (width_segments + 1) * (height_segments + 1);
   std::vector<Vertex> vertices(vertex_count);
 
@@ -90,27 +92,27 @@ std::vector<unsigned int> generatePlaneIndices(int right_segments,
 CubeGeometry::CubeGeometry(float width, float height, float depth,
                            int width_segments, int height_segments,
                            int depth_segments) {
-  std::vector<Vertex> front_vertices = generateCubePlaneVertices(
+  std::vector<Vertex> front_vertices = generatePlaneVertices(
       glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), width, height,
       depth, width_segments, height_segments);
 
-  std::vector<Vertex> back_vertices = generateCubePlaneVertices(
+  std::vector<Vertex> back_vertices = generatePlaneVertices(
       glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), width, height,
       depth, width_segments, height_segments);
 
-  std::vector<Vertex> right_vertices = generateCubePlaneVertices(
+  std::vector<Vertex> right_vertices = generatePlaneVertices(
       glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 1.0f, 0.0f), depth, height,
       width, depth_segments, height_segments);
 
-  std::vector<Vertex> left_vertices = generateCubePlaneVertices(
+  std::vector<Vertex> left_vertices = generatePlaneVertices(
       glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f), depth, height,
       width, depth_segments, height_segments);
 
-  std::vector<Vertex> top_vertices = generateCubePlaneVertices(
+  std::vector<Vertex> top_vertices = generatePlaneVertices(
       glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), width, depth,
       height, width_segments, depth_segments);
 
-  std::vector<Vertex> bottom_vertices = generateCubePlaneVertices(
+  std::vector<Vertex> bottom_vertices = generatePlaneVertices(
       glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), width, depth,
       height, width_segments, depth_segments);
 
@@ -167,9 +169,9 @@ CubeGeometry::CubeGeometry(float width, float height, float depth,
 
 PlaneGeometry::PlaneGeometry(float width, float height, int width_segments,
                              int height_segments) {
-  vertices = generateCubePlaneVertices(
-      glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), width, height,
-      0.0f, width_segments, height_segments);
+  vertices = generatePlaneVertices(glm::vec3(1.0f, 0.0f, 0.0f),
+                                   glm::vec3(0.0f, 1.0f, 0.0f), width, height,
+                                   0.0f, width_segments, height_segments);
 
   indices = generatePlaneIndices(width_segments, height_segments);
 }
