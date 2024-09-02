@@ -25,23 +25,33 @@
 #include "./Mesh.h"
 
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 void Mesh::translate(const glm::vec3& translation) {
-  uniform_data.model_matrix =
-      glm::translate(uniform_data.model_matrix, translation);
+  translate_vector += translation;
 
-  needs_to_update = true;
+  updateModelMatrix();
 }
 
 void Mesh::scale(const glm::vec3& scaling) {
-  uniform_data.model_matrix = glm::scale(uniform_data.model_matrix, scaling);
+  scale_vector *= scaling;
 
-  needs_to_update = true;
+  updateModelMatrix();
 }
 
 void Mesh::rotate(float angle, const glm::vec3& axis) {
+  rotate_quaternion = glm::angleAxis(angle, axis) * rotate_quaternion;
+
+  updateModelMatrix();
+}
+
+void Mesh::updateModelMatrix() {
+  uniform_data.model_matrix = glm::mat4(1.0f);
   uniform_data.model_matrix =
-      glm::rotate(uniform_data.model_matrix, angle, axis);
+      glm::translate(uniform_data.model_matrix, translate_vector);
+  uniform_data.model_matrix *= glm::mat4_cast(rotate_quaternion);
+  uniform_data.model_matrix =
+      glm::scale(uniform_data.model_matrix, scale_vector);
 
   needs_to_update = true;
 }

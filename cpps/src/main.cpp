@@ -76,7 +76,7 @@ int main() {
   mesh3.get()->rotate(glm::radians(45.0f), glm::vec3(1, 0, 0));
 
   plane.get()->rotate(glm::radians(-90.0f), glm::vec3(1, 0, 0));
-  plane.get()->translate(glm::vec3(0, 0, -3));
+  plane.get()->translate(glm::vec3(0, -3, 0));
 
   root.scene_manager->meshes.push_back(*mesh1);
   root.scene_manager->meshes.push_back(*mesh2);

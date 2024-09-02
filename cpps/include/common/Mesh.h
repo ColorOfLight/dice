@@ -25,6 +25,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 #include "./Geometry.h"
 #include "./Material.h"
@@ -48,9 +49,16 @@ class Mesh : public SceneObject, public UniformDataObject {
   void scale(const glm::vec3& scaling);
   void rotate(float angle, const glm::vec3& axis);
 
+ private:
+  void updateModelMatrix();
+
+ public:
   std::reference_wrapper<Geometry> geometry;
   std::reference_wrapper<Material> material;
 
  private:
   MeshUniformData uniform_data = {glm::mat4(1.0f)};
+  glm::vec3 scale_vector = glm::vec3(1.0f);
+  glm::vec3 translate_vector = glm::vec3(0.0f);
+  glm::quat rotate_quaternion = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
 };
