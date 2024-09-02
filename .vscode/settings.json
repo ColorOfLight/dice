@@ -30,6 +30,7 @@
     "memory": "cpp",
     "algorithm": "cpp",
     "unordered_map": "cpp",
-    "optional": "cpp"
+    "optional": "cpp",
+    "functional": "cpp"
   },
 }

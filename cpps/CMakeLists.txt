@@ -91,6 +91,10 @@ endif()
 add_subdirectory(third-party/glm-1.0.1)
 target_link_libraries(DiceProject PRIVATE glm::glm)
 
+add_subdirectory(third-party/bullet3-3.25 EXCLUDE_FROM_ALL)
+target_link_libraries(DiceProject PRIVATE BulletDynamics BulletCollision LinearMath)
+
 target_include_directories(DiceProject PRIVATE
       third-party/glm-1.0.1/glm
+      third-party/bullet3-3.25/src
 )
