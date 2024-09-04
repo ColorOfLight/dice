@@ -18,9 +18,14 @@
 
     # If you want build for desktop,
     cmake . --preset=glfw
+    cd build-glfw
+    ninja
+    bin/DiceProject
 
     # If you want build for web,
     cmake . --preset=emscripten
+    ninja
+    # After compilation, use .js and .wasm file
     ```
 
 3. TBD

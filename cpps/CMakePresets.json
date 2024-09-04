@@ -3,7 +3,7 @@
   "configurePresets": [
     {
       "name": "glfw",
-      "generator": "Unix Makefiles",
+      "generator": "Ninja",
       "binaryDir": "${sourceDir}/build-glfw",
       "cacheVariables": {
         "TARGET": "OPENGL_GLAD_GLFW"
@@ -11,7 +11,7 @@
     },
     {
       "name": "emscripten",
-      "generator": "Unix Makefiles",
+      "generator": "Ninja",
       "binaryDir": "${sourceDir}/build-emscripten",
       "cacheVariables": {
         "CMAKE_TOOLCHAIN_FILE": "$env{EMSDK}/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
