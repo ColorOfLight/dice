@@ -52,6 +52,7 @@ class RenderSystem {
       ShaderProgramId shader_program_id, const VertexObject& vertex_object,
       const std::unordered_map<UniformBlockType, unsigned int>
           uniform_buffer_map) = 0;
+  virtual void setClearColor(const glm::vec4& color) = 0;
 
  private:
 };

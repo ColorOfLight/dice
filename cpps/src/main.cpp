@@ -52,6 +52,7 @@ int main() {
                                          glm::vec3(0.f, 0.f, -1.f));
 
   Root root({width, height, *camera, *ambient_light, *directional_light});
+  root.setClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 
   std::unique_ptr<CubeGeometry> cube_geometry =
       std::make_unique<CubeGeometry>();

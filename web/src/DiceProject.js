@@ -2658,6 +2658,8 @@ function dbg(...args) {
 
   var _glClear = (x0) => GLctx.clear(x0);
 
+  var _glClearColor = (x0, x1, x2, x3) => GLctx.clearColor(x0, x1, x2, x3);
+
   var _glCompileShader = (shader) => {
       GLctx.compileShader(GL.shaders[shader]);
     };
@@ -3031,6 +3033,8 @@ var wasmImports = {
   glBufferData: _glBufferData,
   /** @export */
   glClear: _glClear,
+  /** @export */
+  glClearColor: _glClearColor,
   /** @export */
   glCompileShader: _glCompileShader,
   /** @export */

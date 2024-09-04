@@ -102,3 +102,7 @@ void RenderSystemEmscripten::drawTriangles(
 
   glDrawElements(GL_TRIANGLES, vertex_object.vertex_count, GL_UNSIGNED_INT, 0);
 }
+
+void RenderSystemEmscripten::setClearColor(const glm::vec4& color) {
+  glClearColor(color.r, color.g, color.b, color.a);
+}

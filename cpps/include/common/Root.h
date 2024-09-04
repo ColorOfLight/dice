@@ -48,6 +48,7 @@ class Root {
   Root(const RootOptions& options);
 
   void renderScene(const std::function<void(float, float)>& loop_func);
+  void setClearColor(const glm::vec4& color);
 
  private:
   void updateGpuResources();

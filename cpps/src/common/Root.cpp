@@ -151,3 +151,7 @@ void Root::renderScene(const std::function<void(float, float)>& loop_func) {
 
   render_system->runRenderLoop(renderItems);
 }
+
+void Root::setClearColor(const glm::vec4& color) {
+  render_system->setClearColor(color);
+}

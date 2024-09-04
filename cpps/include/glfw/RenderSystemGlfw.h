@@ -47,6 +47,7 @@ class RenderSystemGlfw : public RenderSystem {
                      const VertexObject& vertex_object,
                      const std::unordered_map<UniformBlockType, unsigned int>
                          uniform_buffer_map) override;
+  void setClearColor(const glm::vec4& color) override;
 
  private:
   GLFWwindow* window;
