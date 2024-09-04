@@ -90,9 +90,6 @@ int main() {
 
   root.scene_manager.get()->entities.push_back(*cube_entity);
 
-  // TODO: remove later
-  root.scene_manager.get()->meshes.push_back(*cube_entity->mesh);
-
   std::function<void(float, float)> loop_func = [&](float elapsed_ms,
                                                     float delta_ms) {
     //

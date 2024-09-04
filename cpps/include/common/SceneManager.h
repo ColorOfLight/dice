@@ -40,7 +40,6 @@ class SceneManager {
                std::reference_wrapper<AmbientLight> ambient_light,
                std::reference_wrapper<DirectionalLight> directional_light);
 
-  std::vector<std::reference_wrapper<Mesh>> meshes;
   std::vector<std::reference_wrapper<Entity>> entities;
   std::reference_wrapper<Camera> camera;
   std::reference_wrapper<AmbientLight> ambient_light;
