@@ -29,35 +29,35 @@
 std::string basic_vertex_source = R"(
     layout (std140) uniform CameraBlock
     {
-        mat4 view_matrix;
-        mat4 projection_matrix;
-        vec3 eye;
+        mat4 u_camera_viewMatrix;
+        mat4 u_camera_projectionMatrix;
+        vec3 u_camera_eye;
     };
 
     layout (std140) uniform ModelBlock
     {
-        mat4 model_matrix;
+        mat4 u_model_matrix;
     };
 
-    layout (location = 0) in vec3 aPosition;
-    layout (location = 1) in vec3 aNormal;
-    layout (location = 2) in vec2 aTexCoord;
+    layout (location = 0) in vec3 a_position;
+    layout (location = 1) in vec3 a_normal;
+    layout (location = 2) in vec2 a_texCoord;
 
-    out vec3 vPosition;
-    out vec3 vNormal;
-    out vec2 vTexCoord;
+    out vec3 v_position;
+    out vec3 v_normal;
+    out vec2 v_texCoord;
 
     void main()
     {
-        gl_Position = projection_matrix * view_matrix * model_matrix * vec4(aPosition, 1.0);
+        gl_Position = u_camera_projectionMatrix * u_camera_viewMatrix * u_model_matrix * vec4(a_position, 1.0);
 
-        vec4 model_position = model_matrix * vec4(aPosition, 1.0);
-        vPosition = model_position.xyz;
+        vec4 modelPosition = u_model_matrix * vec4(a_position, 1.0);
+        v_position = modelPosition.xyz;
 
-        mat3 normal_matrix = transpose(inverse(mat3(model_matrix)));
-        vNormal = normalize(normal_matrix * aNormal);
+        mat3 normalMatrix = transpose(inverse(mat3(u_model_matrix)));
+        v_normal = normalize(normalMatrix * a_normal);
 
-        vTexCoord = aTexCoord;
+        v_texCoord = a_texCoord;
     }
 )";
 
@@ -73,38 +73,38 @@ std::string basic_fragment_source = R"(
 std::string normal_fragment_source = R"(
     out vec4 FragColor;
 
-    in vec3 vNormal;
+    in vec3 v_normal;
 
     void main()
     {
-        vec3 normalized_normal = normalize(vNormal);
-        vec3 positive_normal = (normalized_normal + 1.0) * 0.5;
-        FragColor = vec4(positive_normal, 1.0);
+        vec3 normalizedNormal = normalize(v_normal);
+        vec3 positiveNormal = (normalizedNormal + 1.0) * 0.5;
+        FragColor = vec4(positiveNormal, 1.0);
     }
 )";
 
 std::string texture_coord_fragment_source = R"(
     out vec4 FragColor;
 
-    in vec2 vTexCoord;
+    in vec2 v_texCoord;
 
     void main()
     {
-        FragColor = vec4(vTexCoord, 0.0, 1.0);
+        FragColor = vec4(v_texCoord, 0.0, 1.0);
     }
 )";
 
 std::string single_color_fragment_source = R"(
     layout (std140) uniform MaterialBlock
     {
-        vec3 color;
+        vec3 u_material_color;
     };
 
     out vec4 FragColor;
 
     void main()
     {
-        FragColor = vec4(color, 1.0);
+        FragColor = vec4(u_material_color, 1.0);
     }
 )";
 
@@ -112,50 +112,50 @@ std::string single_color_fragment_source = R"(
 std::string phong_fragment_source = R"(
     layout (std140) uniform CameraBlock
     {
-        mat4 view_matrix;
-        mat4 projection_matrix;
-        vec3 eye;
+        mat4 u_camera_viewMatrix;
+        mat4 u_camera_projectionMatrix;
+        vec3 u_camera_eye;
     };
 
     layout (std140) uniform MaterialBlock
     {
-        vec3 material_color;
-        float material_diffuse;
-        float material_specular;
-        float material_alpha;
+        vec3 u_material_color;
+        float u_material_diffuse;
+        float u_material_specular;
+        float u_material_alpha;
     };
 
     layout (std140) uniform AmbientLightBlock
     {
-        vec3 ambient_color_uniform;
-        float ambient_intensity;
+        vec3 u_ambient_color;
+        float u_ambient_intensity;
     };
 
     layout (std140) uniform DirectionalLightBlock
     {
-        vec3 directional_color;
-        vec3 directional_direction;
-        float directional_intensity;
+        vec3 u_directional_color;
+        vec3 u_directional_direction;
+        float u_directional_intensity;
     };
 
-    in vec3 vNormal;
-    in vec3 vPosition;
+    in vec3 v_normal;
+    in vec3 v_position;
 
     out vec4 FragColor;
 
     void main()
     {
-        vec3 ambient_color = material_color * ambient_color_uniform * ambient_intensity * material_diffuse;
+        vec3 ambientColor = u_material_color * u_ambient_color * u_ambient_intensity * u_material_diffuse;
 
-        vec3 normal = normalize(vNormal);
-        vec3 light_vector = normalize(-directional_direction);
-        vec3 directional_diffuse_color = material_diffuse * max(dot(normal, light_vector), 0.0) * material_color * directional_color * directional_intensity;
+        vec3 normal = normalize(v_normal);
+        vec3 lightVector = normalize(-u_directional_direction);
+        vec3 directionalDiffuseColor = u_material_diffuse * max(dot(normal, lightVector), 0.0) * u_material_color * u_directional_color * u_directional_intensity;
 
-        vec3 view_vector = normalize(eye - vPosition);
-        vec3 reflection = reflect(directional_direction, normal);
-        vec3 directional_specular_color = material_specular * pow(max(0.0, dot(reflection, view_vector)), material_alpha) * directional_color * directional_intensity;
+        vec3 viewVector = normalize(u_camera_eye - v_position);
+        vec3 reflection = reflect(u_directional_direction, normal);
+        vec3 directionalSpecularColor = u_material_specular * pow(max(0.0, dot(reflection, viewVector)), u_material_alpha) * u_directional_color * u_directional_intensity;
         
-        vec3 color = ambient_color + directional_diffuse_color + directional_specular_color;
+        vec3 color = ambientColor + directionalDiffuseColor + directionalSpecularColor;
         FragColor = vec4(color, 1.0);
     }
 )";
