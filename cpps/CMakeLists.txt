@@ -24,22 +24,22 @@ endif()
 
 if (${TARGET} STREQUAL "WEBGL_EMSCRIPTEN")
   if(NOT DEFINED ENV{EMSCRIPTEN_ROOT})
-        find_path(EMSCRIPTEN_ROOT "emcc")
+      find_path(EMSCRIPTEN_ROOT "emcc")
   else()
-      set(EMSCRIPTEN_ROOT "$ENV{EMSCRIPTEN_ROOT}")
+    set(EMSCRIPTEN_ROOT "$ENV{EMSCRIPTEN_ROOT}")
   endif()
 
   if(NOT EMSCRIPTEN_ROOT)
-      if(NOT DEFINED ENV{EMSDK})
-          message(FATAL_ERROR "The emcc compiler not found in PATH")
-      endif()
-      set(EMSCRIPTEN_ROOT "$ENV{EMSDK}/upstream/emscripten")
+    if(NOT DEFINED ENV{EMSDK})
+      message(FATAL_ERROR "The emcc compiler not found in PATH")
+    endif()
+    set(EMSCRIPTEN_ROOT "$ENV{EMSDK}/upstream/emscripten")
   endif()
 
   if(EXISTS "${EMSCRIPTEN_ROOT}/cmake/Modules/Platform/Emscripten.cmake")
-      set(CMAKE_TOOLCHAIN_FILE "${EMSCRIPTEN_ROOT}/cmake/Modules/Platform/Emscripten.cmake")
-      else()
-      message(FATAL_ERROR "Emscripten.cmake toolchain file not found")
+    set(CMAKE_TOOLCHAIN_FILE "${EMSCRIPTEN_ROOT}/cmake/Modules/Platform/Emscripten.cmake")
+  else()
+    message(FATAL_ERROR "Emscripten.cmake toolchain file not found")
   endif()
 
   include_directories(${COMMON_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR} include/emscripten)
@@ -66,20 +66,20 @@ elseif(${TARGET} STREQUAL "OPENGL_GLAD_GLFW")
   target_link_libraries(DiceProject PRIVATE glfw)
 
   target_include_directories(DiceProject PRIVATE
-      third-party/glad-4.3/include
-      third-party/glfw-3.4/include
+    third-party/glad-4.3/include
+    third-party/glfw-3.4/include
   )
 
   if (WIN32)
-      target_link_libraries(DiceProject PRIVATE opengl32)
+    target_link_libraries(DiceProject PRIVATE opengl32)
   elseif(APPLE)
-      find_library(COCOA_LIBRARY Cocoa)
-      find_library(OpenGL_LIBRARY OpenGL)
-      find_library(IOKit_LIBRARY IOKit)
-      find_library(CoreVideo_LIBRARY CoreVideo)
-      target_link_libraries(DiceProject PRIVATE ${COCOA_LIBRARY} ${OpenGL_LIBRARY} ${IOKit_LIBRARY} ${CoreVideo_LIBRARY})
+    find_library(COCOA_LIBRARY Cocoa)
+    find_library(OpenGL_LIBRARY OpenGL)
+    find_library(IOKit_LIBRARY IOKit)
+    find_library(CoreVideo_LIBRARY CoreVideo)
+    target_link_libraries(DiceProject PRIVATE ${COCOA_LIBRARY} ${OpenGL_LIBRARY} ${IOKit_LIBRARY} ${CoreVideo_LIBRARY})
   elseif(UNIX)
-      target_link_libraries(DiceProject PRIVATE GL X11 pthread Xrandr Xi dl)
+    target_link_libraries(DiceProject PRIVATE GL X11 pthread Xrandr Xi dl)
   endif()
 
   target_compile_definitions(DiceProject PRIVATE TARGET_GLFW)
@@ -88,13 +88,21 @@ else()
   message(FATAL_ERROR "Invalid target: ${TARGET}")
 endif()
 
-add_subdirectory(third-party/glm-1.0.1)
-target_link_libraries(DiceProject PRIVATE glm::glm)
+set(ASSIMP_BUILD_ASSIMP_TOOLS OFF)  # Disable Assimp tools like assimp_cmd
+set(ASSIMP_BUILD_TESTS OFF)         # Disable Assimp unit tests
+set(ASSIMP_BUILD_STATIC_LIB ON)     # Build Assimp as a static library
+set(ASSIMP_NO_EXPORT ON)            # Disable Assimp exports
+set(ASSIMP_BUILD_ZLIB ON)
 
+add_subdirectory(third-party/glm-1.0.1)
 add_subdirectory(third-party/bullet3 EXCLUDE_FROM_ALL)
-target_link_libraries(DiceProject PRIVATE BulletDynamics BulletCollision LinearMath)
+add_subdirectory(third-party/assimp)
+
+target_link_libraries(DiceProject PRIVATE
+  glm::glm BulletDynamics BulletCollision LinearMath assimp)
 
 target_include_directories(DiceProject PRIVATE
-      third-party/glm-1.0.1/glm
-      third-party/bullet3/src
+    third-party/glm-1.0.1/glm
+    third-party/bullet3/src
+    third-party/assimp/include
 )
