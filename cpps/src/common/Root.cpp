@@ -70,11 +70,17 @@ void Root::updateGpuResources() {
   }
 }
 
+void Root::simulateDynamicsWorld(float delta_ms) {
+  scene_manager.get()->bt_dynamics_world.get()->stepSimulation(
+      delta_ms / 1000.f, 10);
+}
+
 void Root::renderScene(const std::function<void(float, float)>& loop_func) {
   auto renderItems = [this, &loop_func](float elapsed_ms,
                                         float delta_ms) -> void {
     loop_func(elapsed_ms, delta_ms);
 
+    simulateDynamicsWorld(delta_ms);
     updateGpuResources();
 
     auto camera_uniform_buffer_id =

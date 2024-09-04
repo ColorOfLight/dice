@@ -22,14 +22,19 @@
  * SOFTWARE.
  */
 
+#include <btBulletDynamicsCommon.h>
+
 #include <functional>
 #include <glm/glm.hpp>
+#include <iostream>
 
 #include "./Camera.h"
+#include "./Entity.h"
 #include "./Geometry.h"
 #include "./Light.h"
 #include "./Material.h"
 #include "./Mesh.h"
+#include "./PhysicsModule.h"
 #include "./Root.h"
 
 int main() {
@@ -51,44 +56,46 @@ int main() {
 
   std::unique_ptr<CubeGeometry> cube_geometry =
       std::make_unique<CubeGeometry>();
-  std::unique_ptr<PlaneGeometry> plane_geometry =
-      std::make_unique<PlaneGeometry>(8.0f, 8.0f);
+  //   std::unique_ptr<PlaneGeometry> plane_geometry =
+  //       std::make_unique<PlaneGeometry>(8.0f, 8.0f);
 
-  std::unique_ptr<TextureCoordMaterial> texture_coord_material =
-      std::make_unique<TextureCoordMaterial>();
-  std::unique_ptr<SingleColorMaterial> blue_color_material =
-      std::make_unique<SingleColorMaterial>(glm::vec3(0.f, 0.f, 1.f));
   std::unique_ptr<PhongMaterial> phong_material =
       std::make_unique<PhongMaterial>();
 
-  std::unique_ptr<Mesh> mesh1 =
-      std::make_unique<Mesh>(*cube_geometry, *texture_coord_material);
-  std::unique_ptr<Mesh> mesh2 =
+  std::unique_ptr<Mesh> cube =
       std::make_unique<Mesh>(*cube_geometry, *phong_material);
-  std::unique_ptr<Mesh> mesh3 =
-      std::make_unique<Mesh>(*cube_geometry, *blue_color_material);
 
-  std::unique_ptr<Mesh> plane =
-      std::make_unique<Mesh>(*plane_geometry, *texture_coord_material);
+  //   std::unique_ptr<Mesh> plane =
+  //       std::make_unique<Mesh>(*plane_geometry, *phong_material);
 
-  mesh1.get()->translate(glm::vec3(-2, 0, 0));
-  mesh3.get()->translate(glm::vec3(2, 0, 0));
-  mesh3.get()->rotate(glm::radians(45.0f), glm::vec3(1, 0, 0));
+  //   plane.get()->rotate(glm::radians(-90.0f), glm::vec3(1, 0, 0));
+  //   plane.get()->translate(glm::vec3(0, -3, 0));
 
-  plane.get()->rotate(glm::radians(-90.0f), glm::vec3(1, 0, 0));
-  plane.get()->translate(glm::vec3(0, -3, 0));
+  std::unique_ptr<btCollisionShape> collision_shape =
+      std::make_unique<btBoxShape>(btBoxShape(btVector3(1, 1, 1)));
+  std::unique_ptr<btMotionState> motion_state =
+      std::make_unique<btDefaultMotionState>(btDefaultMotionState(
+          btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0))));
 
-  root.scene_manager->meshes.push_back(*mesh1);
-  root.scene_manager->meshes.push_back(*mesh2);
-  root.scene_manager->meshes.push_back(*mesh3);
-  root.scene_manager->meshes.push_back(*plane);
+  std::unique_ptr<PhysicsModule> physics_module =
+      std::make_unique<PhysicsModule>(1.f, btVector3(0, 0, 0),
+                                      std::move(collision_shape),
+                                      std::move(motion_state));
+
+  std::unique_ptr<Entity> cube_entity =
+      std::make_unique<Entity>(std::move(cube), std::move(physics_module));
+
+  // TODO
+  //   cube_entity.get()->syncPhysicsWithMesh();
+
+  root.scene_manager.get()->entities.push_back(*cube_entity);
+
+  // TODO: remove later
+  root.scene_manager.get()->meshes.push_back(*cube_entity->mesh);
 
   std::function<void(float, float)> loop_func = [&](float elapsed_ms,
                                                     float delta_ms) {
-    float rotation_per_second = 0.25f;
-    float radian_per_ms = rotation_per_second * 2 * glm::pi<float>() / 1000.f;
-
-    mesh2.get()->rotate(radian_per_ms * delta_ms, glm::vec3(0, 1, 0));
+    //
   };
 
   root.renderScene(loop_func);

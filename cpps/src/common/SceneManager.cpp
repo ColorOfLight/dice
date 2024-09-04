@@ -22,41 +22,24 @@
  * SOFTWARE.
  */
 
-#pragma once
-
-#include <functional>
-#include <memory>
-
-#include "./Camera.h"
-#include "./Geometry.h"
-#include "./GpuResourceManager.h"
-#include "./Light.h"
-#include "./Material.h"
-#include "./RenderSystem.h"
 #include "./SceneManager.h"
 
-struct RootOptions {
-  int initial_width;
-  int initial_height;
-  std::reference_wrapper<Camera> camera;
-  std::reference_wrapper<AmbientLight> ambient_light;
-  std::reference_wrapper<DirectionalLight> directional_light;
-};
+SceneManager::SceneManager(
+    std::reference_wrapper<Camera> camera,
+    std::reference_wrapper<AmbientLight> ambient_light,
+    std::reference_wrapper<DirectionalLight> directional_light)
+    : camera(camera),
+      ambient_light(ambient_light),
+      directional_light(directional_light) {
+  bt_broadphase = std::make_unique<btDbvtBroadphase>();
+  bt_collision_configuration =
+      std::make_unique<btDefaultCollisionConfiguration>();
+  bt_dispatcher =
+      std::make_unique<btCollisionDispatcher>(bt_collision_configuration.get());
+  bt_solver = std::make_unique<btSequentialImpulseConstraintSolver>();
+  bt_dynamics_world = std::make_unique<btDiscreteDynamicsWorld>(
+      bt_dispatcher.get(), bt_broadphase.get(), bt_solver.get(),
+      bt_collision_configuration.get());
 
-class Root {
- public:
-  Root(const RootOptions& options);
-
-  void renderScene(const std::function<void(float, float)>& loop_func);
-
- private:
-  void updateGpuResources();
-  void simulateDynamicsWorld(float delta_ms);
-
- public:
-  std::unique_ptr<SceneManager> scene_manager;
-
- private:
-  std::unique_ptr<RenderSystem> render_system;
-  std::unique_ptr<GpuResourceManager> gpu_resource_manager;
-};
+  bt_dynamics_world.get()->setGravity(btVector3(0, -9.81, 0));  // Set gravity
+}

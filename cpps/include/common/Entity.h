@@ -24,39 +24,20 @@
 
 #pragma once
 
-#include <functional>
-#include <memory>
+#include "./Mesh.h"
+#include "./PhysicsModule.h"
 
-#include "./Camera.h"
-#include "./Geometry.h"
-#include "./GpuResourceManager.h"
-#include "./Light.h"
-#include "./Material.h"
-#include "./RenderSystem.h"
-#include "./SceneManager.h"
-
-struct RootOptions {
-  int initial_width;
-  int initial_height;
-  std::reference_wrapper<Camera> camera;
-  std::reference_wrapper<AmbientLight> ambient_light;
-  std::reference_wrapper<DirectionalLight> directional_light;
-};
-
-class Root {
+class Entity {
  public:
-  Root(const RootOptions& options);
+  Entity(Mesh&& mesh, PhysicsModule&& physics_module)
+      : mesh(std::make_unique<Mesh>(std::move(mesh))),
+        physics_module(
+            std::make_unique<PhysicsModule>(std::move(physics_module))) {};
 
-  void renderScene(const std::function<void(float, float)>& loop_func);
+  Entity(std::unique_ptr<Mesh> mesh,
+         std::unique_ptr<PhysicsModule> physics_module)
+      : mesh(std::move(mesh)), physics_module(std::move(physics_module)) {};
 
- private:
-  void updateGpuResources();
-  void simulateDynamicsWorld(float delta_ms);
-
- public:
-  std::unique_ptr<SceneManager> scene_manager;
-
- private:
-  std::unique_ptr<RenderSystem> render_system;
-  std::unique_ptr<GpuResourceManager> gpu_resource_manager;
+  std::unique_ptr<Mesh> mesh;
+  std::unique_ptr<PhysicsModule> physics_module;
 };

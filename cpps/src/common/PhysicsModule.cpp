@@ -22,41 +22,27 @@
  * SOFTWARE.
  */
 
-#pragma once
+#include "./PhysicsModule.h"
 
-#include <functional>
-#include <memory>
+PhysicsModule::PhysicsModule(btScalar mass, btVector3 inertia,
+                             std::unique_ptr<btCollisionShape> collision_shape,
+                             std::unique_ptr<btMotionState> motion_state)
+    : mass(mass),
+      inertia(inertia),
+      bt_collision_shape(std::move(collision_shape)),
+      bt_motion_state(std::move(motion_state)) {
+  btRigidBody::btRigidBodyConstructionInfo rigid_body_ci(
+      mass, bt_motion_state.get(), bt_collision_shape.get(), inertia);
 
-#include "./Camera.h"
-#include "./Geometry.h"
-#include "./GpuResourceManager.h"
-#include "./Light.h"
-#include "./Material.h"
-#include "./RenderSystem.h"
-#include "./SceneManager.h"
+  bt_rigid_body = std::make_unique<btRigidBody>(rigid_body_ci);
+  if (mass > 0) {
+    this->bt_collision_shape.get()->calculateLocalInertia(mass, inertia);
+  }
+}
 
-struct RootOptions {
-  int initial_width;
-  int initial_height;
-  std::reference_wrapper<Camera> camera;
-  std::reference_wrapper<AmbientLight> ambient_light;
-  std::reference_wrapper<DirectionalLight> directional_light;
-};
+glm::vec3 PhysicsModule::getPosition() {
+  btTransform transform = bt_rigid_body.get()->getWorldTransform();
+  btVector3 origin = transform.getOrigin();
 
-class Root {
- public:
-  Root(const RootOptions& options);
-
-  void renderScene(const std::function<void(float, float)>& loop_func);
-
- private:
-  void updateGpuResources();
-  void simulateDynamicsWorld(float delta_ms);
-
- public:
-  std::unique_ptr<SceneManager> scene_manager;
-
- private:
-  std::unique_ptr<RenderSystem> render_system;
-  std::unique_ptr<GpuResourceManager> gpu_resource_manager;
-};
+  return glm::vec3(origin.getX(), origin.getY(), origin.getZ());
+}
