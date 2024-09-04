@@ -22,41 +22,14 @@
  * SOFTWARE.
  */
 
-#pragma once
-
-#include <btBulletDynamicsCommon.h>
-
-#include <vector>
-
-#include "./Camera.h"
 #include "./Entity.h"
-#include "./Geometry.h"
-#include "./Light.h"
-#include "./Mesh.h"
 
-class SceneManager {
- public:
-  SceneManager(std::reference_wrapper<Camera> camera,
-               std::reference_wrapper<AmbientLight> ambient_light,
-               std::reference_wrapper<DirectionalLight> directional_light);
+void Entity::syncMeshWithPhysics() {
+  mesh->setTranslate(physics_module->getPosition());
+  mesh->setRotate(physics_module->getRotation());
+}
 
-  void addEntity(std::reference_wrapper<Entity> entity);
-
-  const std::vector<std::reference_wrapper<Entity>>& getEntities() const {
-    return entities;
-  }
-
-  std::reference_wrapper<Camera> camera;
-  std::reference_wrapper<AmbientLight> ambient_light;
-  std::reference_wrapper<DirectionalLight> directional_light;
-
-  // Bullet Physics
-  std::unique_ptr<btBroadphaseInterface> bt_broadphase;
-  std::unique_ptr<btDefaultCollisionConfiguration> bt_collision_configuration;
-  std::unique_ptr<btCollisionDispatcher> bt_dispatcher;
-  std::unique_ptr<btSequentialImpulseConstraintSolver> bt_solver;
-  std::unique_ptr<btDiscreteDynamicsWorld> bt_dynamics_world;
-
- private:
-  std::vector<std::reference_wrapper<Entity>> entities;
-};
+void Entity::syncPhysicsWithMesh() {
+  physics_module->setPosition(mesh->getTranslation());
+  physics_module->setRotation(mesh->getRotation());
+}

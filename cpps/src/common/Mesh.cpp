@@ -45,6 +45,24 @@ void Mesh::rotate(float angle, const glm::vec3& axis) {
   updateModelMatrix();
 }
 
+void Mesh::setTranslate(const glm::vec3& translation) {
+  translate_vector = translation;
+
+  updateModelMatrix();
+}
+
+void Mesh::setScale(const glm::vec3& scaling) {
+  scale_vector = scaling;
+
+  updateModelMatrix();
+}
+
+void Mesh::setRotate(const glm::quat& rotation) {
+  rotate_quaternion = rotation;
+
+  updateModelMatrix();
+}
+
 void Mesh::updateModelMatrix() {
   uniform_data.model_matrix = glm::mat4(1.0f);
   uniform_data.model_matrix =

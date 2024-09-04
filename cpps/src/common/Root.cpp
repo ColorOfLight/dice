@@ -48,7 +48,7 @@ void Root::updateGpuResources() {
     directional_light.needs_to_update = false;
   }
 
-  for (auto& entity_ref : scene_manager->entities) {
+  for (auto& entity_ref : scene_manager->getEntities()) {
     auto& mesh_ptr = entity_ref.get().mesh;
     auto& mesh = *mesh_ptr;
 
@@ -76,12 +76,21 @@ void Root::simulateDynamicsWorld(float delta_ms) {
       delta_ms / 1000.f, 10);
 }
 
+void Root::syncEntityMeshesWithPhysics() {
+  for (auto& entity_ref : scene_manager->getEntities()) {
+    auto& entity = entity_ref.get();
+    entity.syncMeshWithPhysics();
+  }
+}
+
 void Root::renderScene(const std::function<void(float, float)>& loop_func) {
   auto renderItems = [this, &loop_func](float elapsed_ms,
                                         float delta_ms) -> void {
     loop_func(elapsed_ms, delta_ms);
 
     simulateDynamicsWorld(delta_ms);
+    syncEntityMeshesWithPhysics();
+
     updateGpuResources();
 
     auto camera_uniform_buffer_id =
@@ -93,7 +102,7 @@ void Root::renderScene(const std::function<void(float, float)>& loop_func) {
         gpu_resource_manager->getUniformBufferId(
             &scene_manager->directional_light.get());
 
-    for (auto& entity_ref : scene_manager->entities) {
+    for (auto& entity_ref : scene_manager->getEntities()) {
       auto& mesh_ptr = entity_ref.get().mesh;
       auto& mesh = *mesh_ptr;
 

@@ -26,7 +26,6 @@
 
 #include <functional>
 #include <glm/glm.hpp>
-#include <iostream>
 
 #include "./Camera.h"
 #include "./Entity.h"
@@ -85,10 +84,9 @@ int main() {
   std::unique_ptr<Entity> cube_entity =
       std::make_unique<Entity>(std::move(cube), std::move(physics_module));
 
-  // TODO
-  //   cube_entity.get()->syncPhysicsWithMesh();
+  cube_entity.get()->syncPhysicsWithMesh();
 
-  root.scene_manager.get()->entities.push_back(*cube_entity);
+  root.scene_manager->addEntity(*cube_entity);
 
   std::function<void(float, float)> loop_func = [&](float elapsed_ms,
                                                     float delta_ms) {

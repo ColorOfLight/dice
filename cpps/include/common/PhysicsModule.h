@@ -37,7 +37,12 @@ class PhysicsModule {
                 std::unique_ptr<btCollisionShape> collision_shape,
                 std::unique_ptr<btMotionState> motion_state);
 
-  glm::vec3 getPosition();
+  glm::vec3 getPosition() const;
+  glm::quat getRotation() const;
+  std::reference_wrapper<btRigidBody> getRigidBody() { return *bt_rigid_body; }
+
+  void setPosition(const glm::vec3& position);
+  void setRotation(const glm::quat& rotation);
 
  private:
   std::unique_ptr<btCollisionShape> bt_collision_shape;

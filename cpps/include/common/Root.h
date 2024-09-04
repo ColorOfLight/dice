@@ -52,6 +52,7 @@ class Root {
  private:
   void updateGpuResources();
   void simulateDynamicsWorld(float delta_ms);
+  void syncEntityMeshesWithPhysics();
 
  public:
   std::unique_ptr<SceneManager> scene_manager;

@@ -38,6 +38,9 @@ class Entity {
          std::unique_ptr<PhysicsModule> physics_module)
       : mesh(std::move(mesh)), physics_module(std::move(physics_module)) {};
 
+  void syncMeshWithPhysics();
+  void syncPhysicsWithMesh();
+
   std::unique_ptr<Mesh> mesh;
   std::unique_ptr<PhysicsModule> physics_module;
 };

@@ -49,6 +49,14 @@ class Mesh : public SceneObject, public UniformDataObject {
   void scale(const glm::vec3& scaling);
   void rotate(float angle, const glm::vec3& axis);
 
+  void setTranslate(const glm::vec3& translation);
+  void setScale(const glm::vec3& scaling);
+  void setRotate(const glm::quat& rotation);
+
+  const glm::vec3& getTranslation() const { return translate_vector; }
+  const glm::vec3& getScaling() const { return scale_vector; }
+  const glm::quat& getRotation() const { return rotate_quaternion; }
+
  private:
   void updateModelMatrix();
 

@@ -24,6 +24,8 @@
 
 #include "./PhysicsModule.h"
 
+#include <glm/gtc/quaternion.hpp>
+
 PhysicsModule::PhysicsModule(btScalar mass, btVector3 inertia,
                              std::unique_ptr<btCollisionShape> collision_shape,
                              std::unique_ptr<btMotionState> motion_state)
@@ -40,9 +42,37 @@ PhysicsModule::PhysicsModule(btScalar mass, btVector3 inertia,
   }
 }
 
-glm::vec3 PhysicsModule::getPosition() {
+glm::vec3 PhysicsModule::getPosition() const {
   btTransform transform = bt_rigid_body.get()->getWorldTransform();
   btVector3 origin = transform.getOrigin();
 
   return glm::vec3(origin.getX(), origin.getY(), origin.getZ());
+}
+
+glm::quat PhysicsModule::getRotation() const {
+  btTransform transform = bt_rigid_body.get()->getWorldTransform();
+  btQuaternion rotation = transform.getRotation();
+
+  return glm::quat(rotation.getW(), rotation.getX(), rotation.getY(),
+                   rotation.getZ());
+}
+
+void PhysicsModule::setPosition(const glm::vec3& position) {
+  btTransform transform = bt_rigid_body.get()->getWorldTransform();
+  btVector3 origin = transform.getOrigin();
+
+  origin.setX(position.x);
+  origin.setY(position.y);
+  origin.setZ(position.z);
+
+  transform.setOrigin(origin);
+  bt_rigid_body.get()->setWorldTransform(transform);
+}
+
+void PhysicsModule::setRotation(const glm::quat& rotation) {
+  btTransform transform = bt_rigid_body.get()->getWorldTransform();
+  btQuaternion quaternion(rotation.x, rotation.y, rotation.z, rotation.w);
+
+  transform.setRotation(quaternion);
+  bt_rigid_body.get()->setWorldTransform(transform);
 }

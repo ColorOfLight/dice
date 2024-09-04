@@ -43,3 +43,11 @@ SceneManager::SceneManager(
 
   bt_dynamics_world.get()->setGravity(btVector3(0, -9.81, 0));  // Set gravity
 }
+
+void SceneManager::addEntity(std::reference_wrapper<Entity> entity) {
+  auto& physics_module = entity.get().physics_module;
+  auto rigid_body = (*physics_module).getRigidBody();
+
+  entities.push_back(entity);
+  bt_dynamics_world.get()->addRigidBody(&rigid_body.get());
+}
