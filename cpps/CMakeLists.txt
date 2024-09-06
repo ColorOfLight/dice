@@ -106,3 +106,13 @@ target_include_directories(DiceProject PRIVATE
     third-party/bullet3/src
     third-party/assimp/include
 )
+
+# Copy assets to the build directory
+add_custom_target(copy_assets ALL
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/assets ${CMAKE_BINARY_DIR}/assets
+)
+
+# Optionally install the assets
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/assets)

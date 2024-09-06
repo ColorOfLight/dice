@@ -30,6 +30,7 @@
 #include "./Camera.h"
 #include "./Entity.h"
 #include "./Geometry.h"
+#include "./GeometryUtils.h"
 #include "./Light.h"
 #include "./Material.h"
 #include "./Mesh.h"
@@ -54,8 +55,13 @@ int main() {
   Root root({width, height, *camera, *ambient_light, *directional_light});
   root.setClearColor(glm::vec4(0.1f, 0.1f, 0.1f, 1.0f));
 
-  std::unique_ptr<CubeGeometry> cube_geometry =
-      std::make_unique<CubeGeometry>();
+  std::string modelPath = "assets/models/cube.obj";
+
+  std::unique_ptr<Geometry> cube_geometry =
+      std::make_unique<Geometry>(GeometryUtils::loadObjToGeometry(modelPath));
+
+  //   std::unique_ptr<CubeGeometry> cube_geometry =
+  //       std::make_unique<CubeGeometry>();
   std::unique_ptr<PlaneGeometry> plane_geometry =
       std::make_unique<PlaneGeometry>(8.0f, 8.0f);
 
