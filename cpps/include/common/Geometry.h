@@ -65,13 +65,13 @@ class TriangleGeometry : public Geometry {
 
 class CubeGeometry : public Geometry {
  public:
-  CubeGeometry(float width = 1.0f, float height = 1.0f, float depth = 1.f,
-               int width_segments = 1, int height_segments = 1,
-               int depth_segments = 1);
+  CubeGeometry(float half_width = 1.0f, float half_height = 1.0f,
+               float half_depth = 1.f, int half_width_segments = 1,
+               int half_height_segments = 1, int half_depth_segments = 1);
 };
 
 class PlaneGeometry : public Geometry {
  public:
-  PlaneGeometry(float width = 1.0f, float height = 1.0f, int width_segments = 1,
-                int height_segments = 1);
+  PlaneGeometry(float half_width = 1.0f, float half_height = 1.0f,
+                int half_width_segments = 1, int half_height_segments = 1);
 };

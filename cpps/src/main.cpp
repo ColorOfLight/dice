@@ -60,10 +60,10 @@ int main() {
   std::unique_ptr<Geometry> holder_geometry = std::make_unique<Geometry>(
       GeometryUtils::loadObjToGeometry(holder_model_path));
   std::unique_ptr<CubeGeometry> cube_geometry =
-      std::make_unique<CubeGeometry>(0.2f, 0.2f, 0.2f);
+      std::make_unique<CubeGeometry>(0.1f, 0.1f, 0.1f);
 
   std::unique_ptr<PlaneGeometry> plane_geometry =
-      std::make_unique<PlaneGeometry>(8.0f, 8.0f);
+      std::make_unique<PlaneGeometry>(4.0f, 4.0f);
 
   std::unique_ptr<PhongMaterial> phong_material =
       std::make_unique<PhongMaterial>();
