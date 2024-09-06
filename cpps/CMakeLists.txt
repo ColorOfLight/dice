@@ -48,8 +48,15 @@ if (${TARGET} STREQUAL "WEBGL_EMSCRIPTEN")
 
   add_executable(DiceProject ${DICE_SOURCES})
 
-  set_target_properties(DiceProject PROPERTIES LINK_FLAGS "-s MIN_WEBGL_VERSION=2 -s MAX_WEBGL_VERSION=2 -fexceptions")
+  # Copy assets to the build directory
+  add_custom_target(copy_assets ALL
+      COMMAND ${CMAKE_COMMAND} -E copy_directory
+          ${CMAKE_SOURCE_DIR}/assets ${CMAKE_BINARY_DIR}/assets
+  )
+
+  set_target_properties(DiceProject PROPERTIES LINK_FLAGS "-sMIN_WEBGL_VERSION=2 -sMAX_WEBGL_VERSION=2 -sALLOW_MEMORY_GROWTH=1 -fexceptions")
   target_compile_definitions(DiceProject PRIVATE TARGET_EMSCRIPTEN)
+  target_link_options(DiceProject PUBLIC --preload-file assets)
 
 elseif(${TARGET} STREQUAL "OPENGL_GLAD_GLFW")
   include_directories(${COMMON_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR} include/glfw)
@@ -82,6 +89,12 @@ elseif(${TARGET} STREQUAL "OPENGL_GLAD_GLFW")
     target_link_libraries(DiceProject PRIVATE GL X11 pthread Xrandr Xi dl)
   endif()
 
+  # Copy assets to the build directory
+  add_custom_target(copy_assets ALL
+      COMMAND ${CMAKE_COMMAND} -E copy_directory
+          ${CMAKE_SOURCE_DIR}/assets ${CMAKE_BINARY_DIR}/assets
+  )
+
   target_compile_definitions(DiceProject PRIVATE TARGET_GLFW)
 else()
   # Print error message
@@ -107,12 +120,3 @@ target_include_directories(DiceProject PRIVATE
     third-party/assimp/include
 )
 
-# Copy assets to the build directory
-add_custom_target(copy_assets ALL
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_SOURCE_DIR}/assets ${CMAKE_BINARY_DIR}/assets
-)
-
-# Optionally install the assets
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/assets
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/assets)
