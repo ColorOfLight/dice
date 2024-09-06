@@ -18,6 +18,18 @@ set(OPENGL_INCLUDE_DIR include/opengl)
 file(GLOB OPENGL_HEADERS "${OpenGL_INCLUDE_DIR}/*.h")
 file(GLOB OPENGL_SOURCE_FILES src/opengl/*.cpp)
 
+# Set assmip options
+option(ASSIMP_BUILD_STATIC_LIB ON)
+option(ASSIMP_BUILD_ZLIB ON)
+option(ASSIMP_NO_EXPORT ON)
+option(ASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT "Disable all importers by default" OFF)
+option(ASSIMP_BUILD_ALL_EXPORTERS_BY_DEFAULT "Disable all exporters by default" OFF)
+option(ASSIMP_BUILD_TESTS "Build test suite" OFF)
+option(ASSIMP_INSTALL OFF)
+
+set(ASSIMP_BUILD_OBJ_IMPORTER ON)
+set(ASSIMP_BUILD_ZLIB ON)
+
 if(NOT DEFINED TARGET)
   message(FATAL_ERROR "TARGET is not defined. Please set the TARGET variable.")
 endif()
@@ -100,12 +112,6 @@ else()
   # Print error message
   message(FATAL_ERROR "Invalid target: ${TARGET}")
 endif()
-
-set(ASSIMP_BUILD_ASSIMP_TOOLS OFF)  # Disable Assimp tools like assimp_cmd
-set(ASSIMP_BUILD_TESTS OFF)         # Disable Assimp unit tests
-set(ASSIMP_BUILD_STATIC_LIB ON)     # Build Assimp as a static library
-set(ASSIMP_NO_EXPORT ON)            # Disable Assimp exports
-set(ASSIMP_BUILD_ZLIB ON)
 
 add_subdirectory(third-party/glm-1.0.1)
 add_subdirectory(third-party/bullet3 EXCLUDE_FROM_ALL)
