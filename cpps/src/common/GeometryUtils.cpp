@@ -71,24 +71,17 @@ Geometry GeometryUtils::loadObjToGeometry(const std::string& obj_path) {
 
   // Extract indices (faces)
   std::vector<unsigned int> indices;
-  for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
+  for (int i = 0; i < mesh->mNumFaces; i++) {
     aiFace face = mesh->mFaces[i];
-    // Ensure that the face is a triangle (as we used aiProcess_Triangulate)
-    if (face.mNumIndices == 3) {
-      indices.push_back(face.mIndices[0]);
-      indices.push_back(face.mIndices[1]);
-      indices.push_back(face.mIndices[2]);
-    } else if (face.mNumIndices == 4) {
-      // It's a quad, convert it into two triangles
-      indices.push_back(face.mIndices[0]);
-      indices.push_back(face.mIndices[1]);
-      indices.push_back(face.mIndices[2]);
+    if (face.mNumIndices <= 2) {
+      throw std::runtime_error("Face must have at least 3 indices");
+    }
 
-      indices.push_back(face.mIndices[0]);
-      indices.push_back(face.mIndices[2]);
-      indices.push_back(face.mIndices[3]);
-    } else {
-      throw std::runtime_error("Face is not a triangle or a quad");
+    auto& first_index = face.mIndices[0];
+    for (int j = 1; j < face.mNumIndices - 1; j++) {
+      indices.push_back(first_index);
+      indices.push_back(face.mIndices[j]);
+      indices.push_back(face.mIndices[j + 1]);
     }
   }
 
