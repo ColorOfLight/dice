@@ -37,3 +37,4 @@
 - [ ] Prevent re-calculate model matrix in Mesh
 - [ ] model load
 - [ ] keyboard input
+- [ ] reduce pkg size with replacing the big packages (like assimp)
