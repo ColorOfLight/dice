@@ -68,6 +68,15 @@ class CubeGeometry : public Geometry {
   CubeGeometry(float half_width = 1.0f, float half_height = 1.0f,
                float half_depth = 1.f, int half_width_segments = 1,
                int half_height_segments = 1, int half_depth_segments = 1);
+
+  float getHalfWidth() const { return half_width; };
+  float getHalfHeight() const { return half_height; };
+  float getHalfDepth() const { return half_depth; };
+
+ private:
+  float half_width;
+  float half_height;
+  float half_depth;
 };
 
 class PlaneGeometry : public Geometry {

@@ -29,13 +29,17 @@
 #include <glm/glm.hpp>
 #include <memory>
 
-#include "./Material.h"
+#include "./Geometry.h"
 
 class PhysicsModule {
  public:
   PhysicsModule(btScalar mass, btVector3 inertia,
                 std::unique_ptr<btCollisionShape> collision_shape,
                 std::unique_ptr<btMotionState> motion_state);
+  PhysicsModule(btScalar mass, btVector3 inertia, const btTransform& transform)
+      : mass(mass),
+        inertia(inertia),
+        bt_motion_state(std::make_unique<btDefaultMotionState>(transform)) {}
 
   glm::vec3 getPosition() const;
   glm::quat getRotation() const;
@@ -44,11 +48,28 @@ class PhysicsModule {
   void setPosition(const glm::vec3& position);
   void setRotation(const glm::quat& rotation);
 
- private:
+ protected:
   std::unique_ptr<btCollisionShape> bt_collision_shape;
   std::unique_ptr<btMotionState> bt_motion_state;
   std::unique_ptr<btRigidBody> bt_rigid_body;
 
   btScalar mass;
   btVector3 inertia;
+};
+
+class BoxShapePhysicsModule : public PhysicsModule {
+ public:
+  BoxShapePhysicsModule(float mass, const btVector3& inertia,
+                        const CubeGeometry& cube_geometry,
+                        const btTransform& transform);
+};
+
+class TriangleMeshPhysicsModule : public PhysicsModule {
+ public:
+  TriangleMeshPhysicsModule(const Geometry& geometry, float mass,
+                            const btVector3& inertia,
+                            const btTransform& transform);
+
+ private:
+  std::unique_ptr<btTriangleIndexVertexArray> mesh_index_vertex_array;
 };

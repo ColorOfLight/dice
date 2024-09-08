@@ -24,6 +24,8 @@
 
 #include "./SceneManager.h"
 
+#include <BulletCollision/Gimpact/btGImpactCollisionAlgorithm.h>
+
 SceneManager::SceneManager(
     std::reference_wrapper<Camera> camera,
     std::reference_wrapper<AmbientLight> ambient_light,
@@ -36,6 +38,7 @@ SceneManager::SceneManager(
       std::make_unique<btDefaultCollisionConfiguration>();
   bt_dispatcher =
       std::make_unique<btCollisionDispatcher>(bt_collision_configuration.get());
+  btGImpactCollisionAlgorithm::registerAlgorithm(bt_dispatcher.get());
   bt_solver = std::make_unique<btSequentialImpulseConstraintSolver>();
   bt_dynamics_world = std::make_unique<btDiscreteDynamicsWorld>(
       bt_dispatcher.get(), bt_broadphase.get(), bt_solver.get(),

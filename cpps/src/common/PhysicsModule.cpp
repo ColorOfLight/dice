@@ -24,6 +24,9 @@
 
 #include "./PhysicsModule.h"
 
+#include <BulletCollision/Gimpact/btGImpactCollisionAlgorithm.h>
+#include <BulletCollision/Gimpact/btGImpactShape.h>
+
 #include <glm/gtc/quaternion.hpp>
 
 PhysicsModule::PhysicsModule(btScalar mass, btVector3 inertia,
@@ -75,4 +78,62 @@ void PhysicsModule::setRotation(const glm::quat& rotation) {
 
   transform.setRotation(quaternion);
   bt_rigid_body.get()->setWorldTransform(transform);
+}
+
+BoxShapePhysicsModule::BoxShapePhysicsModule(float mass,
+                                             const btVector3& inertia,
+                                             const CubeGeometry& cube_geometry,
+                                             const btTransform& transform)
+    : PhysicsModule(
+          mass, inertia,
+          std::make_unique<btBoxShape>(btVector3(cube_geometry.getHalfWidth(),
+                                                 cube_geometry.getHalfHeight(),
+                                                 cube_geometry.getHalfDepth())),
+          std::make_unique<btDefaultMotionState>(transform)) {}
+
+TriangleMeshPhysicsModule::TriangleMeshPhysicsModule(
+    const Geometry& geometry, float mass, const btVector3& inertia,
+    const btTransform& transform)
+    : PhysicsModule(mass, inertia, transform) {
+  auto& geometry_vertices = geometry.getVertices();
+
+  std::vector<btScalar> vertices =
+      std::vector<btScalar>(geometry_vertices.size() * 3);
+  for (int i = 0; i < geometry_vertices.size(); i++) {
+    vertices.push_back(geometry_vertices[i].position.x);
+    vertices.push_back(geometry_vertices[i].position.y);
+    vertices.push_back(geometry_vertices[i].position.z);
+  }
+
+  const auto& indices = geometry.getIndices();
+
+  // Create a btIndexedMesh and set its data
+  btIndexedMesh indexed_mesh;
+  indexed_mesh.m_numTriangles = indices.size() / 3;
+  indexed_mesh.m_triangleIndexBase =
+      reinterpret_cast<const unsigned char*>(indices.data());
+  indexed_mesh.m_triangleIndexStride = 3 * sizeof(int);
+  indexed_mesh.m_numVertices = vertices.size() / 3;
+  indexed_mesh.m_vertexBase =
+      reinterpret_cast<const unsigned char*>(vertices.data());
+  indexed_mesh.m_vertexStride = 3 * sizeof(btScalar);
+
+  mesh_index_vertex_array = std::make_unique<btTriangleIndexVertexArray>();
+  mesh_index_vertex_array->addIndexedMesh(indexed_mesh, PHY_INTEGER);
+
+  auto triangle_mesh_shape =
+      std::make_unique<btGImpactMeshShape>(mesh_index_vertex_array.get());
+  triangle_mesh_shape->updateBound();
+  triangle_mesh_shape->setMargin(0.04f);
+
+  bt_collision_shape = std::move(triangle_mesh_shape);
+
+  btRigidBody::btRigidBodyConstructionInfo rigid_body_ci(
+      mass, bt_motion_state.get(), bt_collision_shape.get(), inertia);
+
+  bt_rigid_body = std::make_unique<btRigidBody>(rigid_body_ci);
+  if (mass > 0) {
+    this->bt_collision_shape.get()->calculateLocalInertia(this->mass,
+                                                          this->inertia);
+  }
 }

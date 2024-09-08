@@ -82,32 +82,45 @@ int main() {
   plane.get()->translate(glm::vec3(0, -2, 0));
   holder.get()->translate(glm::vec3(0, -1, 0));
 
-  std::unique_ptr<btCollisionShape> cube_collision_shape =
-      std::make_unique<btBoxShape>(btBoxShape(btVector3(0.1f, 0.1f, 0.1f)));
-  std::unique_ptr<btMotionState> cube_motion_state =
-      std::make_unique<btDefaultMotionState>(btDefaultMotionState(
-          btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0))));
-  std::unique_ptr<PhysicsModule> cube_physics_module =
-      std::make_unique<PhysicsModule>(1.f, btVector3(0, 0, 0),
-                                      std::move(cube_collision_shape),
-                                      std::move(cube_motion_state));
+  //   std::unique_ptr<btCollisionShape> cube_collision_shape =
+  //       std::make_unique<btBoxShape>(btBoxShape(btVector3(0.1f, 0.1f,
+  //       0.1f)));
+  //   std::unique_ptr<btMotionState> cube_motion_state =
+  //       std::make_unique<btDefaultMotionState>(btDefaultMotionState(
+  //           btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0))));
+  //   std::unique_ptr<PhysicsModule> cube_physics_module =
+  //       std::make_unique<PhysicsModule>(1.f, btVector3(0, 0, 0),
+  //                                       std::move(cube_collision_shape),
+  //                                       std::move(cube_motion_state));
 
-  std::unique_ptr<btCollisionShape> holder_collision_shape =
-      std::make_unique<btBoxShape>(btBoxShape(btVector3(0.5f, 0.5f, 0.5f)));
-  std::unique_ptr<btMotionState> holder_motion_state =
-      std::make_unique<btDefaultMotionState>(btDefaultMotionState(
-          btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0))));
-  std::unique_ptr<PhysicsModule> holder_physics_module =
-      std::make_unique<PhysicsModule>(1.f, btVector3(0, 0, 0),
-                                      std::move(holder_collision_shape),
-                                      std::move(holder_motion_state));
+  std::unique_ptr<BoxShapePhysicsModule> cube_physics_module =
+      std::make_unique<BoxShapePhysicsModule>(
+          1.f, btVector3(0, 0, 0), *cube_geometry,
+          btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0)));
+
+  //   std::unique_ptr<btCollisionShape> holder_collision_shape =
+  //       std::make_unique<btBoxShape>(btBoxShape(btVector3(0.5f, 0.5f,
+  //       0.5f)));
+  //   std::unique_ptr<btMotionState> holder_motion_state =
+  //       std::make_unique<btDefaultMotionState>(btDefaultMotionState(
+  //           btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0))));
+  //   std::unique_ptr<PhysicsModule> holder_physics_module =
+  //       std::make_unique<PhysicsModule>(1.f, btVector3(0, 0, 0),
+  //                                       std::move(holder_collision_shape),
+  //                                       std::move(holder_motion_state));
+  std::unique_ptr<TriangleMeshPhysicsModule> holder_physics_module =
+      std::make_unique<TriangleMeshPhysicsModule>(
+          *holder_geometry, 1.f, btVector3(0, 0, 0),
+          btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
 
   // Plane Collision shape with width 8.0f and height 8.0f
   std::unique_ptr<btCollisionShape> plane_collision_shape =
       std::make_unique<btBoxShape>(btBoxShape(btVector3(4.0f, 4.0f, 0.01f)));
+  plane_collision_shape->setMargin(0.04f);
+
   std::unique_ptr<btMotionState> plane_motion_state =
       std::make_unique<btDefaultMotionState>(btDefaultMotionState(
-          btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -3, 0))));
+          btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -2, 0))));
   std::unique_ptr<PhysicsModule> plane_physics_module =
       std::make_unique<PhysicsModule>(0.f, btVector3(0, 0, 0),
                                       std::move(plane_collision_shape),

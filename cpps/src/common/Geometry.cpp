@@ -92,7 +92,8 @@ std::vector<unsigned int> generatePlaneIndices(int right_segments,
 
 CubeGeometry::CubeGeometry(float half_width, float half_height,
                            float half_depth, int width_segments,
-                           int height_segments, int depth_segments) {
+                           int height_segments, int depth_segments)
+    : half_width(half_width), half_height(half_height), half_depth(half_depth) {
   std::vector<Vertex> front_vertices = generatePlaneVertices(
       glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), half_width,
       half_height, half_depth, width_segments, height_segments);
