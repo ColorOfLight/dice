@@ -28,6 +28,7 @@
 #include <BulletCollision/Gimpact/btGImpactShape.h>
 
 #include <glm/gtc/quaternion.hpp>
+#include <vector>
 
 PhysicsModule::PhysicsModule(btScalar mass, btVector3 inertia,
                              std::unique_ptr<btCollisionShape> collision_shape,
@@ -97,12 +98,12 @@ TriangleMeshPhysicsModule::TriangleMeshPhysicsModule(
     : PhysicsModule(mass, inertia, transform) {
   auto& geometry_vertices = geometry.getVertices();
 
-  std::vector<btScalar> vertices =
-      std::vector<btScalar>(geometry_vertices.size() * 3);
+  std::vector<btVector3> vertices =
+      std::vector<btVector3>(geometry_vertices.size());
   for (int i = 0; i < geometry_vertices.size(); i++) {
-    vertices.push_back(geometry_vertices[i].position.x);
-    vertices.push_back(geometry_vertices[i].position.y);
-    vertices.push_back(geometry_vertices[i].position.z);
+    vertices[i] = btVector3(geometry_vertices[i].position.x,
+                            geometry_vertices[i].position.y,
+                            geometry_vertices[i].position.z);
   }
 
   const auto& indices = geometry.getIndices();
@@ -113,7 +114,7 @@ TriangleMeshPhysicsModule::TriangleMeshPhysicsModule(
   indexed_mesh.m_triangleIndexBase =
       reinterpret_cast<const unsigned char*>(indices.data());
   indexed_mesh.m_triangleIndexStride = 3 * sizeof(int);
-  indexed_mesh.m_numVertices = vertices.size() / 3;
+  indexed_mesh.m_numVertices = vertices.size();
   indexed_mesh.m_vertexBase =
       reinterpret_cast<const unsigned char*>(vertices.data());
   indexed_mesh.m_vertexStride = 3 * sizeof(btScalar);
@@ -124,7 +125,7 @@ TriangleMeshPhysicsModule::TriangleMeshPhysicsModule(
   auto triangle_mesh_shape =
       std::make_unique<btGImpactMeshShape>(mesh_index_vertex_array.get());
   triangle_mesh_shape->updateBound();
-  triangle_mesh_shape->setMargin(0.04f);
+  triangle_mesh_shape->setMargin(btScalar(0.04));
 
   bt_collision_shape = std::move(triangle_mesh_shape);
 
