@@ -70,8 +70,8 @@ int main() {
   std::unique_ptr<SingleColorMaterial> single_color_material =
       std::make_unique<SingleColorMaterial>();
 
-  std::unique_ptr<Mesh> holder =
-      std::make_unique<Mesh>(*holder_geometry, *phong_material);
+  //   std::unique_ptr<Mesh> holder =
+  //       std::make_unique<Mesh>(*holder_geometry, *phong_material);
   std::unique_ptr<Mesh> cube =
       std::make_unique<Mesh>(*cube_geometry, *phong_material);
 
@@ -80,7 +80,7 @@ int main() {
 
   plane.get()->rotate(glm::radians(-90.0f), glm::vec3(1, 0, 0));
   plane.get()->translate(glm::vec3(0, -2, 0));
-  holder.get()->translate(glm::vec3(0, -1, 0));
+  //   holder.get()->translate(glm::vec3(0, -1, 0));
 
   //   std::unique_ptr<btCollisionShape> cube_collision_shape =
   //       std::make_unique<btBoxShape>(btBoxShape(btVector3(0.1f, 0.1f,
@@ -108,10 +108,10 @@ int main() {
   //       std::make_unique<PhysicsModule>(1.f, btVector3(0, 0, 0),
   //                                       std::move(holder_collision_shape),
   //                                       std::move(holder_motion_state));
-  std::unique_ptr<TriangleMeshPhysicsModule> holder_physics_module =
-      std::make_unique<TriangleMeshPhysicsModule>(
-          *holder_geometry, 1.f, btVector3(0, 0, 0),
-          btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
+  //   std::unique_ptr<TriangleMeshPhysicsModule> holder_physics_module =
+  //       std::make_unique<TriangleMeshPhysicsModule>(
+  //           *holder_geometry, 1.f, btVector3(0, 0, 0),
+  //           btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -1, 0)));
 
   // Plane Collision shape with width 8.0f and height 8.0f
   std::unique_ptr<btCollisionShape> plane_collision_shape =
@@ -130,16 +130,12 @@ int main() {
       std::make_unique<Entity>(std::move(cube), std::move(cube_physics_module));
   std::unique_ptr<Entity> plane_entity = std::make_unique<Entity>(
       std::move(plane), std::move(plane_physics_module));
-  std::unique_ptr<Entity> holder_entity = std::make_unique<Entity>(
-      std::move(holder), std::move(holder_physics_module));
 
   cube_entity.get()->syncPhysicsWithMesh();
   plane_entity.get()->syncPhysicsWithMesh();
-  holder_entity.get()->syncPhysicsWithMesh();
 
   root.scene_manager->addEntity(*cube_entity);
   root.scene_manager->addEntity(*plane_entity);
-  root.scene_manager->addEntity(*holder_entity);
 
   std::function<void(float, float)> loop_func = [&](float elapsed_ms,
                                                     float delta_ms) {
