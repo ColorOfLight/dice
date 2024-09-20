@@ -39,7 +39,7 @@ if (ENVIRONMENT_IS_NODE) {
 
 // --pre-jses are emitted after the Module integration code, so that they can
 // refer to Module (if they choose; they can also define Module)
-// include: /var/folders/rg/vbdggr6x57g6m7f55845b7r00000gn/T/tmpovsw95tj.js
+// include: /var/folders/rg/vbdggr6x57g6m7f55845b7r00000gn/T/tmp9fdy2ph2.js
 
   if (!Module.expectedDataFileDownloads) {
     Module.expectedDataFileDownloads = 0;
@@ -217,25 +217,25 @@ Module['FS_createPath']("/assets", "models", true, true);
     }
 
     }
-    loadPackage({"files": [{"filename": "/assets/models/cube.obj", "start": 0, "end": 919}], "remote_package_size": 919});
+    loadPackage({"files": [{"filename": "/assets/models/cube.obj", "start": 0, "end": 919}, {"filename": "/assets/models/holder.obj", "start": 919, "end": 25872}], "remote_package_size": 25872});
 
   })();
 
-// end include: /var/folders/rg/vbdggr6x57g6m7f55845b7r00000gn/T/tmpovsw95tj.js
-// include: /var/folders/rg/vbdggr6x57g6m7f55845b7r00000gn/T/tmpu87el5fv.js
+// end include: /var/folders/rg/vbdggr6x57g6m7f55845b7r00000gn/T/tmp9fdy2ph2.js
+// include: /var/folders/rg/vbdggr6x57g6m7f55845b7r00000gn/T/tmpek5204fx.js
 
     // All the pre-js content up to here must remain later on, we need to run
     // it.
     if (Module['$ww'] || (typeof ENVIRONMENT_IS_PTHREAD != 'undefined' && ENVIRONMENT_IS_PTHREAD)) Module['preRun'] = [];
     var necessaryPreJSTasks = Module['preRun'].slice();
-  // end include: /var/folders/rg/vbdggr6x57g6m7f55845b7r00000gn/T/tmpu87el5fv.js
-// include: /var/folders/rg/vbdggr6x57g6m7f55845b7r00000gn/T/tmpwrqj28xa.js
+  // end include: /var/folders/rg/vbdggr6x57g6m7f55845b7r00000gn/T/tmpek5204fx.js
+// include: /var/folders/rg/vbdggr6x57g6m7f55845b7r00000gn/T/tmpolrp5fsz.js
 
     if (!Module['preRun']) throw 'Module.preRun should exist because file support used it; did a pre-js delete it?';
     necessaryPreJSTasks.forEach((task) => {
       if (Module['preRun'].indexOf(task) < 0) throw 'All preRun tasks that exist before user pre-js code should remain after; did you replace Module or modify Module.preRun?';
     });
-  // end include: /var/folders/rg/vbdggr6x57g6m7f55845b7r00000gn/T/tmpwrqj28xa.js
+  // end include: /var/folders/rg/vbdggr6x57g6m7f55845b7r00000gn/T/tmpolrp5fsz.js
 
 
 // Sometimes an existing Module object exists with properties
