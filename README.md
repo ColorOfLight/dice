@@ -1,15 +1,29 @@
 # dice
-3D dice simulator
+
+> **NOTICE**: This project is suspended and archived due to a lack of solid project design. 📦
+
+- Interactive 3D dice simulator for various platforms.
+
+## Tech Stack
+
+- Assimp (model file loader)
+- Bullet Physics (physics engine)
+- GLFW (OpenGL helper on desktop)
+- GLAD (OpenGL linker on desktop)
+- Emscripten (WASM compiler)
+- Vite (Web build tool)
 
 ## How to build
+
+### Desktop
 
 1. Clone git repo
     - You must include submodules with `--recursive` tag when you clone this repo
 
-      ```zsh
-      git clone https://github.com/ColorOfLight/dice --recursive
-      git submodule update --init --recursive
-      ```
+    ```zsh
+    git clone https://github.com/ColorOfLight/dice --recursive
+    git submodule update --init --recursive
+    ```
 
 2. Move to `cpps` directory and create Makefile with CMake preset
 
@@ -28,13 +42,20 @@
     # After compilation, use .js and .wasm file
     ```
 
-3. TBD
+### Web
 
-## TODOs
+- In this case, you don't need to include submodules
 
-- [ ] Options to select shader precisions in web (highp, mediump, lowp)
-- [ ] Simplify the normal matrix calculation ([link](https://lxjk.github.io/2017/10/01/Stop-Using-Normal-Matrix.html))
-- [ ] Prevent re-calculate model matrix in Mesh
-- [ ] model load
-- [ ] keyboard input
-- [ ] reduce pkg size with replacing the big packages (like assimp)
+    ```zsh
+    # Clone this repo
+    git clone https://github.com/ColorOfLight/dice
+
+    # Move to web directory
+    cd web
+
+    # Install dependencies
+    npm install
+
+    # Run dev server
+    npm run dev
+    ```
